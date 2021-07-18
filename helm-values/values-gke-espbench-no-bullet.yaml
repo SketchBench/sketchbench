@@ -1,0 +1,110 @@
+### Benchmark Control Plane ###
+
+dataIngestion:
+  espbench:
+    enabled: true
+    nodeSelector:
+      sketchbench/pool: benchmark-control-plane
+
+bullet:
+  enabled: false
+
+zeppelin:
+  enabled: true
+  deployment:
+    nodeSelector:
+      sketchbench/pool: benchmark-control-plane
+  runMode: local
+  interpreters:
+    - file
+    - spark
+    - md
+    - python
+    - livy
+    - sparql
+  sparkInterpreter:
+    spark:
+      master: "spark://my-sketchbench-spark-master-svc:7077"
+      submit:
+        deployMode: "client"
+      app:
+        name: "zeppelin"
+
+### Benchmark Observability Stack ###
+
+tobs:
+  enabled: true
+  kube-prometheus-stack:
+    alertmanager:
+      alertmanagerSpec:
+        nodeSelector:
+          sketchbench/pool: observability
+    grafana:
+      nodeSelector:
+        sketchbench/pool: observability
+    kube-state-metrics:
+      nodeSelector:
+        sketchbench/pool: observability
+    prometheus:
+      prometheusSpec:
+        nodeSelector:
+          sketchbench/pool: observability
+    prometheus-node-exporter:
+      nodeSelector:
+        sketchbench/pool: observability
+    prometheusOperator:
+      admissionWebhooks:
+        patch:
+          nodeSelector:
+            sketchbench/pool: observability
+      nodeSelector:
+        sketchbench/pool: observability
+  promscale:
+    maintenance:
+      nodeSelector:
+        sketchbench/pool: observability
+    nodeSelector:
+      sketchbench/pool: observability
+  timescaledb-single:
+    nodeSelector:
+      sketchbench/pool: observability
+
+kafdrop:
+  enabled: true
+  nodeSelector:
+    sketchbench/pool: observability
+
+### Data Ingestion (isolated Kafka cluster) ###
+
+kafka:
+  nodeSelector:
+    sketchbench/pool: data-ingestion
+  podAntiAffinitypreset: hard
+  zookeeper:
+    nodeSelector:
+      sketchbench/pool: data-ingestion
+
+### System Under Test (isolated Spark cluster) ###
+
+spark:
+  enabled: true
+  image:
+    repository: sketchbench/bullet-spark-3.0
+    tag: "1.0.4"
+    pullPolicy: IfNotPresent
+  worker:
+    replicaCount: 3
+    nodeSelector:
+      sketchbench/pool: system-under-test
+  master:
+    nodeSelector:
+      sketchbench/pool: system-under-test
+  podAntiAffinitypreset: hard
+
+hdfs:
+  namenode:
+    nodeSelector:
+      sketchbench/pool: system-under-test
+  datanode:
+    nodeSelector:
+      sketchbench/pool: system-under-test
