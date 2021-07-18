@@ -27,7 +27,7 @@ SketchBench utilizes 5 node pools:
 |:---------------------------:|:-------------------------------------------------:|:-------------:|:---------------:|:------------------:|
 | **benchmark-control-plane** | SketchBench components such as the data generator | e2-standard-2 |        3        |        25GB        |
 | **data-ingestion**          |  Isolated Apache Kafka cluster for data ingestion | e2-standard-2 |        2        |        25GB        |
-| **system-under-test**       |          Isolated SUT (e.g. Apache Spark)         | n2-standard-4 |        3        |        25GB        |
+| **system-under-test**       |          Isolated SUT (e.g. Apache Spark)         | c2-standard-4 |        5        |        25GB        |
 | **observability**           |       Observability stack (e.g. Prometheus)       | e2-standard-2 |        3        |        25GB        |
 | **data-plane**              |    Persistency services (e.g. HDFS & Zookeeper)   | e2-standard-2 |        2        |        25GB        |
 
@@ -99,14 +99,14 @@ gcloud beta container \
 --project "sketchbench-320005" node-pools create "system-under-test" \
 --cluster "sketchbench-cluster" \
 --zone "us-west1-a" \
---machine-type "n2-standard-4" \
+--machine-type "c2-standard-4" \
 --image-type "COS_CONTAINERD" \
 --disk-type "pd-ssd" \
 --disk-size "25" \
 --node-labels sketchbench/pool=system-under-test \
 --metadata disable-legacy-endpoints=true \
 --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \
---num-nodes "3" \
+--num-nodes "5" \
 --enable-autoupgrade \
 --enable-autorepair \
 --max-surge-upgrade 1 \
