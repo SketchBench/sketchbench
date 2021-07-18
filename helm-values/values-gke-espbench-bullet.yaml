@@ -56,6 +56,8 @@ bullet:
     nodeSelector:
       sketchbench/pool: benchmark-control-plane
   sparkBackend:
+    executorCores: 3
+    executorMemory: 9G
     nodeSelector:
       sketchbench/pool: system-under-test
     image:
@@ -162,8 +164,6 @@ zeppelin:
     - spark
     - md
     - python
-    - livy
-    - sparql
   sparkInterpreter:
     spark:
       master: "spark://my-sketchbench-spark-master-svc:7077"
@@ -171,7 +171,8 @@ zeppelin:
         deployMode: "client"
       app:
         name: "zeppelin"
-
+      jar:
+        packages: org.apache.spark:spark-sql-kafka-0-10_2.12:3.0.2,org.apache.spark:spark-streaming-kafka-0-10-assembly_2.12:3.0.2
 ### Benchmark Observability Stack ###
 
 tobs:
