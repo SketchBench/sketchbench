@@ -30,9 +30,22 @@ bullet:
   pubsub:
     nodeSelector:
       sketchbench/pool: benchmark-control-plane
+    metrics:
+      kafka:
+        enabled: true
+        nodeSelector:
+          sketchbench/pool: observability
+      jmx:
+        enabled: true
+      serviceMonitor:
+        enabled: true
     zookeeper:
       nodeSelector:
         sketchbench/pool: data-plane
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
   pubsubMonit:
     nodeSelector:
       sketchbench/pool: observability
@@ -206,9 +219,22 @@ kafka:
   nodeSelector:
     sketchbench/pool: data-ingestion
   podAntiAffinitypreset: hard
+  metrics:
+    kafka:
+      enabled: true
+      nodeSelector:
+        sketchbench/pool: observability
+    jmx:
+      enabled: true
+    serviceMonitor:
+      enabled: true
   zookeeper:
     nodeSelector:
       sketchbench/pool: data-ingestion
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
 
 ### System Under Test (isolated Spark cluster) ###
 
@@ -226,6 +252,10 @@ spark:
     nodeSelector:
       sketchbench/pool: system-under-test
   podAntiAffinitypreset: hard
+  metrics:
+    enabled: true
+    podMonitor:
+      enabled: true
 
 hdfs:
   namenode:
