@@ -219,6 +219,7 @@ kafka:
   nodeSelector:
     sketchbench/pool: data-ingestion
   podAntiAffinitypreset: hard
+  logRetentionHours: 6
   metrics:
     kafka:
       enabled: true
