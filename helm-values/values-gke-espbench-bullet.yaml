@@ -246,12 +246,27 @@ spark:
     tag: "1.0.4"
     pullPolicy: IfNotPresent
   worker:
-    replicaCount: 3
+    replicaCount: 4
+    coreLimit: 3
     nodeSelector:
       sketchbench/pool: system-under-test
+    resources:
+      requests:
+        memory: "10Gi"
+        cpu: "3.25"
+      limits:
+        memory: "10Gi"
+        cpu: "3.25"
   master:
     nodeSelector:
       sketchbench/pool: system-under-test
+    resources:
+      requests:
+        memory: "10Gi"
+        cpu: "3.5"
+      limits:
+        memory: "10Gi"
+        cpu: "3.5"
   podAntiAffinitypreset: hard
   metrics:
     enabled: true
