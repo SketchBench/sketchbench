@@ -172,9 +172,6 @@ tobs:
       prometheusSpec:
         nodeSelector:
           sketchbench/pool: observability
-    prometheus-node-exporter:
-      nodeSelector:
-        sketchbench/pool: observability
     prometheusOperator:
       admissionWebhooks:
         patch:
