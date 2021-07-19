@@ -1,0 +1,24 @@
+deployment:
+  nodeSelector:
+    sketchbench/pool: benchmark-control-plane
+runMode: local
+interpreters:
+  - file
+  - spark
+  - md
+  - python
+metrics:
+  enabled: true
+  podMonitor:
+    enabled: true
+sparkInterpreter:
+  spark:
+    master: "spark://sketchbench-spark-standalone-master-svc:7077"
+    submit:
+      deployMode: "client"
+    app:
+      name: "zeppelin"
+    jar:
+      packages: org.apache.spark:spark-sql-kafka-0-10_2.12:3.0.2,org.apache.spark:spark-streaming-kafka-0-10-assembly_2.12:3.0.2
+    cores:
+      max: 1

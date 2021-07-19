@@ -1,22 +1,46 @@
 ### Benchmark Control Plane ###
 
 dataIngestion:
-  espbench:
+  nexmark:
     enabled: true
     nodeSelector:
       sketchbench/pool: benchmark-control-plane
-    # 10000 ns interval = 100,000 msg/sec
-    # 1000000 ns interval = 1,000 msg /sec
-    sendingInterval: 1000000
-    sendingIntervalTimeUnit: NANOSECONDS
-    duration: 1
-    durationTimeUnit: HOURS
 
 bullet:
   enabled: true
-  spark:
-    # Use SketchBench-managed Spark instance in separate node pool
-    enabled: false
+  spark: # System Under Test (isolated Spark cluster)
+    enabled: true
+    image:
+      repository: sketchbench/bullet-spark-3.0
+      tag: "1.0.4"
+      pullPolicy: IfNotPresent
+    worker:
+      replicaCount: 3
+      coreLimit: 3
+      nodeSelector:
+        sketchbench/pool: system-under-test
+      resources:
+        requests:
+          memory: "10Gi"
+          cpu: "3.25"
+        limits:
+          memory: "10Gi"
+          cpu: "3.25"
+    master:
+      nodeSelector:
+        sketchbench/pool: system-under-test
+      resources:
+        requests:
+          memory: "10Gi"
+          cpu: "3.5"
+        limits:
+          memory: "10Gi"
+          cpu: "3.5"
+    podAntiAffinitypreset: hard
+    metrics:
+      enabled: true
+      podMonitor:
+        enabled: true
   hdfs:
     namenode:
       nodeSelector:
@@ -65,6 +89,10 @@ bullet:
     hdfsUser: hadoop
     hdfs:
       port: 8020
+    metrics:
+      enabled: true
+      podMonitor:
+        enable: true
     config:
       bullet:
         spark:
@@ -80,7 +108,7 @@ bullet:
               name: com.yahoo.bullet.dsl.connector.KafkaConnector
             kafka:
               topics:
-                - SketchBench-1-1
+                - SketchBench-nexmark
               bootstrap:
                 servers:
                   - kafka:9092
@@ -99,55 +127,33 @@ bullet:
         {
           "fields": [
             {
-              "name": "messageID",
-              "type": "INTEGER"
-            },
-            {
-              "name": "ts",
-              "type": "STRING"
-            },
-            {
-              "name": "index",
+              "name": "iij_timestamp",
+              "reference": "event.iij_timestamp",
               "type": "LONG"
             },
             {
-              "name": "mf01",
+              "name": "auction_id",
+              "reference": "event.auction_id",
               "type": "INTEGER"
             },
             {
-              "name": "mf02",
+              "name": "partition_id",
+              "reference": "event.partition_id",
               "type": "INTEGER"
             },
             {
-              "name": "mf03",
+              "name": "time",
+              "reference": "event.time",
+              "type": "LONG"
+            },
+            {
+              "name": "person",
+              "reference": "event.person",
               "type": "INTEGER"
             },
             {
-              "name": "pc13",
-              "type": "INTEGER"
-            },
-            {
-              "name": "pc14",
-              "type": "INTEGER"
-            },
-            {
-              "name": "pc15",
-              "type": "INTEGER"
-            },
-            {
-              "name": "pc25",
-              "type": "INTEGER"
-            },
-            {
-              "name": "pc26",
-              "type": "INTEGER"
-            },
-            {
-              "name": "pc27",
-              "type": "INTEGER"
-            },
-            {
-              "name": "res",
+              "name": "bid",
+              "reference": "event.bid",
               "type": "INTEGER"
             }
           ]
@@ -164,50 +170,23 @@ zeppelin:
     - spark
     - md
     - python
+  metrics:
+    enabled: true
+    podMonitor:
+      enabled: true
   sparkInterpreter:
     spark:
-      master: "spark://my-sketchbench-spark-master-svc:7077"
+      master: "spark://sketchbench-nexmark-spark-master-svc:7077"
       submit:
         deployMode: "client"
       app:
         name: "zeppelin"
       jar:
         packages: org.apache.spark:spark-sql-kafka-0-10_2.12:3.0.2,org.apache.spark:spark-streaming-kafka-0-10-assembly_2.12:3.0.2
-### Benchmark Observability Stack ###
+      cores:
+        max: 1
 
-tobs:
-  enabled: true
-  kube-prometheus-stack:
-    alertmanager:
-      alertmanagerSpec:
-        nodeSelector:
-          sketchbench/pool: observability
-    grafana:
-      nodeSelector:
-        sketchbench/pool: observability
-    kube-state-metrics:
-      nodeSelector:
-        sketchbench/pool: observability
-    prometheus:
-      prometheusSpec:
-        nodeSelector:
-          sketchbench/pool: observability
-    prometheusOperator:
-      admissionWebhooks:
-        patch:
-          nodeSelector:
-            sketchbench/pool: observability
-      nodeSelector:
-        sketchbench/pool: observability
-  promscale:
-    maintenance:
-      nodeSelector:
-        sketchbench/pool: observability
-    nodeSelector:
-      sketchbench/pool: observability
-  timescaledb-single:
-    nodeSelector:
-      sketchbench/pool: observability
+### Benchmark Observability Stack ###
 
 kafdrop:
   enabled: true
@@ -237,39 +216,3 @@ kafka:
       enabled: true
       serviceMonitor:
         enabled: true
-
-### System Under Test (isolated Spark cluster) ###
-
-spark:
-  enabled: true
-  image:
-    repository: sketchbench/bullet-spark-3.0
-    tag: "1.0.4"
-    pullPolicy: IfNotPresent
-  worker:
-    replicaCount: 4
-    coreLimit: 3
-    nodeSelector:
-      sketchbench/pool: system-under-test
-    resources:
-      requests:
-        memory: "10Gi"
-        cpu: "3.25"
-      limits:
-        memory: "10Gi"
-        cpu: "3.25"
-  master:
-    nodeSelector:
-      sketchbench/pool: system-under-test
-    resources:
-      requests:
-        memory: "10Gi"
-        cpu: "3.5"
-      limits:
-        memory: "10Gi"
-        cpu: "3.5"
-  podAntiAffinitypreset: hard
-  metrics:
-    enabled: true
-    podMonitor:
-      enabled: true

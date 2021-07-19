@@ -1,0 +1,41 @@
+### Benchmark Control Plane ###
+
+dataIngestion:
+  nexmark:
+    enabled: true
+    nodeSelector:
+      sketchbench/pool: benchmark-control-plane
+
+### Benchmark Observability Stack ###
+
+kafdrop:
+  enabled: true
+  nodeSelector:
+    sketchbench/pool: observability
+
+### Data Ingestion (isolated Kafka cluster) ###
+
+kafka:
+  nodeSelector:
+    sketchbench/pool: data-ingestion
+  podAntiAffinitypreset: hard
+  logRetentionHours: 6
+  metrics:
+    kafka:
+      enabled: true
+      nodeSelector:
+        sketchbench/pool: observability
+    jmx:
+      enabled: true
+    serviceMonitor:
+      enabled: true
+  zookeeper:
+    nodeSelector:
+      sketchbench/pool: data-ingestion
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+
+zeppelin:
+  enabled: false

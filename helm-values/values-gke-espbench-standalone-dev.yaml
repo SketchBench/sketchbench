@@ -1,0 +1,47 @@
+### Benchmark Control Plane ###
+
+dataIngestion:
+  espbench:
+    enabled: true
+    nodeSelector:
+      sketchbench/pool: benchmark-control-plane
+    # 10000 ns interval = 100,000 msg/sec
+    # 1000000 ns interval = 1,000 msg /sec
+    sendingInterval: 1000000
+    sendingIntervalTimeUnit: NANOSECONDS
+    duration: 1
+    durationTimeUnit: HOURS
+
+### Benchmark Observability Stack ###
+
+kafdrop:
+  enabled: true
+  nodeSelector:
+    sketchbench/pool: observability
+
+### Data Ingestion (isolated Kafka cluster) ###
+
+kafka:
+  nodeSelector:
+    sketchbench/pool: data-ingestion
+  podAntiAffinitypreset: hard
+  logRetentionHours: 6
+  metrics:
+    kafka:
+      enabled: true
+      nodeSelector:
+        sketchbench/pool: observability
+    jmx:
+      enabled: true
+    serviceMonitor:
+      enabled: true
+  zookeeper:
+    nodeSelector:
+      sketchbench/pool: data-ingestion
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+
+zeppelin:
+  enabled: false

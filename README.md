@@ -66,3 +66,77 @@ helm install \
 my-sketchbench \
 sketchbench/sketchbench
 ```
+
+## Development setup
+
+### Install observability stack with `tobs`
+
+```bash
+helm repo add timescale https://charts.timescale.com/
+helm repo update
+helm install --devel --values ./helm-values/values-tobs.yaml sketchbench-o11y timescale/tobs
+```
+
+### Install SketchBench stack for ESPBench with Bullet, Zeppelin, and Spark
+
+```bash
+helm install \
+--devel \
+--values ./helm-values/values-gke-espbench-bullet-dev.yaml \
+sketchbench-espbench \
+sketchbench/sketchbench
+```
+
+### Install SketchBench stack for NEXMark with Bullet, Zeppelin, and Spark
+
+```bash
+helm install \
+--devel \
+--values \
+./helm-values/values-gke-nexmark-bullet-dev.yaml \
+sketchbench-nexmark \
+sketchbench/sketchbench
+```
+
+### Install SketchBench "standalone" stack for ESPBench
+
+```bash
+helm install \
+--devel \
+--values \
+./helm-values/values-gke-espbench-standalone-dev.yaml \
+sketchbench-espbench-standalone \
+sketchbench/sketchbench
+```
+
+### Install SketchBench "standalone" stack for NEXMark
+
+```bash
+helm install \
+--devel --values \
+./helm-values/values-gke-nexmark-standalone-dev.yaml \
+sketchbench-nexmark-standalone \
+sketchbench/sketchbench
+```
+
+### Install Spark cluster for "standalone" setup
+
+```bash
+helm install \
+--values \
+./helm-values/values-gke-spark-standalone-dev.yaml \
+sketchbench-spark-standalone \
+bitnami/spark \
+--version 5.6.2
+```
+
+### Install Zeppelin for "standalone" setup
+
+```bash
+helm install \
+--devel \
+--values \
+./helm-values/values-gke-zeppelin-standalone-dev.yaml \
+sketchbench-zeppelin-standalone \
+sketchbench/zeppelin
+```
