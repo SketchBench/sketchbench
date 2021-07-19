@@ -32,40 +32,6 @@ zeppelin:
 
 ### Benchmark Observability Stack ###
 
-tobs:
-  enabled: true
-  kube-prometheus-stack:
-    alertmanager:
-      alertmanagerSpec:
-        nodeSelector:
-          sketchbench/pool: observability
-    grafana:
-      nodeSelector:
-        sketchbench/pool: observability
-    kube-state-metrics:
-      nodeSelector:
-        sketchbench/pool: observability
-    prometheus:
-      prometheusSpec:
-        nodeSelector:
-          sketchbench/pool: observability
-    prometheusOperator:
-      admissionWebhooks:
-        patch:
-          nodeSelector:
-            sketchbench/pool: observability
-      nodeSelector:
-        sketchbench/pool: observability
-  promscale:
-    maintenance:
-      nodeSelector:
-        sketchbench/pool: observability
-    nodeSelector:
-      sketchbench/pool: observability
-  timescaledb-single:
-    nodeSelector:
-      sketchbench/pool: observability
-
 kafdrop:
   enabled: true
   nodeSelector:

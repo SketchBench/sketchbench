@@ -37,12 +37,12 @@ SketchBench utilizes 5 node pools:
 
 ```bash
 gcloud beta container \
---project "sketchbench-320005" clusters create "sketchbench-cluster" \
+--project "sketchbench-320005" clusters create "sketchbench-dev-cluster" \
 --zone "us-west1-a" \
 --no-enable-basic-auth \
 --cluster-version "1.19.9-gke.1900" \
 --release-channel "regular" \
---machine-type "e2-standard-2" \
+--machine-type "e2-highcpu-4" \
 --image-type "COS_CONTAINERD" \
 --disk-type "pd-ssd" \
 --disk-size "25" \
@@ -51,11 +51,13 @@ gcloud beta container \
 --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \
 --max-pods-per-node "110" \
 --num-nodes "3" \
+--no-enable-cloud-logging \
 --enable-ip-alias \
 --network "projects/sketchbench-320005/global/networks/default" \
 --subnetwork "projects/sketchbench-320005/regions/us-west1/subnetworks/default" \
---enable-intra-node-visibility \
+--no-enable-intra-node-visibility \
 --default-max-pods-per-node "110" \
+--enable-dataplane-v2 \
 --no-enable-master-authorized-networks \
 --addons HorizontalPodAutoscaling,HttpLoadBalancing,NodeLocalDNS,GcePersistentDiskCsiDriver \
 --enable-autoupgrade \
@@ -74,16 +76,16 @@ gcloud beta container \
 ```bash
 gcloud beta container \
 --project "sketchbench-320005" node-pools create "data-ingestion" \
---cluster "sketchbench-cluster" \
+--cluster "sketchbench-dev-cluster" \
 --zone "us-west1-a" \
---machine-type "e2-standard-2" \
+--machine-type "e2-highcpu-2" \
 --image-type "COS_CONTAINERD" \
 --disk-type "pd-ssd" \
 --disk-size "25" \
 --node-labels sketchbench/pool=data-ingestion \
 --metadata disable-legacy-endpoints=true \
 --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \
---num-nodes "2" \
+--num-nodes "4" \
 --enable-autoupgrade \
 --enable-autorepair \
 --max-surge-upgrade 1 \
@@ -97,7 +99,7 @@ gcloud beta container \
 ```bash
 gcloud beta container \
 --project "sketchbench-320005" node-pools create "system-under-test" \
---cluster "sketchbench-cluster" \
+--cluster "sketchbench-dev-cluster" \
 --zone "us-west1-a" \
 --machine-type "c2-standard-4" \
 --image-type "COS_CONTAINERD" \
@@ -106,7 +108,7 @@ gcloud beta container \
 --node-labels sketchbench/pool=system-under-test \
 --metadata disable-legacy-endpoints=true \
 --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \
---num-nodes "5" \
+--num-nodes "12" \
 --enable-autoupgrade \
 --enable-autorepair \
 --max-surge-upgrade 1 \
@@ -120,9 +122,9 @@ gcloud beta container \
 ```bash
 gcloud beta container \
 --project "sketchbench-320005" node-pools create "observability" \
---cluster "sketchbench-cluster" \
+--cluster "sketchbench-dev-cluster" \
 --zone "us-west1-a" \
---machine-type "e2-standard-2" \
+--machine-type "e2-highcpu-4" \
 --image-type "COS_CONTAINERD" \
 --disk-type "pd-ssd" \
 --disk-size "25" \
@@ -143,16 +145,16 @@ gcloud beta container \
 ```bash
 gcloud beta container \
 --project "sketchbench-320005" node-pools create "data-plane" \
---cluster "sketchbench-cluster" \
+--cluster "sketchbench-dev-cluster" \
 --zone "us-west1-a" \
---machine-type "e2-standard-2" \
+--machine-type "e2-highcpu-4" \
 --image-type "COS_CONTAINERD" \
 --disk-type "pd-ssd" \
 --disk-size "25" \
 --node-labels sketchbench/pool=data-plane \
 --metadata disable-legacy-endpoints=true \
 --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \
---num-nodes "2" \
+--num-nodes "3" \
 --enable-autoupgrade \
 --enable-autorepair \
 --max-surge-upgrade 1 \
