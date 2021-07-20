@@ -68,8 +68,9 @@ tobs:
 
 kafdrop:
   enabled: true
-  nodeSelector:
-    sketchbench/pool: observability
+  deployment:
+    nodeSelector:
+      sketchbench/pool: observability
 
 ### Data Ingestion (isolated Kafka cluster) ###
 

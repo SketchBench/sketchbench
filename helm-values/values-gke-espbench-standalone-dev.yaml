@@ -16,8 +16,9 @@ dataIngestion:
 
 kafdrop:
   enabled: true
-  nodeSelector:
-    sketchbench/pool: observability
+  deployment:
+    nodeSelector:
+      sketchbench/pool: observability
 
 ### Data Ingestion (isolated Kafka cluster) ###
 
@@ -26,6 +27,13 @@ kafka:
     sketchbench/pool: data-ingestion
   podAntiAffinitypreset: hard
   logRetentionHours: 6
+  resources:
+    requests:
+      memory: "5Gi"
+      cpu: "1.5"
+    limits:
+      memory: "5Gi"
+      cpu: "1.5"
   metrics:
     kafka:
       enabled: true
@@ -37,7 +45,7 @@ kafka:
       enabled: true
   zookeeper:
     nodeSelector:
-      sketchbench/pool: data-ingestion
+      sketchbench/pool: data-plane
     metrics:
       enabled: true
       serviceMonitor:

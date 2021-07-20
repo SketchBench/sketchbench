@@ -21,20 +21,20 @@ bullet:
         sketchbench/pool: system-under-test
       resources:
         requests:
-          memory: "10Gi"
-          cpu: "3.25"
+          memory: "2.5Gi"
+          cpu: "3.5"
         limits:
-          memory: "10Gi"
-          cpu: "3.25"
+          memory: "2.5Gi"
+          cpu: "3.5"
     master:
       nodeSelector:
         sketchbench/pool: system-under-test
       resources:
         requests:
-          memory: "10Gi"
+          memory: "2.5Gi"
           cpu: "3.5"
         limits:
-          memory: "10Gi"
+          memory: "2.5Gi"
           cpu: "3.5"
     podAntiAffinitypreset: hard
     metrics:
@@ -71,8 +71,9 @@ bullet:
         serviceMonitor:
           enabled: true
   pubsubMonit:
-    nodeSelector:
-      sketchbench/pool: observability
+    deployment:
+      nodeSelector:
+        sketchbench/pool: observability
   ui:
     nodeSelector:
       sketchbench/pool: benchmark-control-plane
@@ -81,9 +82,9 @@ bullet:
       sketchbench/pool: benchmark-control-plane
   sparkBackend:
     executorCores: 3
-    executorMemory: 9G
+    executorMemory: 2G
     nodeSelector:
-      sketchbench/pool: system-under-test
+      sketchbench/pool: benchmark-control-plane
     image:
       repository: sketchbench/bullet-spark-3.0
     hdfsUser: hadoop
@@ -190,8 +191,9 @@ zeppelin:
 
 kafdrop:
   enabled: true
-  nodeSelector:
-    sketchbench/pool: observability
+  deployment:
+    nodeSelector:
+      sketchbench/pool: observability
 
 ### Data Ingestion (isolated Kafka cluster) ###
 
@@ -200,6 +202,13 @@ kafka:
     sketchbench/pool: data-ingestion
   podAntiAffinitypreset: hard
   logRetentionHours: 6
+  resources:
+    requests:
+      memory: "5Gi"
+      cpu: "1.5"
+    limits:
+      memory: "5Gi"
+      cpu: "1.5"
   metrics:
     kafka:
       enabled: true
@@ -211,7 +220,7 @@ kafka:
       enabled: true
   zookeeper:
     nodeSelector:
-      sketchbench/pool: data-ingestion
+      sketchbench/pool: data-plane
     metrics:
       enabled: true
       serviceMonitor:

@@ -78,7 +78,7 @@ gcloud beta container \
 --project "sketchbench-320005" node-pools create "data-ingestion" \
 --cluster "sketchbench-dev-cluster" \
 --zone "us-west1-a" \
---machine-type "e2-highcpu-2" \
+--machine-type "e2-standard-2" \
 --image-type "COS_CONTAINERD" \
 --disk-type "pd-ssd" \
 --disk-size "25" \
@@ -101,7 +101,7 @@ gcloud beta container \
 --project "sketchbench-320005" node-pools create "system-under-test" \
 --cluster "sketchbench-dev-cluster" \
 --zone "us-west1-a" \
---machine-type "c2-standard-4" \
+--machine-type "e2-highcpu-4" \
 --image-type "COS_CONTAINERD" \
 --disk-type "pd-ssd" \
 --disk-size "25" \
@@ -124,7 +124,7 @@ gcloud beta container \
 --project "sketchbench-320005" node-pools create "observability" \
 --cluster "sketchbench-dev-cluster" \
 --zone "us-west1-a" \
---machine-type "e2-highcpu-4" \
+--machine-type "e2-standard-4" \
 --image-type "COS_CONTAINERD" \
 --disk-type "pd-ssd" \
 --disk-size "25" \
