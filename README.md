@@ -140,3 +140,55 @@ helm install \
 sketchbench-zeppelin-standalone \
 sketchbench/zeppelin
 ```
+
+### Accessing Bullet locally
+
+#### Bullet for ESPBench
+
+Two services are required to use the Bullet UI locally; open each in a separate terminal:
+
+```bash
+kubectl port-forward service/sketchbench-espbench-bullet-ui 8800:8800
+kubectl port-forward service/sketchbench-espbench-bullet-web-service 9999:9999
+```
+
+#### Bullet for NEXMark
+
+Two services are required to use the Bullet UI locally; open each in a separate terminal:
+
+```bash
+kubectl port-forward service/sketchbench-nexmark-bullet-ui 8800:8800
+kubectl port-forward service/sketchbench-nexmark-bullet-web-service 9999:9999
+```
+
+### Accessing Zeppelin locally
+
+#### Zeppelin for ESPBench (Bullet)
+
+```bash
+kubectl port-forward service/sketchbench-espbench-zeppelin 8080:8080
+```
+
+#### Zeppelin for NEXMark (Bullet)
+
+```bash
+kubectl port-forward service/sketchbench-nexmark-zeppelin 8080:8080
+```
+
+#### Zeppelin for "standalone"
+
+```bash
+kubectl port-forward service/sketchbench-zeppelin-standalone 8080:8080
+```
+
+When starting a Spark job through Zeppelin, open Zeppelin's Spark UI with:
+
+```bash
+kubectl port-forward service/sketchbench-zeppelin-standalone 4040:4040
+```
+
+### Accessing Grafana locally
+
+```bash
+kubectl port-forward service/sketchbench-o11y-grafana 8000:80
+```
