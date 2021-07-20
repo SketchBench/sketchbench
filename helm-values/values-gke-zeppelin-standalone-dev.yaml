@@ -1,6 +1,5 @@
-deployment:
-  nodeSelector:
-    sketchbench/pool: benchmark-control-plane
+nodeSelector:
+  sketchbench/pool: benchmark-control-plane
 runMode: local
 interpreters:
   - file

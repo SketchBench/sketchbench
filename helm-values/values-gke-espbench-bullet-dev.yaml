@@ -27,20 +27,20 @@ bullet:
         sketchbench/pool: system-under-test
       resources:
         requests:
-          memory: "2.5Gi"
+          memory: "12Gi"
           cpu: "3.5"
         limits:
-          memory: "2.5Gi"
+          memory: "12Gi"
           cpu: "3.5"
     master:
       nodeSelector:
         sketchbench/pool: system-under-test
       resources:
         requests:
-          memory: "2.5Gi"
+          memory: "12Gi"
           cpu: "3.5"
         limits:
-          memory: "2.5Gi"
+          memory: "12Gi"
           cpu: "3.5"
     podAntiAffinitypreset: hard
     metrics:
@@ -88,7 +88,7 @@ bullet:
       sketchbench/pool: benchmark-control-plane
   sparkBackend:
     executorCores: 3
-    executorMemory: 2G
+    executorMemory: 10G
     nodeSelector:
       sketchbench/pool: benchmark-control-plane
     image:
@@ -190,9 +190,8 @@ bullet:
 
 zeppelin:
   enabled: true
-  deployment:
-    nodeSelector:
-      sketchbench/pool: benchmark-control-plane
+  nodeSelector:
+    sketchbench/pool: benchmark-control-plane
   runMode: local
   interpreters:
     - file

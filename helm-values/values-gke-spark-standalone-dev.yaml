@@ -9,20 +9,20 @@ worker:
     sketchbench/pool: system-under-test
   resources:
     requests:
-      memory: "2.5Gi"
+      memory: "12Gi"
       cpu: "3.5"
     limits:
-      memory: "2.5Gi"
+      memory: "12Gi"
       cpu: "3.5"
 master:
   nodeSelector:
     sketchbench/pool: system-under-test
   resources:
     requests:
-      memory: "2.5Gi"
+      memory: "12Gi"
       cpu: "3.5"
     limits:
-      memory: "2.5Gi"
+      memory: "12Gi"
       cpu: "3.5"
 podAntiAffinitypreset: hard
 metrics:
