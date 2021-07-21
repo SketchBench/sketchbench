@@ -1,5 +1,13 @@
 # Kafka Metrics
 
+> Resources:
+>
+> - [confluent.io: Apache Kafka Lag Monitoring at AppsFlyer](https://www.confluent.io/blog/kafka-lag-monitoring-and-metrics-at-appsflyer/)
+> - [datadoghq.com: Monitoring Kafka performance metrics](https://www.datadoghq.com/blog/monitoring-kafka-performance-metrics/)
+> - [medium.com: Monitoring Kafka with Kafka exporter + Prometheus + Grafana](https://danielmrosa.medium.com/monitoring-kafka-b97d2d5a5434)
+> - [lightbend.com: Monitor Kafka Consumer Group Latency with Kafka Lag Exporter](https://www.lightbend.com/blog/monitor-kafka-consumer-group-latency-with-kafka-lag-exporter)
+> - [logz.io: Monitoring Kafka in Production](https://logz.io/blog/monitoring-kafka-in-production/)
+
 ## Tooling
 
 ### kafka-exporter
@@ -14,20 +22,20 @@
 
 ## Observed Metrics
 
-### Messages in/out per second
+### Requests in/out per second
 
 - Metrics:
   - `kafka_server_brokertopicmetrics_totalproducerequestspersec_count`
   - `kafka_server_brokertopicmetrics_totalfetchrequestspersec_count`
 - Source: JMX Exporter
 
-Messages in:
+Requests in:
 
 ```plain
 sum(rate(kafka_server_brokertopicmetrics_totalproducerequestspersec_count{app_kubernetes_io_instance="$broker", topic=~"$topic"}[5m])) by (topic)
 ```
 
-Messages out:
+Requests out:
 
 ```plain
 sum(rate(kafka_server_brokertopicmetrics_totalfetchrequestspersec_count{app_kubernetes_io_instance="$broker", topic=~"$topic"}[5m])) by (topic)

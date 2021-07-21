@@ -16,7 +16,7 @@
     "gnetId": null,
     "graphTooltip": 0,
     "id": 36,
-    "iteration": 1626845681455,
+    "iteration": 1626851524779,
     "links": [],
     "panels": [
         {
@@ -67,7 +67,7 @@
             "targets": [
                 {
                     "exemplar": true,
-                    "expr": "sum(rate(kafka_server_brokertopicmetrics_bytesinpersec_count{app_kubernetes_io_instance=\"$broker\", topic=~\"$topic\"}[5m]) / 1024^2) by (topic)",
+                    "expr": "sum(rate(kafka_server_brokertopicmetrics_bytesinpersec_count{\napp_kubernetes_io_instance=\"$broker\", topic=~\"$topic\"}[5m]) / 1024^2) by (topic)\n\n\n\n\n\n\n\n\n\n\n",
                     "interval": "",
                     "legendFormat": "Bytes in (MB)",
                     "refId": "Bytes in (MB)"
@@ -172,23 +172,23 @@
                     "exemplar": true,
                     "expr": "sum(rate(kafka_server_brokertopicmetrics_totalproducerequestspersec_count{app_kubernetes_io_instance=\"$broker\", topic=~\"$topic\"}[5m])) by (topic)",
                     "interval": "",
-                    "legendFormat": "Messages produced",
-                    "refId": "Messages produced"
+                    "legendFormat": "Produce Requests",
+                    "refId": "Produce Requests"
                 },
                 {
                     "exemplar": true,
                     "expr": "sum(rate(kafka_server_brokertopicmetrics_totalfetchrequestspersec_count{app_kubernetes_io_instance=\"$broker\", topic=~\"$topic\"}[5m])) by (topic)",
                     "hide": false,
                     "interval": "",
-                    "legendFormat": "Messages fetched",
-                    "refId": "Messages fetched"
+                    "legendFormat": "Fetch Requests",
+                    "refId": "Fetch Requests"
                 }
             ],
             "thresholds": [],
             "timeFrom": null,
             "timeRegions": [],
             "timeShift": null,
-            "title": "Messages in/out per second",
+            "title": "Requests in/out per second",
             "tooltip": {
                 "shared": true,
                 "sort": 0,
@@ -434,7 +434,7 @@
             {
                 "allValue": null,
                 "current": {
-                    "selected": true,
+                    "selected": false,
                     "text": "sketchbench-espbench",
                     "value": "sketchbench-espbench"
                 },
@@ -465,9 +465,13 @@
             {
                 "allValue": null,
                 "current": {
-                    "selected": false,
-                    "text": "SketchBench-1-1",
-                    "value": "SketchBench-1-1"
+                    "selected": true,
+                    "text": [
+                        "SketchBench-1-1"
+                    ],
+                    "value": [
+                        "SketchBench-1-1"
+                    ]
                 },
                 "datasource": null,
                 "definition": "label_values(kafka_topic_partitions{app_kubernetes_io_name=\"kafka\",app_kubernetes_io_instance=\"$broker\",topic!=\"__consumer_offsets\"}, topic)",
@@ -496,12 +500,12 @@
         ]
     },
     "time": {
-        "from": "now-24h",
+        "from": "now-6h",
         "to": "now"
     },
     "timepicker": {},
     "timezone": "",
     "title": "SketchBench",
     "uid": "CsZ004Wnz",
-    "version": 15
+    "version": 17
 }
