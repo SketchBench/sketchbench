@@ -99,7 +99,7 @@ bullet:
     metrics:
       enabled: true
       podMonitor:
-        enable: true
+        enabled: true
     config:
       bullet:
         spark:
