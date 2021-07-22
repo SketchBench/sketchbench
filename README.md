@@ -25,20 +25,20 @@ helm repo update
 
 ```bash
 helm install \
---devel \
 --values ./helm-values/values-gke-espbench-bullet.yaml \
 my-sketchbench \
-sketchbench/sketchbench
+sketchbench/sketchbench \
+--version 0.2.1
 ```
 
 #### ESPBench data with Zeppelin for non-sketch-based queries
 
 ```bash
 helm install \
---devel \
 --values ./helm-values/values-gke-espbench-no-bullet.yaml \
 my-sketchbench \
-sketchbench/sketchbench
+sketchbench/sketchbench \
+--version 0.2.1
 ```
 
 ---
@@ -51,72 +51,65 @@ sketchbench/sketchbench
 
 ```bash
 helm install \
---devel \
 --values ./helm-values/values-gke-tester-bullet.yaml \
 my-sketchbench \
-sketchbench/sketchbench
+sketchbench/sketchbench \
+--version 0.2.1
 ```
 
 #### Test data with Zeppelin for non-sketch-based queries
 
 ```bash
 helm install \
---devel \
 --values ./helm-values/values-gke-tester-no-bullet.yaml \
 my-sketchbench \
-sketchbench/sketchbench
+sketchbench/sketchbench \
+--version 0.2.1
 ```
 
 ## Development setup
-
-### Install observability stack with `tobs`
-
-```bash
-helm repo add timescale https://charts.timescale.com/
-helm repo update
-helm install --devel --values ./helm-values/values-tobs.yaml sketchbench-o11y timescale/tobs
-```
 
 ### Install SketchBench stack for ESPBench with Bullet, Zeppelin, and Spark
 
 ```bash
 helm install \
---devel \
 --values ./helm-values/values-gke-espbench-bullet-dev.yaml \
 sketchbench-espbench \
-sketchbench/sketchbench
+sketchbench/sketchbench \
+--version 0.2.1
 ```
 
 ### Install SketchBench stack for NEXMark with Bullet, Zeppelin, and Spark
 
 ```bash
 helm install \
---devel \
 --values \
 ./helm-values/values-gke-nexmark-bullet-dev.yaml \
 sketchbench-nexmark \
-sketchbench/sketchbench
+sketchbench/sketchbench \
+--version 0.2.1
 ```
 
 ### Install SketchBench "standalone" stack for ESPBench
 
 ```bash
 helm install \
---devel \
 --values \
 ./helm-values/values-gke-espbench-standalone-dev.yaml \
 sketchbench-espbench-standalone \
-sketchbench/sketchbench
+sketchbench/sketchbench \
+--version 0.2.1
 ```
 
 ### Install SketchBench "standalone" stack for NEXMark
 
 ```bash
 helm install \
---devel --values \
+--values \
 ./helm-values/values-gke-nexmark-standalone-dev.yaml \
 sketchbench-nexmark-standalone \
-sketchbench/sketchbench
+sketchbench/sketchbench \
+--version 0.2.1
 ```
 
 ### Install Spark cluster for "standalone" setup
@@ -134,11 +127,11 @@ bitnami/spark \
 
 ```bash
 helm install \
---devel \
 --values \
 ./helm-values/values-gke-zeppelin-standalone-dev.yaml \
 sketchbench-zeppelin-standalone \
-sketchbench/zeppelin
+sketchbench/zeppelin \
+--version 0.9.0
 ```
 
 ### Accessing Bullet locally

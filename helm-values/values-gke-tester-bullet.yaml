@@ -4,7 +4,7 @@ dataIngestion:
   tester:
     enabled: true
     nodeSelector:
-      sketchbench/pool: benchmark-control-plane
+      sketchbench/pool: control-plane
 
 bullet:
   enabled: true
@@ -23,7 +23,7 @@ bullet:
         sketchbench/pool: data-plane
   pubsub:
     nodeSelector:
-      sketchbench/pool: benchmark-control-plane
+      sketchbench/pool: control-plane
     zookeeper:
       nodeSelector:
         sketchbench/pool: data-plane
@@ -32,10 +32,10 @@ bullet:
       sketchbench/pool: observability
   ui:
     nodeSelector:
-      sketchbench/pool: benchmark-control-plane
+      sketchbench/pool: control-plane
   webservice:
     nodeSelector:
-      sketchbench/pool: benchmark-control-plane
+      sketchbench/pool: control-plane
   sparkBackend:
     nodeSelector:
       sketchbench/pool: system-under-test
@@ -208,7 +208,7 @@ zeppelin:
   enabled: true
   deployment:
     nodeSelector:
-      sketchbench/pool: benchmark-control-plane
+      sketchbench/pool: control-plane
   runMode: local
   interpreters:
     - file

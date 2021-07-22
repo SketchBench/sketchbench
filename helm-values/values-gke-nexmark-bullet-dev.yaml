@@ -4,7 +4,7 @@ dataIngestion:
   nexmark:
     enabled: true
     nodeSelector:
-      sketchbench/pool: benchmark-control-plane
+      sketchbench/pool: control-plane
 
 bullet:
   enabled: true
@@ -53,7 +53,7 @@ bullet:
         sketchbench/pool: data-plane
   pubsub:
     nodeSelector:
-      sketchbench/pool: benchmark-control-plane
+      sketchbench/pool: control-plane
     metrics:
       kafka:
         enabled: true
@@ -76,15 +76,15 @@ bullet:
         sketchbench/pool: observability
   ui:
     nodeSelector:
-      sketchbench/pool: benchmark-control-plane
+      sketchbench/pool: control-plane
   webservice:
     nodeSelector:
-      sketchbench/pool: benchmark-control-plane
+      sketchbench/pool: control-plane
   sparkBackend:
     executorCores: 3
     executorMemory: 10G
     nodeSelector:
-      sketchbench/pool: benchmark-control-plane
+      sketchbench/pool: control-plane
     image:
       repository: sketchbench/bullet-spark-3.0
     hdfsUser: hadoop
@@ -163,7 +163,7 @@ bullet:
 zeppelin:
   enabled: true
   nodeSelector:
-    sketchbench/pool: benchmark-control-plane
+    sketchbench/pool: control-plane
   runMode: local
   interpreters:
     - file

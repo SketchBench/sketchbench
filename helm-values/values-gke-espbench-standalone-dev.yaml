@@ -4,7 +4,7 @@ dataIngestion:
   espbench:
     enabled: true
     nodeSelector:
-      sketchbench/pool: benchmark-control-plane
+      sketchbench/pool: control-plane
     # 10000 ns interval = 100,000 msg/sec
     # 1000000 ns interval = 1,000 msg /sec
     sendingInterval: 1000000
