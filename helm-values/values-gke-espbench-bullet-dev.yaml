@@ -205,6 +205,7 @@ zeppelin:
     - spark
     - md
     - python
+    - sh
   metrics:
     enabled: true
     podMonitor:
@@ -277,6 +278,8 @@ tobs:
       prometheusSpec:
         nodeSelector:
           sketchbench/pool: observability
+        podMonitorSelectorNilUsesHelmValues: false
+        serviceMonitorSelectorNilUsesHelmValues: false
     prometheusOperator:
       nodeSelector:
         sketchbench/pool: observability
