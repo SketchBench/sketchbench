@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 131,
-  "iteration": 1627019001737,
+  "iteration": 1627113878972,
   "links": [],
   "panels": [
     {
@@ -41,9 +41,7 @@
       "datasource": null,
       "description": "",
       "fieldConfig": {
-        "defaults": {
-          "unit": "Bps"
-        },
+        "defaults": {},
         "overrides": []
       },
       "fill": 0,
@@ -295,7 +293,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(kafka_consumergroup_lag{app_kubernetes_io_instance=\"$broker\", topic=~\"$topic\"}) by (consumergroup, topic)",
+          "expr": "kafka_consumergroup_lag{topic=~\"$topic\", job=\"sketchbench-espbench-kafka-metrics\"}",
           "interval": "",
           "legendFormat": "{{consumergroup}} (topic: {{topic}})",
           "refId": "Lag"
@@ -514,7 +512,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{pod=~\".*spark-worker.*\", container!=\"POD\"}) by (pod)",
+          "expr": "node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{container=\"spark-worker\"}",
           "interval": "",
           "intervalFactor": 1,
           "legendFormat": "{{pod}}",
@@ -614,7 +612,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{pod=~\".*spark-backend.*\", container!=\"POD\"}) by (pod)",
+          "expr": "node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{container=\"spark-backend\"}",
           "interval": "",
           "intervalFactor": 1,
           "legendFormat": "{{pod}}",
@@ -712,7 +710,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(container_memory_working_set_bytes{pod=~\".*spark-worker.*\", container!=\"POD\"}) by (pod)",
+          "expr": "container_memory_working_set_bytes{container=\"spark-worker\"}",
           "interval": "",
           "intervalFactor": 1,
           "legendFormat": "{{pod}}",
@@ -810,7 +808,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(container_memory_working_set_bytes{pod=~\".*spark-backend.*\", container!=\"POD\"}) by (pod)",
+          "expr": "container_memory_working_set_bytes{container=\"spark-backend\"}",
           "interval": "",
           "intervalFactor": 1,
           "legendFormat": "{{pod}}",
@@ -1377,7 +1375,7 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "BulletSparkStreamingJob",
           "value": "BulletSparkStreamingJob"
         },
@@ -1408,12 +1406,12 @@
     ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-12h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "SketchBench",
   "uid": "CsZ004Wnz",
-  "version": 11
+  "version": 19
 }
