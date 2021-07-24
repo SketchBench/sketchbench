@@ -1,0 +1,127 @@
+﻿{
+  "paragraphs": [
+    {
+      "title": "Spark Quantile with 10 second Batch Window",
+      "text": "%spark\nimport org.apache.kafka.clients.consumer.ConsumerRecord\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.streaming.kafka010._\nimport org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent\nimport org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe\nimport org.apache.spark.SparkContext\n\nimport org.apache.spark.sql.Row\nimport org.apache.spark.sql.types.{StringType, StructField, StructType, DoubleType}\n\nimport org.apache.kafka.clients.consumer.ConsumerConfig\nimport org.apache.kafka.common.serialization.StringDeserializer\n\nimport org.apache.spark.sql.SQLContext\n\nimport org.apache.spark.util.LongAccumulator\nimport org.apache.spark.streaming._\n\nimport org.apache.spark.ml.feature.QuantileDiscretizer\n\nimport scala.util.parsing.json.JSON\nimport java.util.{Calendar, Date}\nimport java.text.SimpleDateFormat\n\nval ssc = new StreamingContext(sc, Seconds(10))\n\nval sqlContext = new SQLContext(sc)\nimport sqlContext.implicits._\n\nval r = scala.util.Random\nval groupId = s\"stream-nexmark-v${r.nextInt.toString}\"\n\nval batchesToRun = 3\n\nobject FinishedBatchesCounter {\n  @volatile private var instance: LongAccumulator = null\n\n  def getInstance(sc: SparkContext): LongAccumulator = {\n    if (instance == null) {\n      synchronized {\n        if (instance == null) {\n      \tinstance = sc.longAccumulator(\"FinishedBatchesCounter\")\n        }\n      }\n    }\n    instance\n  }\n}\n    \nval kafkaParams = Map[String, Object](\n  \"bootstrap.servers\" -> \"my-sketchbench-kafka:9092\",\n  \"key.deserializer\" -> classOf[StringDeserializer],\n  \"value.deserializer\" -> classOf[StringDeserializer],\n  \"group.id\" -> groupId,\n  \"auto.offset.reset\" -> \"latest\",\n  \"enable.auto.commit\" -> (false: java.lang.Boolean)\n)\n\nval topics = Array(\"SketchBench-nexmark\")\nval stream = KafkaUtils.createDirectStream[String, String](\n  ssc,\n  PreferConsistent,\n  Subscribe[String, String](topics, kafkaParams)\n)\n\nval messages = stream\n    .map(record => record.value)\n    .flatMap(record => {\n         JSON.parseFull(record).map(rawMap =>{\n            val map = rawMap.asInstanceOf[Map[String,Map[String,String]]]\n            val inMap = map.get(\"event\")\n            inMap\n         } )\n    })\nval dateFormat = new SimpleDateFormat(\"YYYY-MM-d hh:mm:ss.SSS\")\n\nmessages.foreachRDD { rdd =>\n  \n  val dinishedBatchesCounter = FinishedBatchesCounter.getInstance(sc)\n  println(s\">>> Batch ${dinishedBatchesCounter.count + 1} ---\")\n  \n  val start = Calendar.getInstance().getTime()\n  println(s\"--- Start Time - \"+dateFormat.format(start))\n  \n  val newRDD = rdd.map(p =>\n  Row(p.get(\"time\"),\n    p.get(\"auction_id\"),\n    p.get(\"person\"),\n    p.get(\"bid\")))\n \n    val columns = Seq(\"time\",\"auction_id\",\"person\",\"bid\")\n    \n    val schema = StructType(columns.map(fieldName => StructField(fieldName, DoubleType, nullable = true)))\n    val rddDF = spark.createDataFrame(newRDD,schema)\n    \n    val max_message_time =  rddDF.select(\"time\").agg(max(\"time\")).first().getDouble(0).longValue()\n    \n    // https://spark.apache.org/docs/latest/ml-features#quantilediscretizer\n    \n    val discretizer = new QuantileDiscretizer()\n  .setInputCol(\"bid\")\n  .setOutputCol(\"result\")\n  .setNumBuckets(11)\n  \n    val result = discretizer.fit(rddDF).transform(rddDF)\n    result.groupBy(\"result\").agg(min(\"bid\"),max(\"bid\"),avg(\"bid\"),count(\"bid\")).orderBy(\"result\").show(false)\n    \n    val max_record_time = new Date(max_message_time)\n    println(s\"--- Max Message Time - \"+dateFormat.format(max_record_time))\n    \n    val end = Calendar.getInstance().getTime()\n    val diff = end.getTime() - start.getTime()\n    println(s\"--- End Time - \"+dateFormat.format(end))\n    println(s\"--- Processing Time in Millis - \"+diff)\n    println(\"--- Processed messages in this batch: \" + rdd.count())  \n    \n  if (dinishedBatchesCounter.count >= batchesToRun - 1) {\n    ssc.stop()\n  } else {\n    dinishedBatchesCounter.add(1)\n  }\n}\n\nssc.start()  \nssc.awaitTermination()",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-24T03:45:58+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[33mwarning: \u001b[0mthere was one deprecation warning (since 1.0.6)\n\u001b[33mwarning: \u001b[0mthere was one deprecation warning (since 2.0.0)\n\u001b[33mwarning: \u001b[0mthere were two deprecation warnings in total; for details, enable `:setting -deprecation' or `:replay -deprecation'\n>>> Batch 1 ---\n--- Start Time - 2021-07-24 03:33:50.215\n+------+--------+--------+------------------+----------+\n|result|min(bid)|max(bid)|avg(bid)          |count(bid)|\n+------+--------+--------+------------------+----------+\n|0.0   |19.0    |82.0    |55.6140350877193  |57        |\n|1.0   |83.0    |111.0   |96.91803278688525 |61        |\n|2.0   |113.0   |138.0   |125.57142857142857|56        |\n|3.0   |139.0   |164.0   |150.4126984126984 |63        |\n|4.0   |165.0   |186.0   |174.80327868852459|61        |\n|5.0   |187.0   |206.0   |195.49122807017545|57        |\n|6.0   |207.0   |228.0   |216.90322580645162|62        |\n|7.0   |229.0   |251.0   |238.96428571428572|56        |\n|8.0   |252.0   |277.0   |262.28125         |64        |\n|9.0   |279.0   |320.0   |297.40677966101697|59        |\n|10.0  |321.0   |494.0   |364.96774193548384|62        |\n+------+--------+--------+------------------+----------+\n\n--- Max Message Time - 2021-07-24 03:33:49.986\n--- End Time - 2021-07-24 03:34:18.264\n--- Processing Time in Millis - 28049\n--- Processed messages in this batch: 658\n>>> Batch 2 ---\n--- Start Time - 2021-07-24 03:34:18.831\n+------+--------+--------+------------------+----------+\n|result|min(bid)|max(bid)|avg(bid)          |count(bid)|\n+------+--------+--------+------------------+----------+\n|0.0   |5.0     |74.0    |51.178082191780824|73        |\n|1.0   |76.0    |108.0   |92.86075949367088 |79        |\n|2.0   |109.0   |131.0   |119.64935064935065|77        |\n|3.0   |132.0   |156.0   |144.8082191780822 |73        |\n|4.0   |157.0   |178.0   |167.275           |80        |\n|5.0   |179.0   |199.0   |188.6             |75        |\n|6.0   |201.0   |223.0   |211.2875          |80        |\n|7.0   |224.0   |247.0   |236.43037974683546|79        |\n|8.0   |248.0   |279.0   |261.5822784810127 |79        |\n|9.0   |280.0   |319.0   |300.23376623376623|77        |\n|10.0  |321.0   |516.0   |369.0             |79        |\n+------+--------+--------+------------------+----------+\n\n--- Max Message Time - 2021-07-24 03:33:59.860\n--- End Time - 2021-07-24 03:34:24.646\n--- Processing Time in Millis - 5815\n--- Processed messages in this batch: 851\n>>> Batch 3 ---\n--- Start Time - 2021-07-24 03:34:25.178\n+------+--------+--------+------------------+----------+\n|result|min(bid)|max(bid)|avg(bid)          |count(bid)|\n+------+--------+--------+------------------+----------+\n|0.0   |7.0     |73.0    |50.5              |74        |\n|1.0   |74.0    |103.0   |90.02702702702703 |74        |\n|2.0   |104.0   |127.0   |115.41025641025641|78        |\n|3.0   |128.0   |149.0   |139.1125          |80        |\n|4.0   |151.0   |175.0   |164.13333333333333|75        |\n|5.0   |176.0   |195.0   |186.72727272727272|77        |\n|6.0   |196.0   |215.0   |205.16883116883116|77        |\n|7.0   |216.0   |241.0   |228.96153846153845|78        |\n|8.0   |242.0   |274.0   |256.97402597402595|77        |\n|9.0   |275.0   |323.0   |296.6753246753247 |77        |\n|10.0  |324.0   |524.0   |373.0769230769231 |78        |\n+------+--------+--------+------------------+----------+\n\n--- Max Message Time - 2021-07-24 03:34:09.886\n--- End Time - 2021-07-24 03:34:29.846\n--- Processing Time in Millis - 4668\n--- Processed messages in this batch: 845\nimport org.apache.kafka.clients.consumer.ConsumerRecord\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.streaming.kafka010._\nimport org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent\nimport org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe\nimport org.apache.spark.SparkContext\nimport org.apache.spark.sql.Row\nimport org.apache.spark.sql.types.{StringType, StructField, StructType, DoubleType}\nimport org.apache.kafka.clients.consumer.ConsumerConfig\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.sql.SQLContext\nimport org.apache.spark.util.LongAccumulator\nimport org.apache.spark.streaming._\nimport org.apache.spark.ml.feature.QuantileDiscretizer\nimport scala.util.parsing.json.JS...\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627097561763_1534756828",
+      "id": "paragraph_1626035545319_1260970793",
+      "dateCreated": "2021-07-24T03:32:41+0000",
+      "dateStarted": "2021-07-24T03:33:39+0000",
+      "dateFinished": "2021-07-24T03:34:33+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:7714"
+    },
+    {
+      "title": "Original Source - Spark - Kafka DStream Approach",
+      "text": "%spark\nimport org.apache.kafka.clients.consumer.ConsumerRecord\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.SparkContext\nimport org.apache.spark.streaming.kafka010._\nimport org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent\nimport org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe\nimport org.apache.spark.streaming.StreamingContext\nimport org.apache.spark.streaming.Seconds\nimport org.apache.spark.streaming.scheduler._\nimport org.apache.spark.sql.SparkSession\nimport org.apache.spark.sql.functions._\nimport org.apache.spark.sql.types._\nimport org.apache.spark.util.LongAccumulator\nimport scala.util.parsing.json.JSON\n\nval r = scala.util.Random\n// Generate a new Kafka Consumer group id every run\nval groupId = s\"stream-checker-v${r.nextInt.toString}\"\n\nval kafkaParams = Map[String, Object](\n  \"bootstrap.servers\" -> \"kafka:9092\",\n  \"key.deserializer\" -> classOf[StringDeserializer],\n  \"value.deserializer\" -> classOf[StringDeserializer],\n  \"group.id\" -> groupId,\n  // remove this if your Kafka doesn't use SSL\n  \"security.protocol\" -> \"SSL\",\n  \"auto.offset.reset\" -> \"latest\",\n  \"enable.auto.commit\" -> (false: java.lang.Boolean)\n)\n\nval topics = Array(\"topic-to-consume\")\n\n// Accumulating results in batches of\nval batchInterval = Seconds(5)\n\n// How many batches to run before terminating\nval batchesToRun = 10\n\ncase class Message(\n      platform: String,\n      uid: String,\n      key: String,\n      value: String\n)\n\n// Counter for the number of batches. The job will stop after it reaches 'batchesToRun' value\n// Looks ugly, but this is what documentation uses as an example ¯\\_(ツ)_/¯\nobject FinishedBatchesCounter {\n  @volatile private var instance: LongAccumulator = null\n\n  def getInstance(sc: SparkContext): LongAccumulator = {\n    if (instance == null) {\n      synchronized {\n        if (instance == null) {\n      \tinstance = sc.longAccumulator(\"FinishedBatchesCounter\")\n        }\n      }\n    }\n    instance\n  }\n}\n\n// 'sc' is a SparkContext, here it's provided by Zeppelin\nval ssc = new StreamingContext(sc, batchInterval)\n\nval stream = KafkaUtils.createDirectStream[String, String](\n  ssc,\n  PreferConsistent,\n  Subscribe[String, String](topics, kafkaParams)\n)\n\nval messages = stream\n    // We get a bunch of metadata from Kafka like partitions, timestamps, etc. Only interested in message payload\n    .map(record => record.value)\n    // We use flatMap to handle errors\n    // by returning an empty list (None) if we encounter an issue and a\n    // list with one element if everything is ok (Some(_)).\t\n    .flatMap(record => {\n        // Deserializing JSON using built-in Scala parser and converting it to a Message case class\n        JSON.parseFull(record).map(rawMap => {\n        \tval map = rawMap.asInstanceOf[Map[String,String]]\n            Message(map.get(\"platform\").get, map.get(\"uid\").get, map.get(\"key\").get, map.get(\"value\").get)\n        })\n    })\n\n// Cache DStream now, it'll speed up most of the operations below\t\nmessages.cache()\t\n\n// Counting batches and terminating after 'batchesToRun'\nmessages.foreachRDD { rdd =>\n\n  val dinishedBatchesCounter = FinishedBatchesCounter.getInstance(sc)\n\n  println(s\"--- Batch ${dinishedBatchesCounter.count + 1} ---\")\n  println(\"Processed messages in this batch: \" + rdd.count())\n\n  if (dinishedBatchesCounter.count >= batchesToRun - 1) {\n    ssc.stop()\n  } else {\n    dinishedBatchesCounter.add(1)\n  }\n}\n\n// Printing aggregation for the platforms:\nmessages\n    .map(msg => (msg.fp, 1))\n    .reduceByKey(_ + _)\n    .print()\n\n// Printing messages with 'weird' uids\nval weirdUidMessages = messages.filter(msg => msg.uid == \"NULL\" || msg.uid == \"\" || msg.uid == \" \" || msg.uid.length < 10)\nweirdUidMessages.print(20)\nweirdUidMessages.count().print()\n\n// TODO: catch more violations here using filtering on 'messages'\n\nssc.start()\nssc.awaitTermination()",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-24T03:32:41+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627097561766_1793198553",
+      "id": "paragraph_1626135921569_832053266",
+      "dateCreated": "2021-07-24T03:32:41+0000",
+      "status": "READY",
+      "$$hashKey": "object:7715"
+    },
+    {
+      "text": "%spark\nimport org.apache.kafka.clients.consumer.ConsumerRecord\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.streaming.kafka010._\nimport org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent\nimport org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe\nimport org.apache.spark.SparkContext\n\nimport org.apache.spark.sql.Row\nimport org.apache.spark.sql.types.{StringType, StructField, StructType, DoubleType}\n\nimport org.apache.kafka.clients.consumer.ConsumerConfig\nimport org.apache.kafka.common.serialization.StringDeserializer\n\nimport org.apache.spark.sql.SQLContext\n\nimport org.apache.spark.util.LongAccumulator\nimport org.apache.spark.streaming._\n\nimport org.apache.spark.ml.feature.QuantileDiscretizer\n\nimport scala.util.parsing.json.JSON\n\nval ssc = new StreamingContext(sc, Seconds(10))\n\nval sqlContext = new SQLContext(sc)\nimport sqlContext.implicits._\n\nval r = scala.util.Random\nval groupId = s\"stream-nexmark-v${r.nextInt.toString}\"\n\nval batchesToRun = 10\n\nobject FinishedBatchesCounter {\n  @volatile private var instance: LongAccumulator = null\n\n  def getInstance(sc: SparkContext): LongAccumulator = {\n    if (instance == null) {\n      synchronized {\n        if (instance == null) {\n      \tinstance = sc.longAccumulator(\"FinishedBatchesCounter\")\n        }\n      }\n    }\n    instance\n  }\n}\n    \nval kafkaParams = Map[String, Object](\n  \"bootstrap.servers\" -> \"my-sketchbench-kafka:9092\",\n  \"key.deserializer\" -> classOf[StringDeserializer],\n  \"value.deserializer\" -> classOf[StringDeserializer],\n  \"group.id\" -> groupId,\n  \"auto.offset.reset\" -> \"latest\",\n  \"enable.auto.commit\" -> (false: java.lang.Boolean)\n)\n\nval topics = Array(\"SketchBench-nexmark\")\nval stream = KafkaUtils.createDirectStream[String, String](\n  ssc,\n  PreferConsistent,\n  Subscribe[String, String](topics, kafkaParams)\n)\n\nval messages = stream\n    .map(record => record.value)\n    .flatMap(record => {\n        // // Deserializing JSON using built-in Scala parser and converting it to a Message case class\n        // JSON.parseFull(record).map(rawMap => {\n        //     val map = rawMap.asInstanceOf[Map[String,String]]\n        //     print(rawMap)\n        //     //Message(map.get(\"time\").get, map.get(\"auction_id\").get, map.get(\"person\").get, map.get(\"bid\").get)\n        // })\n         JSON.parseFull(record).map(rawMap =>{\n            val map = rawMap.asInstanceOf[Map[String,Map[String,String]]]\n            val inMap = map.get(\"event\")\n            //Message(inMap.get(\"time\"), inMap.get(\"auction_id\"), inMap.get(\"person\"),inMap.get(\"bid\"))\n            inMap\n         } )\n    })\n\nmessages.foreachRDD { rdd =>\n\n  val dinishedBatchesCounter = FinishedBatchesCounter.getInstance(sc)\n  println(s\"--- Batch ${dinishedBatchesCounter.count + 1} ---\")\n  println(\"Processed messages in this batch: \" + rdd.count())\n  \n  val newRDD = rdd.map(p =>\n  Row(p.get(\"time\"),\n    p.get(\"auction_id\"),\n    p.get(\"person\"),\n    p.get(\"bid\")))\n    \n    newRDD.take(2).foreach(println)\n    \n    val columns = Seq(\"time\",\"auction_id\",\"person\",\"bid\")\n    \n    val schema = StructType(columns.map(fieldName => StructField(fieldName, DoubleType, nullable = true)))\n    val rddDF = spark.createDataFrame(newRDD,schema)\n   \n   \n   // val quantiles = rddDF.stat.approxQuantile(\"bid\", Array(0.1,0.2,0.3,0,4,0.5,0.6,0.7,0.8,0.9,1), 0.25)\n   // println(quantiles)\n    \n    \n    // val myDataFrame = spark.createDataFrame(rdd).toDF()\n    //val myDataFrame = newRDD.toDF(\"time\",\"auction_id\",\"person\",\"bid\")\n    //myDataFrame.show()  \n    \n    \n    // https://spark.apache.org/docs/latest/ml-features#quantilediscretizer\n    \n    val discretizer = new QuantileDiscretizer()\n  .setInputCol(\"bid\")\n  .setOutputCol(\"result\")\n  .setNumBuckets(11)\n  \n    val result = discretizer.fit(rddDF).transform(rddDF)\n    result.groupBy(\"result\").agg(min(\"bid\"),max(\"bid\"),avg(\"bid\")).orderBy(\"result\").show(false)\n    \n  if (dinishedBatchesCounter.count >= batchesToRun - 1) {\n    ssc.stop()\n  } else {\n    dinishedBatchesCounter.add(1)\n  }\n}\n\n\nssc.start()  \nssc.awaitTermination()\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-24T03:32:41+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627097561766_1715866565",
+      "id": "paragraph_1627084104952_1242418499",
+      "dateCreated": "2021-07-24T03:32:41+0000",
+      "status": "READY",
+      "$$hashKey": "object:7716"
+    }
+  ],
+  "name": "NEXMark_10s_window_quantile_sample",
+  "id": "2GBUR1YA5",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.9.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {},
+  "path": "/NEXMark_10s_window_quantile_sample"
+}
