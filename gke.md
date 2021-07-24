@@ -15,11 +15,11 @@ SketchBench utilizes 5 node pools:
 
 |                             |                    Description                    |   Node type   | Number of Nodes | Disk Size per Node |
 |-----------------------------|---------------------------------------------------|---------------|-----------------|--------------------|
-| **control-plane**           | SketchBench components such as the data generator | c2-standard-4 |        3        |        100GB       |
-| **data-ingestion**          |  Isolated Apache Kafka cluster for data ingestion | c2-standard-4 |        3        |        100GB       |
-| **system-under-test**       |          Isolated SUT (e.g. Apache Spark)         | c2-standard-4 |        3        |        100GB       |
-| **observability**           |       Observability stack (e.g. Prometheus)       | c2-standard-4 |        3        |        100GB       |
-| **data-plane**              |    Persistency services (e.g. HDFS & Zookeeper)   | c2-standard-4 |        3        |        100GB       |
+| **control-plane**           | SketchBench components such as the data generator | e2-standard-4 |        3        |        100GB       |
+| **data-ingestion**          |  Isolated Apache Kafka cluster for data ingestion | c2-standard-8 |        1        |        100GB       |
+| **system-under-test**       |          Isolated SUT (e.g. Apache Spark)         | c2-standard-8 |        4        |        100GB       |
+| **observability**           |       Observability stack (e.g. Prometheus)       | e2-standard-4 |        2        |        100GB       |
+| **data-plane**              |    Persistency services (e.g. HDFS & Zookeeper)   | e2-standard-4 |        2        |        100GB       |
 
 #### Node pools during development
 
@@ -37,7 +37,7 @@ SketchBench utilizes 5 node pools:
 
 ```bash
 gcloud beta container \
---project "sketchbench-320518" clusters create "sketchbench-dev-cluster" \
+--project "sketchbench-320518" clusters create "sketchbench-cluster" \
 --zone "us-west1-a" \
 --no-enable-basic-auth \
 --cluster-version "1.19.9-gke.1900" \
@@ -45,7 +45,7 @@ gcloud beta container \
 --machine-type "e2-standard-4" \
 --image-type "COS_CONTAINERD" \
 --disk-type "pd-ssd" \
---disk-size "30" \
+--disk-size "100" \
 --node-labels sketchbench/pool=control-plane \
 --metadata disable-legacy-endpoints=true \
 --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \
@@ -76,12 +76,12 @@ gcloud beta container \
 ```bash
 gcloud beta container \
 --project "sketchbench-320518" node-pools create "data-ingestion" \
---cluster "sketchbench-dev-cluster" \
+--cluster "sketchbench-cluster" \
 --zone "us-west1-a" \
---machine-type "e2-standard-4" \
+--machine-type "c2-standard-8" \
 --image-type "COS_CONTAINERD" \
 --disk-type "pd-ssd" \
---disk-size "30" \
+--disk-size "100" \
 --node-labels sketchbench/pool=data-ingestion \
 --metadata disable-legacy-endpoints=true \
 --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \
@@ -99,12 +99,12 @@ gcloud beta container \
 ```bash
 gcloud beta container \
 --project "sketchbench-320518" node-pools create "system-under-test" \
---cluster "sketchbench-dev-cluster" \
+--cluster "sketchbench-cluster" \
 --zone "us-west1-a" \
---machine-type "e2-standard-4" \
+--machine-type "c2-standard-8" \
 --image-type "COS_CONTAINERD" \
 --disk-type "pd-ssd" \
---disk-size "30" \
+--disk-size "100" \
 --node-labels sketchbench/pool=system-under-test \
 --metadata disable-legacy-endpoints=true \
 --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \
@@ -122,12 +122,12 @@ gcloud beta container \
 ```bash
 gcloud beta container \
 --project "sketchbench-320518" node-pools create "observability" \
---cluster "sketchbench-dev-cluster" \
+--cluster "sketchbench-cluster" \
 --zone "us-west1-a" \
 --machine-type "e2-standard-4" \
 --image-type "COS_CONTAINERD" \
 --disk-type "pd-ssd" \
---disk-size "30" \
+--disk-size "100" \
 --node-labels sketchbench/pool=observability \
 --metadata disable-legacy-endpoints=true \
 --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \
@@ -145,12 +145,12 @@ gcloud beta container \
 ```bash
 gcloud beta container \
 --project "sketchbench-320518" node-pools create "data-plane" \
---cluster "sketchbench-dev-cluster" \
+--cluster "sketchbench-cluster" \
 --zone "us-west1-a" \
 --machine-type "e2-standard-4" \
 --image-type "COS_CONTAINERD" \
 --disk-type "pd-ssd" \
---disk-size "30" \
+--disk-size "100" \
 --node-labels sketchbench/pool=data-plane \
 --metadata disable-legacy-endpoints=true \
 --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \

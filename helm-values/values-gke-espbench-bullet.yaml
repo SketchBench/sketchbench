@@ -27,20 +27,20 @@ bullet:
         sketchbench/pool: system-under-test
       resources:
         requests:
-          memory: "30Gi"
+          memory: "26Gi"
           cpu: "7"
         limits:
-          memory: "30Gi"
+          memory: "26Gi"
           cpu: "7"
     master:
       nodeSelector:
         sketchbench/pool: system-under-test
       resources:
         requests:
-          memory: "30Gi"
+          memory: "26Gi"
           cpu: "7"
         limits:
-          memory: "30Gi"
+          memory: "26Gi"
           cpu: "7"
     podAntiAffinitypreset: hard
     metrics:
@@ -88,15 +88,15 @@ bullet:
       sketchbench/pool: control-plane
   sparkBackend:
     executorCores: 7
-    executorMemory: 30G
+    executorMemory: 26G
     nodeSelector:
       sketchbench/pool: system-under-test
     resources:
       requests:
-        memory: "30Gi"
+        memory: "26Gi"
         cpu: "7"
       limits:
-        memory: "30Gi"
+        memory: "26Gi"
         cpu: "7"
     image:
       repository: sketchbench/bullet-spark-3.0
@@ -219,10 +219,10 @@ kafka:
   logRetentionHours: 6
   resources:
     requests:
-      memory: "30Gi"
+      memory: "26Gi"
       cpu: "7"
     limits:
-      memory: "30Gi"
+      memory: "26Gi"
       cpu: "7"
   metrics:
     kafka:
