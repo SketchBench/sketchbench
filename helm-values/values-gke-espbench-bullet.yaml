@@ -14,9 +14,39 @@ dataIngestion:
 
 bullet:
   enabled: true
-  spark:
-    # Use SketchBench-managed Spark instance in separate node pool
-    enabled: false
+  spark: # System Under Test (isolated Spark cluster)
+    enabled: true
+    image:
+      repository: sketchbench/bullet-spark-3.0
+      tag: "1.0.4"
+      pullPolicy: IfNotPresent
+    worker:
+      replicaCount: 2
+      coreLimit: 7
+      nodeSelector:
+        sketchbench/pool: system-under-test
+      resources:
+        requests:
+          memory: "30Gi"
+          cpu: "7"
+        limits:
+          memory: "30Gi"
+          cpu: "7"
+    master:
+      nodeSelector:
+        sketchbench/pool: system-under-test
+      resources:
+        requests:
+          memory: "30Gi"
+          cpu: "7"
+        limits:
+          memory: "30Gi"
+          cpu: "7"
+    podAntiAffinitypreset: hard
+    metrics:
+      enabled: true
+      podMonitor:
+        enabled: true
   hdfs:
     namenode:
       nodeSelector:
@@ -47,8 +77,9 @@ bullet:
         serviceMonitor:
           enabled: true
   pubsubMonit:
-    nodeSelector:
-      sketchbench/pool: observability
+    deployment:
+      nodeSelector:
+        sketchbench/pool: observability
   ui:
     nodeSelector:
       sketchbench/pool: control-plane
@@ -56,15 +87,26 @@ bullet:
     nodeSelector:
       sketchbench/pool: control-plane
   sparkBackend:
-    executorCores: 3
-    executorMemory: 9G
+    executorCores: 7
+    executorMemory: 30G
     nodeSelector:
       sketchbench/pool: system-under-test
+    resources:
+      requests:
+        memory: "30Gi"
+        cpu: "7"
+      limits:
+        memory: "30Gi"
+        cpu: "7"
     image:
       repository: sketchbench/bullet-spark-3.0
     hdfsUser: hadoop
     hdfs:
       port: 8020
+    metrics:
+      enabled: true
+      podMonitor:
+        enabled: true
     config:
       bullet:
         spark:
@@ -155,65 +197,18 @@ bullet:
 
 zeppelin:
   enabled: true
-  deployment:
-    nodeSelector:
-      sketchbench/pool: control-plane
+  nodeSelector:
+    sketchbench/pool: control-plane
   runMode: local
   interpreters:
     - file
-    - spark
     - md
     - python
-  sparkInterpreter:
-    spark:
-      master: "spark://my-sketchbench-spark-master-svc:7077"
-      submit:
-        deployMode: "client"
-      app:
-        name: "zeppelin"
-      jar:
-        packages: org.apache.spark:spark-sql-kafka-0-10_2.12:3.0.2,org.apache.spark:spark-streaming-kafka-0-10-assembly_2.12:3.0.2
-### Benchmark Observability Stack ###
-
-tobs:
-  enabled: true
-  kube-prometheus-stack:
-    alertmanager:
-      alertmanagerSpec:
-        nodeSelector:
-          sketchbench/pool: observability
-    grafana:
-      nodeSelector:
-        sketchbench/pool: observability
-    kube-state-metrics:
-      nodeSelector:
-        sketchbench/pool: observability
-    prometheus:
-      prometheusSpec:
-        nodeSelector:
-          sketchbench/pool: observability
-    prometheusOperator:
-      admissionWebhooks:
-        patch:
-          nodeSelector:
-            sketchbench/pool: observability
-      nodeSelector:
-        sketchbench/pool: observability
-  promscale:
-    maintenance:
-      nodeSelector:
-        sketchbench/pool: observability
-    nodeSelector:
-      sketchbench/pool: observability
-  timescaledb-single:
-    nodeSelector:
-      sketchbench/pool: observability
-
-kafdrop:
-  enabled: true
-  deployment:
-    nodeSelector:
-      sketchbench/pool: observability
+    - sh
+  metrics:
+    enabled: true
+    podMonitor:
+      enabled: true
 
 ### Data Ingestion (isolated Kafka cluster) ###
 
@@ -222,6 +217,13 @@ kafka:
     sketchbench/pool: data-ingestion
   podAntiAffinitypreset: hard
   logRetentionHours: 6
+  resources:
+    requests:
+      memory: "30Gi"
+      cpu: "7"
+    limits:
+      memory: "30Gi"
+      cpu: "7"
   metrics:
     kafka:
       enabled: true
@@ -233,44 +235,46 @@ kafka:
       enabled: true
   zookeeper:
     nodeSelector:
-      sketchbench/pool: data-ingestion
+      sketchbench/pool: data-plane
     metrics:
       enabled: true
       serviceMonitor:
         enabled: true
 
-### System Under Test (isolated Spark cluster) ###
+### Benchmark Observability Stack ###
 
-spark:
+kafdrop:
   enabled: true
-  image:
-    repository: sketchbench/bullet-spark-3.0
-    tag: "1.0.4"
-    pullPolicy: IfNotPresent
-  worker:
-    replicaCount: 4
-    coreLimit: 3
+  deployment:
     nodeSelector:
-      sketchbench/pool: system-under-test
-    resources:
-      requests:
-        memory: "10Gi"
-        cpu: "3.25"
-      limits:
-        memory: "10Gi"
-        cpu: "3.25"
-  master:
+      sketchbench/pool: observability
+
+tobs:
+  enabled: true
+  kube-prometheus-stack:
+    alertmanager:
+      enabled: false # not needed
+    grafana:
+      nodeSelector:
+        sketchbench/pool: observability
+    kube-state-metrics:
+      nodeSelector:
+        sketchbench/pool: observability
+    prometheus:
+      prometheusSpec:
+        nodeSelector:
+          sketchbench/pool: observability
+        podMonitorSelectorNilUsesHelmValues: false
+        serviceMonitorSelectorNilUsesHelmValues: false
+    prometheusOperator:
+      nodeSelector:
+        sketchbench/pool: observability
+  promscale:
+    maintenance:
+      nodeSelector:
+        sketchbench/pool: observability
     nodeSelector:
-      sketchbench/pool: system-under-test
-    resources:
-      requests:
-        memory: "10Gi"
-        cpu: "3.5"
-      limits:
-        memory: "10Gi"
-        cpu: "3.5"
-  podAntiAffinitypreset: hard
-  metrics:
-    enabled: true
-    podMonitor:
-      enabled: true
+      sketchbench/pool: observability
+  timescaledb-single:
+    nodeSelector:
+      sketchbench/pool: observability
