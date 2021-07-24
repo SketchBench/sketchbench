@@ -1,0 +1,301 @@
+﻿{
+  "paragraphs": [
+    {
+      "title": "Spark Quantile with 10 second Batch Window",
+      "text": "%spark\n//All required imports to run this notebook\n\nimport org.apache.kafka.clients.consumer.ConsumerRecord\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.streaming.kafka010._\nimport org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent\nimport org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe\nimport org.apache.spark.SparkContext\nimport org.apache.spark.sql.Row\nimport org.apache.spark.sql.types.{StringType, StructField, StructType, IntegerType, DoubleType}\nimport org.apache.kafka.clients.consumer.ConsumerConfig\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.sql.SQLContext\nimport org.apache.spark.util.LongAccumulator\nimport org.apache.spark.streaming._\nimport org.apache.spark.ml.feature.QuantileDiscretizer\nimport scala.util.parsing.json.JSON\nimport java.util.{Calendar, Date}\nimport java.text.SimpleDateFormat\nimport sqlContext.implicits._\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-24T07:49:10+0000",
+      "progress": 0,
+      "config": {
+        "lineNumbers": true,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 424,
+              "optionOpen": false
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import org.apache.kafka.clients.consumer.ConsumerRecord\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.streaming.kafka010._\nimport org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent\nimport org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe\nimport org.apache.spark.SparkContext\nimport org.apache.spark.sql.Row\nimport org.apache.spark.sql.types.{StringType, StructField, StructType, IntegerType, DoubleType}\nimport org.apache.kafka.clients.consumer.ConsumerConfig\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.sql.SQLContext\nimport org.apache.spark.util.LongAccumulator\nimport org.apache.spark.streaming._\nimport org.apache.spark.ml.feature.QuantileDiscretizer\nimport scala.util.pa...\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627112950136_1812613990",
+      "id": "paragraph_1626035545319_1260970793",
+      "dateCreated": "2021-07-24T07:49:10+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:3713"
+    },
+    {
+      "text": "%spark\n\n// Variable initialization\n\nval ssc = new StreamingContext(sc, Seconds(10))\nval sqlContext = new SQLContext(sc)\nval r = scala.util.Random\nval groupId = s\"stream-espbench-v${r.nextInt.toString}\"\nval batchesToRun = 3\nval topics = Array(\"SketchBench-1-1\")\nval dateFormat = new SimpleDateFormat(\"YYYY-MM-d hh:mm:ss.SSS\")",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-24T07:49:10+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[33mwarning: \u001b[0mthere was one deprecation warning (since 2.0.0); for details, enable `:setting -deprecation' or `:replay -deprecation'\n\u001b[1m\u001b[34mssc\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.streaming.StreamingContext\u001b[0m = org.apache.spark.streaming.StreamingContext@1949c1ad\n\u001b[1m\u001b[34msqlContext\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.SQLContext\u001b[0m = org.apache.spark.sql.SQLContext@6224e111\n\u001b[1m\u001b[34mr\u001b[0m: \u001b[1m\u001b[32mutil.Random.type\u001b[0m = scala.util.Random$@6576d21\n\u001b[1m\u001b[34mgroupId\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = stream-espbench-v-1570455371\n\u001b[1m\u001b[34mbatchesToRun\u001b[0m: \u001b[1m\u001b[32mInt\u001b[0m = 3\n\u001b[1m\u001b[34mtopics\u001b[0m: \u001b[1m\u001b[32mArray[String]\u001b[0m = Array(SketchBench-1-1)\n\u001b[1m\u001b[34mdateFormat\u001b[0m: \u001b[1m\u001b[32mjava.text.SimpleDateFormat\u001b[0m = java.text.SimpleDateFormat@c5e88241\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627112950137_1436571063",
+      "id": "paragraph_1627112323857_186381451",
+      "dateCreated": "2021-07-24T07:49:10+0000",
+      "status": "READY",
+      "$$hashKey": "object:3714"
+    },
+    {
+      "text": "%spark\n\n// Function for defining the batches to run the queries.\n\nobject FinishedBatchesCounter {\n  @volatile private var instance: LongAccumulator = null\n\n  def getInstance(sc: SparkContext): LongAccumulator = {\n    if (instance == null) {\n      synchronized {\n        if (instance == null) {\n      \tinstance = sc.longAccumulator(\"FinishedBatchesCounter\")\n        }\n      }\n    }\n    instance\n  }\n}\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-24T07:49:10+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "defined object FinishedBatchesCounter\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627112950137_471035284",
+      "id": "paragraph_1627112367281_1356959987",
+      "dateCreated": "2021-07-24T07:49:10+0000",
+      "status": "READY",
+      "$$hashKey": "object:3715"
+    },
+    {
+      "text": "%spark\n\n// Kafka COnnection details     \nval kafkaParams = Map[String, Object](\n  \"bootstrap.servers\" -> \"my-sketchbench-kafka:9092\",\n  \"key.deserializer\" -> classOf[StringDeserializer],\n  \"value.deserializer\" -> classOf[StringDeserializer],\n  \"auto.offset.reset\" -> \"latest\",\n  \"group.id\" -> groupId,\n  \"enable.auto.commit\" -> (false: java.lang.Boolean)\n)\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-24T07:49:10+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mkafkaParams\u001b[0m: \u001b[1m\u001b[32mscala.collection.immutable.Map[String,Object]\u001b[0m = Map(key.deserializer -> class org.apache.kafka.common.serialization.StringDeserializer, auto.offset.reset -> latest, group.id -> stream-espbench-v-1570455371, bootstrap.servers -> my-sketchbench-kafka:9092, enable.auto.commit -> false, value.deserializer -> class org.apache.kafka.common.serialization.StringDeserializer)\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627112950137_1304607677",
+      "id": "paragraph_1627112430259_454609685",
+      "dateCreated": "2021-07-24T07:49:10+0000",
+      "status": "READY",
+      "$$hashKey": "object:3716"
+    },
+    {
+      "text": "%spark\n\n// Connect to Kafka and establish streaming for windows.\nval stream = KafkaUtils.createDirectStream[String, String](\n  ssc,\n  PreferConsistent,\n  Subscribe[String, String](topics, kafkaParams)\n)\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-24T07:49:10+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mstream\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.streaming.dstream.InputDStream[org.apache.kafka.clients.consumer.ConsumerRecord[String,String]]\u001b[0m = org.apache.spark.streaming.kafka010.DirectKafkaInputDStream@63a9e2c5\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627112950138_249005856",
+      "id": "paragraph_1627112465726_2071867502",
+      "dateCreated": "2021-07-24T07:49:10+0000",
+      "status": "READY",
+      "$$hashKey": "object:3717"
+    },
+    {
+      "text": "%spark\n// Process the messages from the stream and calculate Min, Max, Avg and Count of messages in each batch\nval messages = stream\n    .map(record => record.value)\n    .flatMap(record => {\n         JSON.parseFull(record).map(rawMap =>{\n            val map = rawMap.asInstanceOf[Map[String,String]]\n            map\n         } )\n    })\n    \nmessages.foreachRDD { rdd =>\n  val finishedBatchesCounter = FinishedBatchesCounter.getInstance(sc)\n  println(s\">>> Batch ${finishedBatchesCounter.count + 1} ---\")\n  val start = Calendar.getInstance().getTime()\n  println(s\"--- Start Time - \"+dateFormat.format(start))\n  val newRDD = rdd.map(p => Row(p.get(\"mf01\").get))\n  val columns = Seq(\"mf01\")\n  val schema = StructType(columns.map(fieldName => StructField(fieldName, DoubleType, nullable = true)))\n  val rddDF = spark.createDataFrame(newRDD,schema)\n  val discretizer = new QuantileDiscretizer()\n      .setInputCol(\"mf01\")\n      .setOutputCol(\"result\")\n      .setNumBuckets(11)\n  \n  val result = discretizer.fit(rddDF).transform(rddDF)\n  result.groupBy(\"result\").agg(min(\"mf01\"),max(\"mf01\"),avg(\"mf01\"),count(\"mf01\")).orderBy(\"result\").show(false)\n\n  val end = Calendar.getInstance().getTime()\n  val diff = end.getTime() - start.getTime()\n  println(s\"--- End Time - \"+dateFormat.format(end))\n  println(s\"--- Processing Time in Millis - \"+diff)\n  println(\"--- Processed messages in this batch: \" + rdd.count()) \n    \n  if (finishedBatchesCounter.count >= batchesToRun - 1) {\n    ssc.stop()\n  } else {\n    finishedBatchesCounter.add(1)\n  }\n}\n\nssc.start()  \nssc.awaitTermination()",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-24T07:49:10+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[33mwarning: \u001b[0mthere was one deprecation warning (since 1.0.6); for details, enable `:setting -deprecation' or `:replay -deprecation'\n>>> Batch 1 ---\n--- Start Time - 2021-07-24 07:46:10.320\n+------+---------+---------+------------------+-----------+\n|result|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+------+---------+---------+------------------+-----------+\n|0.0   |12869.0  |13216.0  |13103.231981981982|444        |\n|1.0   |13217.0  |13290.0  |13258.70091324201 |438        |\n|2.0   |13291.0  |13331.0  |13310.152654867257|452        |\n|3.0   |13333.0  |13372.0  |13353.935840707965|452        |\n|4.0   |13373.0  |13389.0  |13382.079710144928|414        |\n|5.0   |13390.0  |13403.0  |13396.36974789916 |476        |\n|6.0   |13404.0  |13418.0  |13411.813747228382|451        |\n|7.0   |13419.0  |13432.0  |13425.094786729858|422        |\n|8.0   |13433.0  |13455.0  |13442.936440677966|472        |\n|9.0   |13456.0  |13522.0  |13476.203579418345|447        |\n|10.0  |13523.0  |14722.0  |13693.903083700441|454        |\n+------+---------+---------+------------------+-----------+\n\n--- End Time - 2021-07-24 07:46:55.280\n--- Processing Time in Millis - 44960\n--- Processed messages in this batch: 4922\n>>> Batch 2 ---\n--- Start Time - 2021-07-24 07:47:02.413\n+------+---------+---------+------------------+-----------+\n|result|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+------+---------+---------+------------------+-----------+\n|0.0   |12818.0  |13118.0  |13038.648044692738|895        |\n|1.0   |13119.0  |13246.0  |13173.57384441939 |887        |\n|2.0   |13247.0  |13333.0  |13290.518847006651|902        |\n|3.0   |13334.0  |13431.0  |13393.650285714286|875        |\n|4.0   |13432.0  |13497.0  |13462.375135135135|925        |\n|5.0   |13498.0  |13588.0  |13542.348214285714|896        |\n|6.0   |13589.0  |13644.0  |13620.214857142857|875        |\n|7.0   |13646.0  |13670.0  |13659.241339491917|866        |\n|8.0   |13671.0  |13684.0  |13677.303062302006|947        |\n|9.0   |13685.0  |13707.0  |13695.62929061785 |874        |\n|10.0  |13708.0  |18255.0  |13918.689765458423|938        |\n+------+---------+---------+------------------+-----------+\n\n--- End Time - 2021-07-24 07:47:33.807\n--- Processing Time in Millis - 31394\n--- Processed messages in this batch: 9880\n>>> Batch 3 ---\n--- Start Time - 2021-07-24 07:47:46.340\n+------+---------+---------+------------------+-----------+\n|result|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+------+---------+---------+------------------+-----------+\n|0.0   |12857.0  |13329.0  |13220.622246696035|908        |\n|1.0   |13330.0  |13395.0  |13364.926553672316|885        |\n|2.0   |13396.0  |13425.0  |13412.463973799127|916        |\n|3.0   |13426.0  |13443.0  |13434.329646017699|904        |\n|4.0   |13445.0  |13469.0  |13455.22030237581 |926        |\n|5.0   |13470.0  |13574.0  |13515.91960352423 |908        |\n|6.0   |13575.0  |13629.0  |13608.842458100558|895        |\n|7.0   |13631.0  |13650.0  |13641.643348623853|872        |\n|8.0   |13651.0  |13672.0  |13661.256684491978|935        |\n|9.0   |13673.0  |13699.0  |13685.115005476451|913        |\n|10.0  |13700.0  |14269.0  |13734.624203821657|942        |\n+------+---------+---------+------------------+-----------+\n\n--- End Time - 2021-07-24 07:48:16.451\n--- Processing Time in Millis - 30111\n--- Processed messages in this batch: 10004\n\u001b[1m\u001b[34mmessages\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.streaming.dstream.DStream[Map[String,String]]\u001b[0m = org.apache.spark.streaming.dstream.FlatMappedDStream@4d3df260\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627112950138_1240432456",
+      "id": "paragraph_1627112487810_608870197",
+      "dateCreated": "2021-07-24T07:49:10+0000",
+      "status": "READY",
+      "$$hashKey": "object:3718"
+    },
+    {
+      "text": "%spark\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-24T07:49:10+0000",
+      "progress": 0,
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627112950139_1810481286",
+      "id": "paragraph_1627112761301_1143049410",
+      "dateCreated": "2021-07-24T07:49:10+0000",
+      "status": "READY",
+      "$$hashKey": "object:3719"
+    }
+  ],
+  "name": "ESPBench-Standalone-Quantile",
+  "id": "2GBSF4D4K",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.9.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {},
+  "path": "/ESPBench-Standalone-Quantile"
+}

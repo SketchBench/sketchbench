@@ -1,10 +1,10 @@
 ﻿{
   "paragraphs": [
     {
-      "title": "Spark Quantile with 10 second Batch Window",
+      "title": "ESPBench - Query 1",
       "text": "%spark\n// All required imports to run the notebook\n\nimport org.apache.kafka.clients.consumer.ConsumerRecord\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.streaming.kafka010._\nimport org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent\nimport org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe\nimport org.apache.spark.SparkContext\nimport org.apache.spark.sql.Row\nimport org.apache.spark.sql.types.{StringType, StructField, StructType, IntegerType, DoubleType}\nimport org.apache.kafka.clients.consumer.ConsumerConfig\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.sql.SQLContext\nimport org.apache.spark.util.LongAccumulator\nimport org.apache.spark.streaming._\nimport org.apache.spark.ml.feature.QuantileDiscretizer\nimport scala.util.parsing.json.JSON\nimport java.util.{Calendar, Date}\nimport java.text.SimpleDateFormat\nimport sqlContext.implicits._\nimport scala.concurrent.duration._\n",
       "user": "anonymous",
-      "dateUpdated": "2021-07-24T07:23:09+0000",
+      "dateUpdated": "2021-07-24T07:36:38+0000",
       "progress": 0,
       "config": {
         "lineNumbers": true,
