@@ -222,14 +222,6 @@ zeppelin:
       cores:
         max: 1
 
-### Benchmark Observability Stack ###
-
-kafdrop:
-  enabled: true
-  deployment:
-    nodeSelector:
-      sketchbench/pool: observability
-
 ### Data Ingestion (isolated Kafka cluster) ###
 
 kafka:
@@ -262,6 +254,12 @@ kafka:
         enabled: true
 
 ### Benchmark Observability Stack ###
+
+kafdrop:
+  enabled: true
+  deployment:
+    nodeSelector:
+      sketchbench/pool: observability
 
 tobs:
   enabled: true

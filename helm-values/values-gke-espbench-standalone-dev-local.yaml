@@ -3,8 +3,6 @@
 dataIngestion:
   espbench:
     enabled: true
-    nodeSelector:
-      sketchbench/pool: control-plane
     # 10000 ns interval = 100,000 msg/sec
     # 1000000 ns interval = 1,000 msg /sec
     sendingInterval: 1000000
@@ -15,29 +13,16 @@ dataIngestion:
 ### Data Ingestion (isolated Kafka cluster) ###
 
 kafka:
-  nodeSelector:
-    sketchbench/pool: data-ingestion
   podAntiAffinitypreset: hard
   logRetentionHours: 6
-  resources:
-    requests:
-      memory: "5Gi"
-      cpu: "1.5"
-    limits:
-      memory: "5Gi"
-      cpu: "1.5"
   metrics:
     kafka:
       enabled: true
-      nodeSelector:
-        sketchbench/pool: observability
     jmx:
       enabled: true
     serviceMonitor:
       enabled: true
   zookeeper:
-    nodeSelector:
-      sketchbench/pool: data-plane
     metrics:
       enabled: true
       serviceMonitor:
@@ -45,8 +30,6 @@ kafka:
 
 zeppelin:
   enabled: true
-  nodeSelector:
-    sketchbench/pool: control-plane
   runMode: local
   interpreters:
     - file
@@ -74,39 +57,9 @@ zeppelin:
 
 kafdrop:
   enabled: true
-  deployment:
-    nodeSelector:
-      sketchbench/pool: observability
 
 tobs:
-  enabled: true
-  kube-prometheus-stack:
-    alertmanager:
-      enabled: false # not needed
-    grafana:
-      nodeSelector:
-        sketchbench/pool: observability
-    kube-state-metrics:
-      nodeSelector:
-        sketchbench/pool: observability
-    prometheus:
-      prometheusSpec:
-        nodeSelector:
-          sketchbench/pool: observability
-        podMonitorSelectorNilUsesHelmValues: false
-        serviceMonitorSelectorNilUsesHelmValues: false
-    prometheusOperator:
-      nodeSelector:
-        sketchbench/pool: observability
-  promscale:
-    maintenance:
-      nodeSelector:
-        sketchbench/pool: observability
-    nodeSelector:
-      sketchbench/pool: observability
-  timescaledb-single:
-    nodeSelector:
-      sketchbench/pool: observability
+  enabled: false
 
 ### System Under Test ###
 
@@ -118,26 +71,22 @@ spark:
     pullPolicy: IfNotPresent
   worker:
     replicaCount: 2
-    coreLimit: 3
-    nodeSelector:
-      sketchbench/pool: system-under-test
+    coreLimit: 1
     resources:
       requests:
-        memory: "12Gi"
-        cpu: "3.5"
+        memory: "2Gi"
+        cpu: "1.5"
       limits:
-        memory: "12Gi"
-        cpu: "3.5"
+        memory: "2Gi"
+        cpu: "1.5"
   master:
-    nodeSelector:
-      sketchbench/pool: system-under-test
     resources:
       requests:
-        memory: "12Gi"
-        cpu: "3.5"
+        memory: "2Gi"
+        cpu: "1.5"
       limits:
-        memory: "12Gi"
-        cpu: "3.5"
+        memory: "2Gi"
+        cpu: "1.5"
   podAntiAffinitypreset: hard
   metrics:
     enabled: true

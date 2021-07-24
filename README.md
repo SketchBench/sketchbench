@@ -101,6 +101,17 @@ sketchbench/sketchbench \
 --version 0.2.2
 ```
 
+### Install SketchBench "standalone" stack for ESPBench for local development
+
+```bash
+helm install \
+--values \
+./helm-values/values-gke-espbench-standalone-dev-local.yaml \
+sketchbench-espbench-standalone \
+sketchbench/sketchbench \
+--version 0.2.2
+```
+
 ### Install SketchBench "standalone" stack for NEXMark
 
 ```bash
@@ -110,28 +121,6 @@ helm install \
 sketchbench-nexmark-standalone \
 sketchbench/sketchbench \
 --version 0.2.2
-```
-
-### Install Spark cluster for "standalone" setup
-
-```bash
-helm install \
---values \
-./helm-values/values-gke-spark-standalone-dev.yaml \
-sketchbench-spark-standalone \
-bitnami/spark \
---version 5.6.2
-```
-
-### Install Zeppelin for "standalone" setup
-
-```bash
-helm install \
---values \
-./helm-values/values-gke-zeppelin-standalone-dev.yaml \
-sketchbench-zeppelin-standalone \
-sketchbench/zeppelin \
---version 0.9.0
 ```
 
 ### Accessing Bullet locally
