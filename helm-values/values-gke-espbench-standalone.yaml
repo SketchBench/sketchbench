@@ -196,13 +196,48 @@ bullet:
           ]
         }
 
+spark: # System Under Test (isolated Spark cluster)
+  enabled: true
+  image:
+    repository: sketchbench/bullet-spark-3.0
+    tag: "1.0.4"
+    pullPolicy: IfNotPresent
+  worker:
+    replicaCount: 2
+    coreLimit: 7
+    nodeSelector:
+      sketchbench/pool: system-under-test
+    resources:
+      requests:
+        memory: "26Gi"
+        cpu: "7"
+      limits:
+        memory: "26Gi"
+        cpu: "7"
+  master:
+    nodeSelector:
+      sketchbench/pool: system-under-test
+    resources:
+      requests:
+        memory: "26Gi"
+        cpu: "7"
+      limits:
+        memory: "26Gi"
+        cpu: "7"
+  podAntiAffinitypreset: hard
+  metrics:
+    enabled: true
+    podMonitor:
+      enabled: true
+
 zeppelin:
   enabled: true
   nodeSelector:
-    sketchbench/pool: control-plane
+    sketchbench/pool: system-under-test
   runMode: local
   interpreters:
     - file
+    - spark
     - md
     - python
     - sh
@@ -212,8 +247,15 @@ zeppelin:
       enabled: true
   sparkInterpreter:
     spark:
+      master: "spark://sketchbench-espbench-spark-master-svc:7077"
+      submit:
+        deployMode: "client"
       app:
         name: BulletSparkStreamingJob
+      jar:
+        packages: org.apache.spark:spark-sql-kafka-0-10_2.12:3.0.2,org.apache.spark:spark-streaming-kafka-0-10-assembly_2.12:3.0.2
+      cores:
+        max: 14
       driver:
         cores: 7
         memory: 25g
@@ -221,8 +263,6 @@ zeppelin:
         cores: 7
         memory: 25g
         instances: 2
-      cores:
-        max: 14
 
 ### Data Ingestion (isolated Kafka cluster) ###
 
