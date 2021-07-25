@@ -10,23 +10,22 @@
 SELECT TIME,
   VALUE AS CPU_USAGE,
   VAL(POD_ID) AS POD
-FROM PROM_METRIC."node_namespace_pod_container:container_cpu_usage_seconds__1693"
+FROM PROM_METRIC."node_namespace_pod_container:container_cpu_usage_seconds__1578"
 WHERE VAL(POD_ID) LIKE '%spark-worker%'
   AND CONTAINER_ID > 0
-  AND TIME > NOW() - INTERVAL '10 minute'
+  AND TIME > NOW() - INTERVAL '10 hour'
 ORDER BY TIME ASC
 ```
 
-#### Workers Memory in MB
+#### Workers Memory in Bytes
 
 ```sql
-SELECT TIME,
-  VALUE / 1024 / 1024 AS VALUE_MEM_MB,
+SELECT TIME, VALUE AS VALUE_MEM_BYTES,
   VAL(POD_ID) AS POD
 FROM PROM_METRIC.CONTAINER_MEMORY_WORKING_SET_BYTES
 WHERE VAL(POD_ID) LIKE '%spark-worker%'
   AND CONTAINER_ID > 0
-  AND TIME > NOW() - INTERVAL '10 minute'
+  AND TIME > NOW() - INTERVAL '10 hour'
 ORDER BY TIME ASC
 ```
 
@@ -38,7 +37,7 @@ SELECT TIME,
   VAL(EXECUTOR_ID_ID) AS EXECUTOR
 FROM PROM_METRIC."metrics_executor_rddBlocks"
 WHERE VAL(EXECUTOR_ID_ID) <> 'driver'
-  AND TIME > NOW() - INTERVAL '10 minute'
+  AND TIME > NOW() - INTERVAL '10 hour'
 ORDER BY TIME ASC
 ```
 
@@ -50,7 +49,7 @@ SELECT TIME,
   VAL(EXECUTOR_ID_ID) AS EXECUTOR
 FROM PROM_METRIC."metrics_executor_completedTasks_total"
 WHERE VAL(EXECUTOR_ID_ID) <> 'driver'
-  AND TIME > NOW() - INTERVAL '10 minute'
+  AND TIME > NOW() - INTERVAL '10 hour'
 ORDER BY TIME ASC
 ```
 
@@ -62,7 +61,7 @@ SELECT TIME,
   VAL(EXECUTOR_ID_ID) AS EXECUTOR
 FROM PROM_METRIC."metrics_executor_activeTasks"
 WHERE VAL(EXECUTOR_ID_ID) <> 'driver'
-  AND TIME > NOW() - INTERVAL '10 minute'
+  AND TIME > NOW() - INTERVAL '10 hour'
 ORDER BY TIME ASC
 ```
 
@@ -74,23 +73,22 @@ ORDER BY TIME ASC
 SELECT TIME,
   VALUE AS CPU_USAGE,
   VAL(POD_ID) AS POD
-FROM PROM_METRIC."node_namespace_pod_container:container_cpu_usage_seconds__1693"
+FROM PROM_METRIC."node_namespace_pod_container:container_cpu_usage_seconds__1578"
 WHERE VAL(POD_ID) LIKE '%spark-backend%'
   AND CONTAINER_ID > 0
-  AND TIME > NOW() - INTERVAL '10 minute'
+  AND TIME > NOW() - INTERVAL '10 hour'
 ORDER BY TIME ASC
 ```
 
 #### Driver Memory in MB
 
 ```sql
-SELECT TIME,
-  VALUE / 1024 / 1024 AS VALUE_MEM_MB,
+SELECT TIME, VALUE AS VALUE_MEM_BYTES,
   VAL(POD_ID) AS POD
 FROM PROM_METRIC.CONTAINER_MEMORY_WORKING_SET_BYTES
 WHERE VAL(POD_ID) LIKE '%spark-backend%'
   AND CONTAINER_ID > 0
-  AND TIME > NOW() - INTERVAL '10 minute'
+  AND TIME > NOW() - INTERVAL '10 hour'
 ORDER BY TIME ASC
 ```
 
@@ -98,53 +96,51 @@ ORDER BY TIME ASC
 
 ### Network
 
-#### Bytes In in kb/sec (One Minute Rate)
+#### Bytes In per sec (One Minute Rate)
 
 ```sql
-SELECT TIME,
-  VALUE / 1024 AS BYTES_IN_KB_RATE
+SELECT TIME, VALUE AS BYTESINPERSEC_ONEMINUTERATE
 FROM PROM_METRIC.KAFKA_SERVER_BROKERTOPICMETRICS_BYTESINPERSEC_ONEMINUTERATE
 WHERE VAL(TOPIC_ID) = 'SketchBench-1-1'
   AND VAL(JOB_ID) = 'sketchbench-espbench-kafka-jmx-metrics'
-  AND TIME > NOW() - INTERVAL '10 minute'
+  AND TIME > NOW() - INTERVAL '10 hour'
 ORDER BY TIME ASC
 ```
 
-#### Bytes Out in kb/sec (One Minute Rate)
+#### Bytes Out per sec (One Minute Rate)
 
 ```sql
-SELECT TIME,
-  VALUE / 1024 AS BYTES_OUT_KB_RATE
+SELECT TIME, VALUE AS BYTESOUTPERSEC_ONEMINUTERATE
 FROM PROM_METRIC.KAFKA_SERVER_BROKERTOPICMETRICS_BYTESOUTPERSEC_ONEMINUTERATE
 WHERE VAL(TOPIC_ID) = 'SketchBench-1-1'
   AND VAL(JOB_ID) = 'sketchbench-espbench-kafka-jmx-metrics'
-  AND TIME > NOW() - INTERVAL '10 minute'
+  AND TIME > NOW() - INTERVAL '10 hour'
 ORDER BY TIME ASC
 ```
 
 ### Requests
 
-#### Requests In in req/sec (One Minute Rate)
+#### Requests In per /sec (One Minute Rate)
 
 ```sql
 SELECT TIME,
   VALUE AS REQUESTS_PER_SEC_IN
-FROM PROM_METRIC.KAFKA_SERVER_BROKERTOPICMETRICS_TOTALPRODUCEREQUESTSPERSE_1255
+FROM PROM_METRIC.KAFKA_SERVER_BROKERTOPICMETRICS_TOTALPRODUCEREQUESTSPERSE_1562
 WHERE VAL(TOPIC_ID) = 'SketchBench-1-1'
   AND VAL(JOB_ID) = 'sketchbench-espbench-kafka-jmx-metrics'
-  AND TIME > NOW() - INTERVAL '10 minute'
+  AND TIME > NOW() - INTERVAL '10 hour'
 ORDER BY TIME ASC
 ```
 
-#### Requests Out in req/sec (One Minute Rate)
+#### Requests Out per sec (One Minute Rate)
 
 ```sql
 SELECT TIME,
   VALUE AS REQUESTS_PER_SEC_OUT
-FROM PROM_METRIC.KAFKA_SERVER_BROKERTOPICMETRICS_TOTALFETCHREQUESTSPERSEC__1293
+FROM PROM_METRIC.KAFKA_SERVER_BROKERTOPICMETRICS_TOTALFETCHREQUESTSPERSEC__1572
 WHERE VAL(TOPIC_ID) = 'SketchBench-1-1'
   AND VAL(JOB_ID) = 'sketchbench-espbench-kafka-jmx-metrics'
-  AND TIME > NOW() - INTERVAL '10 minute'
+  AND TIME > NOW() - INTERVAL '10 hour'
 ORDER BY TIME ASC
 ```
 
@@ -159,7 +155,7 @@ SELECT TIME,
 FROM PROM_METRIC.KAFKA_CONSUMERGROUP_LAG_SUM
 WHERE VAL(TOPIC_ID) = 'SketchBench-1-1'
   AND VAL(JOB_ID) = 'sketchbench-espbench-kafka-metrics'
-  AND TIME > NOW() - INTERVAL '10 minute'
+  AND TIME > NOW() - INTERVAL '10 hour'
 ORDER BY TIME ASC
 ```
 
@@ -174,7 +170,7 @@ SELECT TIME,
 FROM PROM_METRIC.KAFKA_CONSUMERGROUP_CURRENT_OFFSET
 WHERE VAL(TOPIC_ID) = 'SketchBench-1-1'
   AND VAL(JOB_ID) = 'sketchbench-espbench-kafka-metrics'
-  AND TIME > NOW() - INTERVAL '10 minute'
+  AND TIME > NOW() - INTERVAL '10 hour'
 ORDER BY TIME ASC
 ```
 
@@ -186,6 +182,6 @@ SELECT TIME,
 FROM PROM_METRIC.KAFKA_TOPIC_PARTITION_CURRENT_OFFSET
 WHERE VAL(TOPIC_ID) = 'SketchBench-1-1'
   AND VAL(JOB_ID) = 'sketchbench-espbench-kafka-metrics'
-  AND TIME > NOW() - INTERVAL '10 minute'
+  AND TIME > NOW() - INTERVAL '10 hour'
 ORDER BY TIME ASC
 ```
