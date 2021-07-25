@@ -1,44 +1,9 @@
 ﻿{
   "paragraphs": [
     {
-      "user": "anonymous",
-      "progress": 0,
-      "config": {
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionSupport": true
-        },
-        "colWidth": 12,
-        "editorMode": "ace/mode/python",
-        "fontSize": 9,
-        "results": {},
-        "enabled": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "apps": [],
-      "runtimeInfos": {},
-      "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627073275990_859555869",
-      "id": "paragraph_1627073275990_859555869",
-      "dateCreated": "2021-07-23T20:47:55+0000",
-      "status": "FINISHED",
-      "focus": true,
-      "$$hashKey": "object:2117",
       "text": "# Docker container runs with `zeppelin` user and installs pip packages in user-specific `.local` directory, that's not part of the default `PYTHONPATH`\nimport sys\nsys.path.append('/opt/zeppelin/.local/lib/python3.7/site-packages')",
-      "dateUpdated": "2021-07-23T22:22:50+0000",
-      "dateFinished": "2021-07-23T20:56:28+0000",
-      "dateStarted": "2021-07-23T20:56:21+0000",
-      "results": {
-        "code": "SUCCESS",
-        "msg": []
-      }
-    },
-    {
       "user": "anonymous",
+      "dateUpdated": "2021-07-25T01:02:07+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -56,63 +21,62 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627073292314_656828845",
+      "jobName": "paragraph_1627163020969_998289256",
+      "id": "paragraph_1627073275990_859555869",
+      "dateCreated": "2021-07-24T21:43:40+0000",
+      "dateStarted": "2021-07-25T01:02:07+0000",
+      "dateFinished": "2021-07-25T01:02:08+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:184"
+    },
+    {
+      "text": "# All required imports to run the notebook\nimport json\nimport sseclient\nimport requests\nimport pandas as pd\nimport time",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-25T01:02:08+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627163020970_1158913694",
       "id": "paragraph_1627073292314_656828845",
-      "dateCreated": "2021-07-23T20:48:12+0000",
+      "dateCreated": "2021-07-24T21:43:40+0000",
+      "dateStarted": "2021-07-25T01:02:08+0000",
+      "dateFinished": "2021-07-25T01:02:09+0000",
       "status": "FINISHED",
-      "focus": true,
-      "$$hashKey": "object:2286",
-      "text": "# All required imports to run the notebook\nimport json\nimport sseclient\nimport requests\nimport pandas as pd",
-      "dateUpdated": "2021-07-23T22:15:38+0000",
-      "dateFinished": "2021-07-23T21:12:12+0000",
-      "dateStarted": "2021-07-23T21:12:11+0000",
-      "results": {
-        "code": "SUCCESS",
-        "msg": []
-      }
+      "$$hashKey": "object:185"
     },
     {
-      "user": "anonymous",
-      "progress": 0,
-      "config": {
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionSupport": true
-        },
-        "colWidth": 12,
-        "editorMode": "ace/mode/python",
-        "fontSize": 9,
-        "results": {},
-        "enabled": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "apps": [],
-      "runtimeInfos": {},
-      "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627073816029_1102174803",
-      "id": "paragraph_1627073816029_1102174803",
-      "dateCreated": "2021-07-23T20:56:56+0000",
-      "status": "FINISHED",
-      "focus": true,
-      "$$hashKey": "object:2659",
       "text": "# Globals\nBULLET_SERVICE_NAME = 'sketchbench-espbench-bullet-web-service'\nBULLET_SERVICE_PORT = '9999'\nBULLET_HTTP_API_ENDPOINT = 'http://{0}:{1}/api/bullet/queries/http-query'.format(BULLET_SERVICE_NAME, BULLET_SERVICE_PORT)\nBULLET_SSE_API_ENDPOINT = 'http://{0}:{1}/api/bullet/queries/sse-query'.format(BULLET_SERVICE_NAME, BULLET_SERVICE_PORT)\n\nREQUEST_HEADERS = {\n    'Content-type': 'text/plain',\n}",
-      "dateUpdated": "2021-07-23T20:59:43+0000",
-      "dateFinished": "2021-07-23T20:59:43+0000",
-      "dateStarted": "2021-07-23T20:59:43+0000",
-      "results": {
-        "code": "SUCCESS",
-        "msg": []
-      }
-    },
-    {
       "user": "anonymous",
+      "dateUpdated": "2021-07-25T01:02:09+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -130,26 +94,25 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627078524867_1462564514",
-      "id": "paragraph_1627078524867_1462564514",
-      "dateCreated": "2021-07-23T22:15:24+0000",
+      "jobName": "paragraph_1627163020970_671426265",
+      "id": "paragraph_1627073816029_1102174803",
+      "dateCreated": "2021-07-24T21:43:40+0000",
+      "dateStarted": "2021-07-25T01:02:09+0000",
+      "dateFinished": "2021-07-25T01:02:10+0000",
       "status": "FINISHED",
-      "focus": true,
-      "$$hashKey": "object:10147",
+      "$$hashKey": "object:186"
+    },
+    {
       "text": "# Function for pretty-printing a dict/JSON\ndef pretty_print(data):\n    z.show(json.dumps(data, indent=2, sort_keys=True))",
-      "dateUpdated": "2021-07-23T22:16:13+0000",
-      "dateFinished": "2021-07-23T22:16:13+0000",
-      "dateStarted": "2021-07-23T22:16:13+0000",
-      "results": {
-        "code": "SUCCESS",
-        "msg": []
-      }
-    },
-    {
       "user": "anonymous",
+      "dateUpdated": "2021-07-25T01:02:11+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -167,26 +130,61 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627073936668_2099232657",
+      "jobName": "paragraph_1627163020971_1973446053",
+      "id": "paragraph_1627078524867_1462564514",
+      "dateCreated": "2021-07-24T21:43:40+0000",
+      "dateStarted": "2021-07-25T01:02:11+0000",
+      "dateFinished": "2021-07-25T01:02:11+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:187"
+    },
+    {
+      "text": "# Function for blocking HTTP requests\ndef http_request(query):\n    start = time.time()\n    z.show('############# START #############')\n    z.show('Epoch: {0}'.format(start))\n    z.show('UTC: {0}'.format(time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(start))))\n    z.show('#################################')\n    \n    response = requests.post(BULLET_HTTP_API_ENDPOINT, data=query, headers=REQUEST_HEADERS)\n        \n    end = time.time()\n    z.show('############## END ##############')\n    z.show('Epoch: {0}'.format(end))\n    z.show('UTC: {0}'.format(time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(end))))\n    z.show('#################################')\n    \n    response_data = response.json()\n    pretty_print(response_data.get('meta', {}))\n    z.show(pd.DataFrame(response_data.get('records', [])))",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-25T01:17:15+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627163020971_2060953269",
       "id": "paragraph_1627073936668_2099232657",
-      "dateCreated": "2021-07-23T20:58:56+0000",
+      "dateCreated": "2021-07-24T21:43:40+0000",
+      "dateStarted": "2021-07-25T01:17:15+0000",
+      "dateFinished": "2021-07-25T01:17:15+0000",
       "status": "FINISHED",
-      "focus": true,
-      "$$hashKey": "object:2752",
-      "text": "# Function for blocking HTTP requests\ndef http_request(query):\n    response = requests.post(BULLET_HTTP_API_ENDPOINT, data=query, headers=REQUEST_HEADERS)\n    response_data = response.json()\n    pretty_print(response_data.get('meta', {}))\n    z.show(pd.DataFrame(response_data.get('records', [])))",
-      "dateUpdated": "2021-07-23T22:18:05+0000",
-      "dateFinished": "2021-07-23T22:18:05+0000",
-      "dateStarted": "2021-07-23T22:18:05+0000",
-      "results": {
-        "code": "SUCCESS",
-        "msg": []
-      }
+      "$$hashKey": "object:188"
     },
     {
+      "text": "# Function for Server-Sent Events (SSE)-based streaming requests (e.g. for queries with windows)\ndef sse_request(query):\n    start = time.time()\n    z.show('############# START #############')\n    z.show('Epoch: {0}'.format(start))\n    z.show('UTC: {0}'.format(time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(start))))\n    z.show('#################################')\n    \n    response = requests.post(BULLET_SSE_API_ENDPOINT, data=query, stream=True, headers=REQUEST_HEADERS)\n    sse_client = sseclient.SSEClient(response)\n    all_results = []\n    query_receive_time = float('inf')\n    for sse_event in sse_client.events():\n        # Update table with all results\n        window_results = json.loads(sse_event.data)\n        all_results.extend(window_results.get('records', []))\n        # Update receive time of overall query\n        window_query_receive_time = window_results.get('meta', {}).get('Query', {}).get('Receive Time')\n        query_receive_time = window_query_receive_time if window_query_receive_time < query_receive_time else query_receive_time\n        # Print current window stats\n        z.show(window_results.get('meta', {}).get('Window', {}))\n    \n    end = time.time()\n    z.show('############## END ##############')\n    z.show('Epoch: {0}'.format(end))\n    z.show('UTC: {0}'.format(time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(end))))\n    z.show('#################################')\n    \n    # Print query receive time\n    z.show('Query Receive Time: {0}'.format(query_receive_time))\n    # Show overall results\n    z.show(pd.DataFrame(all_results))",
       "user": "anonymous",
+      "dateUpdated": "2021-07-25T01:02:13+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -204,26 +202,25 @@
         "params": {},
         "forms": {}
       },
-      "apps": [],
-      "runtimeInfos": {},
-      "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627074111627_456611848",
-      "id": "paragraph_1627074111627_456611848",
-      "dateCreated": "2021-07-23T21:01:51+0000",
-      "status": "FINISHED",
-      "focus": true,
-      "$$hashKey": "object:2867",
-      "text": "# Function for Server-Sent Events (SSE)-based streaming requests (e.g. for queries with windows)\ndef sse_request(query):\n    response = requests.post(BULLET_SSE_API_ENDPOINT, data=query, stream=True, headers=REQUEST_HEADERS)\n    sse_client = sseclient.SSEClient(response)\n    all_results = []\n    query_receive_time = float('inf')\n    for sse_event in sse_client.events():\n        # Update table with all results\n        window_results = json.loads(sse_event.data)\n        all_results.extend(window_results.get('records', []))\n        # Update receive time of overall query\n        window_query_receive_time = window_results.get('meta', {}).get('Query', {}).get('Receive Time')\n        query_receive_time = window_query_receive_time if window_query_receive_time < query_receive_time else query_receive_time\n        # Print current window stats\n        z.show(window_results.get('meta', {}).get('Window', {}))\n    # Print query receive time\n    z.show('Query Receive Time: {0}'.format(query_receive_time))\n    # Show overall results\n    z.show(pd.DataFrame(all_results))",
-      "dateUpdated": "2021-07-23T22:02:16+0000",
-      "dateFinished": "2021-07-23T22:02:16+0000",
-      "dateStarted": "2021-07-23T22:02:16+0000",
       "results": {
         "code": "SUCCESS",
         "msg": []
-      }
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627163020971_940433337",
+      "id": "paragraph_1627074111627_456611848",
+      "dateCreated": "2021-07-24T21:43:40+0000",
+      "dateStarted": "2021-07-25T01:02:13+0000",
+      "dateFinished": "2021-07-25T01:02:14+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:189"
     },
     {
+      "text": "%md\n\n## Query 1: Check Sensors\n\n> Calculate avg, min, max, count for the last 1sec for mf01 for monitoring.\n\n**CQL:**\n\n```sql\nSELECT \n  AVG(mf01), \n  MIN(mf01), \n  MAX(mf01), \n  COUNT(mf01) \nFROM \n  STREAM_SENSOR TUMBLING WINDOW 1 SECONDS;\n```",
       "user": "anonymous",
+      "dateUpdated": "2021-07-25T01:02:16+0000",
       "progress": 0,
       "config": {
         "tableHide": false,
@@ -243,19 +240,6 @@
         "params": {},
         "forms": {}
       },
-      "apps": [],
-      "runtimeInfos": {},
-      "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627074388021_160175271",
-      "id": "paragraph_1627074388021_160175271",
-      "dateCreated": "2021-07-23T21:06:28+0000",
-      "status": "FINISHED",
-      "focus": true,
-      "$$hashKey": "object:3084",
-      "text": "%md\n\n## Query 1: Check Sensors\n\n> Calculate avg, min, max, count for the last 1sec for mf01 for monitoring.\n\n**CQL:**\n\n```sql\nSELECT \n  AVG(mf01), \n  MIN(mf01), \n  MAX(mf01), \n  COUNT(mf01) \nFROM \n  STREAM_SENSOR TUMBLING WINDOW 1 SECONDS;\n```",
-      "dateUpdated": "2021-07-23T22:27:24+0000",
-      "dateFinished": "2021-07-23T22:27:24+0000",
-      "dateStarted": "2021-07-23T22:27:24+0000",
       "results": {
         "code": "SUCCESS",
         "msg": [
@@ -264,10 +248,22 @@
             "data": "<div class=\"markdown-body\">\n<h2>Query 1: Check Sensors</h2>\n<blockquote>\n<p>Calculate avg, min, max, count for the last 1sec for mf01 for monitoring.</p>\n</blockquote>\n<p><strong>CQL:</strong></p>\n<pre><code class=\"language-sql\">SELECT \n  AVG(mf01), \n  MIN(mf01), \n  MAX(mf01), \n  COUNT(mf01) \nFROM \n  STREAM_SENSOR TUMBLING WINDOW 1 SECONDS;\n</code></pre>\n\n</div>"
           }
         ]
-      }
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627163020971_1624605228",
+      "id": "paragraph_1627074388021_160175271",
+      "dateCreated": "2021-07-24T21:43:40+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:190",
+      "dateFinished": "2021-07-25T01:02:18+0000",
+      "dateStarted": "2021-07-25T01:02:16+0000"
     },
     {
+      "text": "# Processing stream data for 10 seconds\n\nDURATION = 300000 # 5min\n\nquery_1_bql = '''\nSELECT \n  AVG(mf01), \n  MIN(mf01), \n  MAX(mf01), \n  COUNT(*) \nFROM \n  STREAM({0}, TIME) WINDOWING TUMBLING(1000, TIME);\n'''.format(DURATION)\n\nsse_request(query_1_bql)",
       "user": "anonymous",
+      "dateUpdated": "2021-07-25T01:14:48+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -382,35 +378,34 @@
         "params": {},
         "forms": {}
       },
-      "apps": [],
-      "runtimeInfos": {},
-      "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627074417073_567825142",
-      "id": "paragraph_1627074417073_567825142",
-      "dateCreated": "2021-07-23T21:06:57+0000",
-      "status": "FINISHED",
-      "focus": true,
-      "$$hashKey": "object:3184",
-      "text": "# Processing stream data for 10 seconds\n\nquery_1_bql = '''\nSELECT \n  AVG(mf01), \n  MIN(mf01), \n  MAX(mf01), \n  COUNT(*) \nFROM \n  STREAM(10000, TIME) WINDOWING TUMBLING(1000, TIME);\n'''\nsse_request(query_1_bql)",
-      "dateUpdated": "2021-07-23T22:18:35+0000",
-      "dateFinished": "2021-07-23T22:18:46+0000",
-      "dateStarted": "2021-07-23T22:18:35+0000",
       "results": {
         "code": "SUCCESS",
         "msg": [
           {
             "type": "TEXT",
-            "data": "{'Number': 1, 'Emit Time': 1627078718245, 'Expected Emit Time': 1627078718097, 'Name': 'Tumbling'}\n{'Number': 2, 'Emit Time': 1627078719400, 'Expected Emit Time': 1627078719097, 'Name': 'Tumbling'}\n{'Number': 3, 'Emit Time': 1627078723720, 'Expected Emit Time': 1627078720097, 'Name': 'Tumbling'}\n{'Number': 4, 'Emit Time': 1627078723720, 'Expected Emit Time': 1627078721097, 'Name': 'Tumbling'}\n{'Number': 5, 'Emit Time': 1627078723720, 'Expected Emit Time': 1627078722097, 'Name': 'Tumbling'}\n{'Number': 6, 'Emit Time': 1627078723721, 'Expected Emit Time': 1627078723097, 'Name': 'Tumbling'}\n{'Number': 7, 'Emit Time': 1627078724904, 'Expected Emit Time': 1627078724097, 'Name': 'Tumbling'}\n{'Number': 8, 'Emit Time': 1627078726183, 'Expected Emit Time': 1627078725097, 'Name': 'Tumbling'}\nQuery Receive Time: 1627078715512\n"
+            "data": "############# START #############\nEpoch: 1627175308.7404468\nUTC: 2021-07-25 01:08:28\n#################################\n{'Number': 1, 'Emit Time': 1627175314537, 'Expected Emit Time': 1627175310492, 'Name': 'Tumbling'}\n{'Number': 2, 'Emit Time': 1627175314537, 'Expected Emit Time': 1627175311492, 'Name': 'Tumbling'}\n{'Number': 3, 'Emit Time': 1627175314537, 'Expected Emit Time': 1627175312492, 'Name': 'Tumbling'}\n{'Number': 4, 'Emit Time': 1627175314537, 'Expected Emit Time': 1627175313492, 'Name': 'Tumbling'}\n{'Number': 5, 'Emit Time': 1627175314537, 'Expected Emit Time': 1627175314492, 'Name': 'Tumbling'}\n{'Number': 6, 'Emit Time': 1627175315675, 'Expected Emit Time': 1627175315492, 'Name': 'Tumbling'}\n{'Number': 7, 'Emit Time': 1627175316740, 'Expected Emit Time': 1627175316492, 'Name': 'Tumbling'}\n{'Number': 8, 'Emit Time': 1627175317619, 'Expected Emit Time': 1627175317492, 'Name': 'Tumbling'}\n{'Number': 9, 'Emit Time': 1627175319436, 'Expected Emit Time': 1627175318492, 'Name': 'Tumbling'}\n{'Number': 10, 'Emit Time': 1627175320506, 'Expected Emit Time': 1627175319492, 'Name': 'Tumbling'}\n{'Number': 11, 'Emit Time': 1627175320507, 'Expected Emit Time': 1627175320492, 'Name': 'Tumbling'}\n{'Number': 12, 'Emit Time': 1627175325045, 'Expected Emit Time': 1627175321492, 'Name': 'Tumbling'}\n{'Number': 13, 'Emit Time': 1627175325045, 'Expected Emit Time': 1627175322492, 'Name': 'Tumbling'}\n{'Number': 14, 'Emit Time': 1627175325045, 'Expected Emit Time': 1627175323492, 'Name': 'Tumbling'}\n{'Number': 15, 'Emit Time': 1627175325045, 'Expected Emit Time': 1627175324492, 'Name': 'Tumbling'}\n{'Number': 16, 'Emit Time': 1627175326076, 'Expected Emit Time': 1627175325492, 'Name': 'Tumbling'}\n{'Number': 17, 'Emit Time': 1627175326676, 'Expected Emit Time': 1627175326492, 'Name': 'Tumbling'}\n{'Number': 18, 'Emit Time': 1627175327903, 'Expected Emit Time': 1627175327492, 'Name': 'Tumbling'}\n{'Number': 19, 'Emit Time': 1627175328924, 'Expected Emit Time': 1627175328492, 'Name': 'Tumbling'}\n{'Number': 20, 'Emit Time': 1627175329834, 'Expected Emit Time': 1627175329492, 'Name': 'Tumbling'}\n{'Number': 21, 'Emit Time': 1627175334541, 'Expected Emit Time': 1627175330492, 'Name': 'Tumbling'}\n{'Number': 22, 'Emit Time': 1627175334541, 'Expected Emit Time': 1627175331492, 'Name': 'Tumbling'}\n{'Number': 23, 'Emit Time': 1627175334541, 'Expected Emit Time': 1627175332492, 'Name': 'Tumbling'}\n{'Number': 24, 'Emit Time': 1627175334541, 'Expected Emit Time': 1627175333492, 'Name': 'Tumbling'}\n{'Number': 25, 'Emit Time': 1627175334541, 'Expected Emit Time': 1627175334492, 'Name': 'Tumbling'}\n{'Number': 26, 'Emit Time': 1627175335728, 'Expected Emit Time': 1627175335492, 'Name': 'Tumbling'}\n{'Number': 27, 'Emit Time': 1627175336904, 'Expected Emit Time': 1627175336492, 'Name': 'Tumbling'}\n{'Number': 28, 'Emit Time': 1627175337818, 'Expected Emit Time': 1627175337492, 'Name': 'Tumbling'}\n{'Number': 29, 'Emit Time': 1627175339407, 'Expected Emit Time': 1627175338492, 'Name': 'Tumbling'}\n{'Number': 30, 'Emit Time': 1627175340491, 'Expected Emit Time': 1627175339492, 'Name': 'Tumbling'}\n{'Number': 31, 'Emit Time': 1627175340492, 'Expected Emit Time': 1627175340492, 'Name': 'Tumbling'}\n{'Number': 32, 'Emit Time': 1627175344528, 'Expected Emit Time': 1627175341492, 'Name': 'Tumbling'}\n{'Number': 33, 'Emit Time': 1627175344529, 'Expected Emit Time': 1627175342492, 'Name': 'Tumbling'}\n{'Number': 34, 'Emit Time': 1627175344529, 'Expected Emit Time': 1627175343492, 'Name': 'Tumbling'}\n{'Number': 35, 'Emit Time': 1627175344529, 'Expected Emit Time': 1627175344492, 'Name': 'Tumbling'}\n{'Number': 36, 'Emit Time': 1627175345679, 'Expected Emit Time': 1627175345492, 'Name': 'Tumbling'}\n{'Number': 37, 'Emit Time': 1627175346762, 'Expected Emit Time': 1627175346492, 'Name': 'Tumbling'}\n{'Number': 38, 'Emit Time': 1627175347603, 'Expected Emit Time': 1627175347492, 'Name': 'Tumbling'}\n{'Number': 39, 'Emit Time': 1627175349467, 'Expected Emit Time': 1627175348492, 'Name': 'Tumbling'}\n{'Number': 40, 'Emit Time': 1627175349492, 'Expected Emit Time': 1627175349492, 'Name': 'Tumbling'}\n{'Number': 41, 'Emit Time': 1627175354541, 'Expected Emit Time': 1627175350492, 'Name': 'Tumbling'}\n{'Number': 42, 'Emit Time': 1627175354541, 'Expected Emit Time': 1627175351492, 'Name': 'Tumbling'}\n{'Number': 43, 'Emit Time': 1627175354541, 'Expected Emit Time': 1627175352492, 'Name': 'Tumbling'}\n{'Number': 44, 'Emit Time': 1627175354542, 'Expected Emit Time': 1627175353492, 'Name': 'Tumbling'}\n{'Number': 45, 'Emit Time': 1627175354542, 'Expected Emit Time': 1627175354492, 'Name': 'Tumbling'}\n{'Number': 46, 'Emit Time': 1627175355754, 'Expected Emit Time': 1627175355492, 'Name': 'Tumbling'}\n{'Number': 47, 'Emit Time': 1627175356961, 'Expected Emit Time': 1627175356492, 'Name': 'Tumbling'}\n{'Number': 48, 'Emit Time': 1627175357906, 'Expected Emit Time': 1627175357492, 'Name': 'Tumbling'}\n{'Number': 49, 'Emit Time': 1627175359409, 'Expected Emit Time': 1627175358492, 'Name': 'Tumbling'}\n{'Number': 50, 'Emit Time': 1627175360475, 'Expected Emit Time': 1627175359492, 'Name': 'Tumbling'}\n{'Number': 51, 'Emit Time': 1627175360492, 'Expected Emit Time': 1627175360492, 'Name': 'Tumbling'}\n{'Number': 52, 'Emit Time': 1627175364544, 'Expected Emit Time': 1627175361492, 'Name': 'Tumbling'}\n{'Number': 53, 'Emit Time': 1627175364544, 'Expected Emit Time': 1627175362492, 'Name': 'Tumbling'}\n{'Number': 54, 'Emit Time': 1627175364545, 'Expected Emit Time': 1627175363492, 'Name': 'Tumbling'}\n{'Number': 55, 'Emit Time': 1627175364545, 'Expected Emit Time': 1627175364492, 'Name': 'Tumbling'}\n{'Number': 56, 'Emit Time': 1627175365841, 'Expected Emit Time': 1627175365492, 'Name': 'Tumbling'}\n{'Number': 57, 'Emit Time': 1627175366979, 'Expected Emit Time': 1627175366492, 'Name': 'Tumbling'}\n{'Number': 58, 'Emit Time': 1627175367857, 'Expected Emit Time': 1627175367492, 'Name': 'Tumbling'}\n{'Number': 59, 'Emit Time': 1627175368752, 'Expected Emit Time': 1627175368492, 'Name': 'Tumbling'}\n{'Number': 60, 'Emit Time': 1627175369572, 'Expected Emit Time': 1627175369492, 'Name': 'Tumbling'}\n{'Number': 61, 'Emit Time': 1627175374557, 'Expected Emit Time': 1627175370492, 'Name': 'Tumbling'}\n{'Number': 62, 'Emit Time': 1627175374557, 'Expected Emit Time': 1627175371492, 'Name': 'Tumbling'}\n{'Number': 63, 'Emit Time': 1627175374557, 'Expected Emit Time': 1627175372492, 'Name': 'Tumbling'}\n{'Number': 64, 'Emit Time': 1627175374557, 'Expected Emit Time': 1627175373492, 'Name': 'Tumbling'}\n{'Number': 65, 'Emit Time': 1627175374557, 'Expected Emit Time': 1627175374492, 'Name': 'Tumbling'}\n{'Number': 66, 'Emit Time': 1627175375517, 'Expected Emit Time': 1627175375492, 'Name': 'Tumbling'}\n{'Number': 67, 'Emit Time': 1627175376798, 'Expected Emit Time': 1627175376492, 'Name': 'Tumbling'}\n{'Number': 68, 'Emit Time': 1627175378364, 'Expected Emit Time': 1627175377492, 'Name': 'Tumbling'}\n{'Number': 69, 'Emit Time': 1627175379422, 'Expected Emit Time': 1627175378492, 'Name': 'Tumbling'}\n{'Number': 70, 'Emit Time': 1627175380462, 'Expected Emit Time': 1627175379492, 'Name': 'Tumbling'}\n{'Number': 71, 'Emit Time': 1627175380492, 'Expected Emit Time': 1627175380492, 'Name': 'Tumbling'}\n{'Number': 72, 'Emit Time': 1627175384535, 'Expected Emit Time': 1627175381492, 'Name': 'Tumbling'}\n{'Number': 73, 'Emit Time': 1627175384535, 'Expected Emit Time': 1627175382492, 'Name': 'Tumbling'}\n{'Number': 74, 'Emit Time': 1627175384535, 'Expected Emit Time': 1627175383492, 'Name': 'Tumbling'}\n{'Number': 75, 'Emit Time': 1627175384536, 'Expected Emit Time': 1627175384492, 'Name': 'Tumbling'}\n{'Number': 76, 'Emit Time': 1627175385759, 'Expected Emit Time': 1627175385492, 'Name': 'Tumbling'}\n{'Number': 77, 'Emit Time': 1627175386918, 'Expected Emit Time': 1627175386492, 'Name': 'Tumbling'}\n{'Number': 78, 'Emit Time': 1627175387813, 'Expected Emit Time': 1627175387492, 'Name': 'Tumbling'}\n{'Number': 79, 'Emit Time': 1627175389473, 'Expected Emit Time': 1627175388492, 'Name': 'Tumbling'}\n{'Number': 80, 'Emit Time': 1627175389492, 'Expected Emit Time': 1627175389492, 'Name': 'Tumbling'}\n{'Number': 81, 'Emit Time': 1627175390536, 'Expected Emit Time': 1627175390492, 'Name': 'Tumbling'}\n{'Number': 82, 'Emit Time': 1627175394528, 'Expected Emit Time': 1627175391492, 'Name': 'Tumbling'}\n{'Number': 83, 'Emit Time': 1627175394528, 'Expected Emit Time': 1627175392492, 'Name': 'Tumbling'}\n{'Number': 84, 'Emit Time': 1627175394529, 'Expected Emit Time': 1627175393492, 'Name': 'Tumbling'}\n{'Number': 85, 'Emit Time': 1627175394529, 'Expected Emit Time': 1627175394492, 'Name': 'Tumbling'}\n{'Number': 86, 'Emit Time': 1627175395786, 'Expected Emit Time': 1627175395492, 'Name': 'Tumbling'}\n{'Number': 87, 'Emit Time': 1627175397019, 'Expected Emit Time': 1627175396492, 'Name': 'Tumbling'}\n{'Number': 88, 'Emit Time': 1627175397910, 'Expected Emit Time': 1627175397492, 'Name': 'Tumbling'}\n{'Number': 89, 'Emit Time': 1627175398492, 'Expected Emit Time': 1627175398492, 'Name': 'Tumbling'}\n{'Number': 90, 'Emit Time': 1627175400449, 'Expected Emit Time': 1627175399492, 'Name': 'Tumbling'}\n{'Number': 91, 'Emit Time': 1627175405044, 'Expected Emit Time': 1627175400492, 'Name': 'Tumbling'}\n{'Number': 92, 'Emit Time': 1627175405044, 'Expected Emit Time': 1627175401492, 'Name': 'Tumbling'}\n{'Number': 93, 'Emit Time': 1627175405044, 'Expected Emit Time': 1627175402492, 'Name': 'Tumbling'}\n{'Number': 94, 'Emit Time': 1627175405044, 'Expected Emit Time': 1627175403492, 'Name': 'Tumbling'}\n{'Number': 95, 'Emit Time': 1627175405045, 'Expected Emit Time': 1627175404492, 'Name': 'Tumbling'}\n{'Number': 96, 'Emit Time': 1627175405650, 'Expected Emit Time': 1627175405492, 'Name': 'Tumbling'}\n{'Number': 97, 'Emit Time': 1627175406932, 'Expected Emit Time': 1627175406492, 'Name': 'Tumbling'}\n{'Number': 98, 'Emit Time': 1627175407624, 'Expected Emit Time': 1627175407492, 'Name': 'Tumbling'}\n{'Number': 99, 'Emit Time': 1627175408621, 'Expected Emit Time': 1627175408492, 'Name': 'Tumbling'}\n{'Number': 100, 'Emit Time': 1627175409519, 'Expected Emit Time': 1627175409492, 'Name': 'Tumbling'}\n{'Number': 101, 'Emit Time': 1627175414530, 'Expected Emit Time': 1627175410492, 'Name': 'Tumbling'}\n{'Number': 102, 'Emit Time': 1627175414530, 'Expected Emit Time': 1627175411492, 'Name': 'Tumbling'}\n{'Number': 103, 'Emit Time': 1627175414530, 'Expected Emit Time': 1627175412492, 'Name': 'Tumbling'}\n{'Number': 104, 'Emit Time': 1627175414530, 'Expected Emit Time': 1627175413492, 'Name': 'Tumbling'}\n{'Number': 105, 'Emit Time': 1627175414530, 'Expected Emit Time': 1627175414492, 'Name': 'Tumbling'}\n{'Number': 106, 'Emit Time': 1627175415831, 'Expected Emit Time': 1627175415492, 'Name': 'Tumbling'}\n{'Number': 107, 'Emit Time': 1627175416495, 'Expected Emit Time': 1627175416492, 'Name': 'Tumbling'}\n{'Number': 108, 'Emit Time': 1627175417524, 'Expected Emit Time': 1627175417492, 'Name': 'Tumbling'}\n{'Number': 109, 'Emit Time': 1627175419397, 'Expected Emit Time': 1627175418492, 'Name': 'Tumbling'}\n{'Number': 110, 'Emit Time': 1627175420410, 'Expected Emit Time': 1627175419492, 'Name': 'Tumbling'}\n{'Number': 111, 'Emit Time': 1627175424529, 'Expected Emit Time': 1627175420492, 'Name': 'Tumbling'}\n{'Number': 112, 'Emit Time': 1627175424529, 'Expected Emit Time': 1627175421492, 'Name': 'Tumbling'}\n{'Number': 113, 'Emit Time': 1627175424529, 'Expected Emit Time': 1627175422492, 'Name': 'Tumbling'}\n{'Number': 114, 'Emit Time': 1627175424530, 'Expected Emit Time': 1627175423492, 'Name': 'Tumbling'}\n{'Number': 115, 'Emit Time': 1627175424530, 'Expected Emit Time': 1627175424492, 'Name': 'Tumbling'}\n{'Number': 116, 'Emit Time': 1627175425785, 'Expected Emit Time': 1627175425492, 'Name': 'Tumbling'}\n{'Number': 117, 'Emit Time': 1627175426971, 'Expected Emit Time': 1627175426492, 'Name': 'Tumbling'}\n{'Number': 118, 'Emit Time': 1627175427755, 'Expected Emit Time': 1627175427492, 'Name': 'Tumbling'}\n{'Number': 119, 'Emit Time': 1627175429498, 'Expected Emit Time': 1627175428492, 'Name': 'Tumbling'}\n{'Number': 120, 'Emit Time': 1627175429498, 'Expected Emit Time': 1627175429492, 'Name': 'Tumbling'}\n{'Number': 121, 'Emit Time': 1627175434541, 'Expected Emit Time': 1627175430492, 'Name': 'Tumbling'}\n{'Number': 122, 'Emit Time': 1627175434541, 'Expected Emit Time': 1627175431492, 'Name': 'Tumbling'}\n{'Number': 123, 'Emit Time': 1627175434541, 'Expected Emit Time': 1627175432492, 'Name': 'Tumbling'}\n{'Number': 124, 'Emit Time': 1627175434541, 'Expected Emit Time': 1627175433492, 'Name': 'Tumbling'}\n{'Number': 125, 'Emit Time': 1627175434541, 'Expected Emit Time': 1627175434492, 'Name': 'Tumbling'}\n{'Number': 126, 'Emit Time': 1627175435768, 'Expected Emit Time': 1627175435492, 'Name': 'Tumbling'}\n{'Number': 127, 'Emit Time': 1627175436918, 'Expected Emit Time': 1627175436492, 'Name': 'Tumbling'}\n{'Number': 128, 'Emit Time': 1627175437807, 'Expected Emit Time': 1627175437492, 'Name': 'Tumbling'}\n{'Number': 129, 'Emit Time': 1627175439458, 'Expected Emit Time': 1627175438492, 'Name': 'Tumbling'}\n{'Number': 130, 'Emit Time': 1627175439492, 'Expected Emit Time': 1627175439492, 'Name': 'Tumbling'}\n{'Number': 131, 'Emit Time': 1627175444529, 'Expected Emit Time': 1627175440492, 'Name': 'Tumbling'}\n{'Number': 132, 'Emit Time': 1627175444529, 'Expected Emit Time': 1627175441492, 'Name': 'Tumbling'}\n{'Number': 133, 'Emit Time': 1627175444529, 'Expected Emit Time': 1627175442492, 'Name': 'Tumbling'}\n{'Number': 134, 'Emit Time': 1627175444529, 'Expected Emit Time': 1627175443492, 'Name': 'Tumbling'}\n{'Number': 135, 'Emit Time': 1627175444529, 'Expected Emit Time': 1627175444492, 'Name': 'Tumbling'}\n{'Number': 136, 'Emit Time': 1627175445746, 'Expected Emit Time': 1627175445492, 'Name': 'Tumbling'}\n{'Number': 137, 'Emit Time': 1627175446935, 'Expected Emit Time': 1627175446492, 'Name': 'Tumbling'}\n{'Number': 138, 'Emit Time': 1627175447904, 'Expected Emit Time': 1627175447492, 'Name': 'Tumbling'}\n{'Number': 139, 'Emit Time': 1627175449390, 'Expected Emit Time': 1627175448492, 'Name': 'Tumbling'}\n{'Number': 140, 'Emit Time': 1627175450412, 'Expected Emit Time': 1627175449492, 'Name': 'Tumbling'}\n{'Number': 141, 'Emit Time': 1627175454531, 'Expected Emit Time': 1627175450492, 'Name': 'Tumbling'}\n{'Number': 142, 'Emit Time': 1627175454531, 'Expected Emit Time': 1627175451492, 'Name': 'Tumbling'}\n{'Number': 143, 'Emit Time': 1627175454531, 'Expected Emit Time': 1627175452492, 'Name': 'Tumbling'}\n{'Number': 144, 'Emit Time': 1627175454531, 'Expected Emit Time': 1627175453492, 'Name': 'Tumbling'}\n{'Number': 145, 'Emit Time': 1627175454531, 'Expected Emit Time': 1627175454492, 'Name': 'Tumbling'}\n{'Number': 146, 'Emit Time': 1627175455749, 'Expected Emit Time': 1627175455492, 'Name': 'Tumbling'}\n{'Number': 147, 'Emit Time': 1627175456911, 'Expected Emit Time': 1627175456492, 'Name': 'Tumbling'}\n{'Number': 148, 'Emit Time': 1627175457838, 'Expected Emit Time': 1627175457492, 'Name': 'Tumbling'}\n{'Number': 149, 'Emit Time': 1627175459467, 'Expected Emit Time': 1627175458492, 'Name': 'Tumbling'}\n{'Number': 150, 'Emit Time': 1627175459492, 'Expected Emit Time': 1627175459492, 'Name': 'Tumbling'}\n{'Number': 151, 'Emit Time': 1627175465047, 'Expected Emit Time': 1627175460492, 'Name': 'Tumbling'}\n{'Number': 152, 'Emit Time': 1627175465047, 'Expected Emit Time': 1627175461492, 'Name': 'Tumbling'}\n{'Number': 153, 'Emit Time': 1627175465047, 'Expected Emit Time': 1627175462492, 'Name': 'Tumbling'}\n{'Number': 154, 'Emit Time': 1627175465048, 'Expected Emit Time': 1627175463492, 'Name': 'Tumbling'}\n{'Number': 155, 'Emit Time': 1627175465048, 'Expected Emit Time': 1627175464492, 'Name': 'Tumbling'}\n{'Number': 156, 'Emit Time': 1627175465680, 'Expected Emit Time': 1627175465492, 'Name': 'Tumbling'}\n{'Number': 157, 'Emit Time': 1627175466906, 'Expected Emit Time': 1627175466492, 'Name': 'Tumbling'}\n{'Number': 158, 'Emit Time': 1627175467511, 'Expected Emit Time': 1627175467492, 'Name': 'Tumbling'}\n{'Number': 159, 'Emit Time': 1627175468874, 'Expected Emit Time': 1627175468492, 'Name': 'Tumbling'}\n{'Number': 160, 'Emit Time': 1627175470429, 'Expected Emit Time': 1627175469492, 'Name': 'Tumbling'}\n{'Number': 161, 'Emit Time': 1627175474530, 'Expected Emit Time': 1627175470492, 'Name': 'Tumbling'}\n{'Number': 162, 'Emit Time': 1627175474530, 'Expected Emit Time': 1627175471492, 'Name': 'Tumbling'}\n{'Number': 163, 'Emit Time': 1627175474531, 'Expected Emit Time': 1627175472492, 'Name': 'Tumbling'}\n{'Number': 164, 'Emit Time': 1627175474531, 'Expected Emit Time': 1627175473492, 'Name': 'Tumbling'}\n{'Number': 165, 'Emit Time': 1627175474531, 'Expected Emit Time': 1627175474492, 'Name': 'Tumbling'}\n{'Number': 166, 'Emit Time': 1627175475853, 'Expected Emit Time': 1627175475492, 'Name': 'Tumbling'}\n{'Number': 167, 'Emit Time': 1627175476492, 'Expected Emit Time': 1627175476492, 'Name': 'Tumbling'}\n{'Number': 168, 'Emit Time': 1627175477889, 'Expected Emit Time': 1627175477492, 'Name': 'Tumbling'}\n{'Number': 169, 'Emit Time': 1627175479476, 'Expected Emit Time': 1627175478492, 'Name': 'Tumbling'}\n{'Number': 170, 'Emit Time': 1627175479492, 'Expected Emit Time': 1627175479492, 'Name': 'Tumbling'}\n{'Number': 171, 'Emit Time': 1627175484535, 'Expected Emit Time': 1627175480492, 'Name': 'Tumbling'}\n{'Number': 172, 'Emit Time': 1627175484535, 'Expected Emit Time': 1627175481492, 'Name': 'Tumbling'}\n{'Number': 173, 'Emit Time': 1627175484535, 'Expected Emit Time': 1627175482492, 'Name': 'Tumbling'}\n{'Number': 174, 'Emit Time': 1627175484535, 'Expected Emit Time': 1627175483492, 'Name': 'Tumbling'}\n{'Number': 175, 'Emit Time': 1627175484536, 'Expected Emit Time': 1627175484492, 'Name': 'Tumbling'}\n{'Number': 176, 'Emit Time': 1627175485768, 'Expected Emit Time': 1627175485492, 'Name': 'Tumbling'}\n{'Number': 177, 'Emit Time': 1627175486492, 'Expected Emit Time': 1627175486492, 'Name': 'Tumbling'}\n{'Number': 178, 'Emit Time': 1627175487877, 'Expected Emit Time': 1627175487492, 'Name': 'Tumbling'}\n{'Number': 179, 'Emit Time': 1627175489456, 'Expected Emit Time': 1627175488492, 'Name': 'Tumbling'}\n{'Number': 180, 'Emit Time': 1627175490439, 'Expected Emit Time': 1627175489492, 'Name': 'Tumbling'}\n{'Number': 181, 'Emit Time': 1627175495052, 'Expected Emit Time': 1627175490492, 'Name': 'Tumbling'}\n{'Number': 182, 'Emit Time': 1627175495052, 'Expected Emit Time': 1627175491492, 'Name': 'Tumbling'}\n{'Number': 183, 'Emit Time': 1627175495052, 'Expected Emit Time': 1627175492492, 'Name': 'Tumbling'}\n{'Number': 184, 'Emit Time': 1627175495052, 'Expected Emit Time': 1627175493492, 'Name': 'Tumbling'}\n{'Number': 185, 'Emit Time': 1627175495052, 'Expected Emit Time': 1627175494492, 'Name': 'Tumbling'}\n{'Number': 186, 'Emit Time': 1627175495654, 'Expected Emit Time': 1627175495492, 'Name': 'Tumbling'}\n{'Number': 187, 'Emit Time': 1627175496860, 'Expected Emit Time': 1627175496492, 'Name': 'Tumbling'}\n{'Number': 188, 'Emit Time': 1627175497528, 'Expected Emit Time': 1627175497492, 'Name': 'Tumbling'}\n{'Number': 189, 'Emit Time': 1627175498495, 'Expected Emit Time': 1627175498492, 'Name': 'Tumbling'}\n{'Number': 190, 'Emit Time': 1627175500425, 'Expected Emit Time': 1627175499492, 'Name': 'Tumbling'}\n{'Number': 191, 'Emit Time': 1627175505059, 'Expected Emit Time': 1627175500492, 'Name': 'Tumbling'}\n{'Number': 192, 'Emit Time': 1627175505059, 'Expected Emit Time': 1627175501492, 'Name': 'Tumbling'}\n{'Number': 193, 'Emit Time': 1627175505059, 'Expected Emit Time': 1627175502492, 'Name': 'Tumbling'}\n{'Number': 194, 'Emit Time': 1627175505060, 'Expected Emit Time': 1627175503492, 'Name': 'Tumbling'}\n{'Number': 195, 'Emit Time': 1627175505060, 'Expected Emit Time': 1627175504492, 'Name': 'Tumbling'}\n{'Number': 196, 'Emit Time': 1627175505707, 'Expected Emit Time': 1627175505492, 'Name': 'Tumbling'}\n{'Number': 197, 'Emit Time': 1627175506959, 'Expected Emit Time': 1627175506492, 'Name': 'Tumbling'}\n{'Number': 198, 'Emit Time': 1627175507556, 'Expected Emit Time': 1627175507492, 'Name': 'Tumbling'}\n{'Number': 199, 'Emit Time': 1627175508575, 'Expected Emit Time': 1627175508492, 'Name': 'Tumbling'}\n{'Number': 200, 'Emit Time': 1627175510436, 'Expected Emit Time': 1627175509492, 'Name': 'Tumbling'}\n{'Number': 201, 'Emit Time': 1627175514536, 'Expected Emit Time': 1627175510492, 'Name': 'Tumbling'}\n{'Number': 202, 'Emit Time': 1627175514537, 'Expected Emit Time': 1627175511492, 'Name': 'Tumbling'}\n{'Number': 203, 'Emit Time': 1627175514537, 'Expected Emit Time': 1627175512492, 'Name': 'Tumbling'}\n{'Number': 204, 'Emit Time': 1627175514537, 'Expected Emit Time': 1627175513492, 'Name': 'Tumbling'}\n{'Number': 205, 'Emit Time': 1627175514537, 'Expected Emit Time': 1627175514492, 'Name': 'Tumbling'}\n{'Number': 206, 'Emit Time': 1627175515835, 'Expected Emit Time': 1627175515492, 'Name': 'Tumbling'}\n{'Number': 207, 'Emit Time': 1627175516492, 'Expected Emit Time': 1627175516492, 'Name': 'Tumbling'}\n{'Number': 208, 'Emit Time': 1627175517492, 'Expected Emit Time': 1627175517492, 'Name': 'Tumbling'}\n{'Number': 209, 'Emit Time': 1627175519435, 'Expected Emit Time': 1627175518492, 'Name': 'Tumbling'}\n{'Number': 210, 'Emit Time': 1627175520399, 'Expected Emit Time': 1627175519492, 'Name': 'Tumbling'}\n{'Number': 211, 'Emit Time': 1627175524530, 'Expected Emit Time': 1627175520492, 'Name': 'Tumbling'}\n{'Number': 212, 'Emit Time': 1627175524530, 'Expected Emit Time': 1627175521492, 'Name': 'Tumbling'}\n{'Number': 213, 'Emit Time': 1627175524530, 'Expected Emit Time': 1627175522492, 'Name': 'Tumbling'}\n{'Number': 214, 'Emit Time': 1627175524530, 'Expected Emit Time': 1627175523492, 'Name': 'Tumbling'}\n{'Number': 215, 'Emit Time': 1627175524531, 'Expected Emit Time': 1627175524492, 'Name': 'Tumbling'}\n{'Number': 216, 'Emit Time': 1627175525823, 'Expected Emit Time': 1627175525492, 'Name': 'Tumbling'}\n{'Number': 217, 'Emit Time': 1627175526492, 'Expected Emit Time': 1627175526492, 'Name': 'Tumbling'}\n{'Number': 218, 'Emit Time': 1627175527977, 'Expected Emit Time': 1627175527492, 'Name': 'Tumbling'}\n{'Number': 219, 'Emit Time': 1627175529375, 'Expected Emit Time': 1627175528492, 'Name': 'Tumbling'}\n{'Number': 220, 'Emit Time': 1627175530485, 'Expected Emit Time': 1627175529492, 'Name': 'Tumbling'}\n{'Number': 221, 'Emit Time': 1627175530492, 'Expected Emit Time': 1627175530492, 'Name': 'Tumbling'}\n{'Number': 222, 'Emit Time': 1627175534534, 'Expected Emit Time': 1627175531492, 'Name': 'Tumbling'}\n{'Number': 223, 'Emit Time': 1627175534535, 'Expected Emit Time': 1627175532492, 'Name': 'Tumbling'}\n{'Number': 224, 'Emit Time': 1627175534535, 'Expected Emit Time': 1627175533492, 'Name': 'Tumbling'}\n{'Number': 225, 'Emit Time': 1627175534535, 'Expected Emit Time': 1627175534492, 'Name': 'Tumbling'}\n{'Number': 226, 'Emit Time': 1627175535866, 'Expected Emit Time': 1627175535492, 'Name': 'Tumbling'}\n{'Number': 227, 'Emit Time': 1627175536570, 'Expected Emit Time': 1627175536492, 'Name': 'Tumbling'}\n{'Number': 228, 'Emit Time': 1627175537619, 'Expected Emit Time': 1627175537492, 'Name': 'Tumbling'}\n{'Number': 229, 'Emit Time': 1627175538573, 'Expected Emit Time': 1627175538492, 'Name': 'Tumbling'}\n{'Number': 230, 'Emit Time': 1627175540422, 'Expected Emit Time': 1627175539492, 'Name': 'Tumbling'}\n{'Number': 231, 'Emit Time': 1627175544537, 'Expected Emit Time': 1627175540492, 'Name': 'Tumbling'}\n{'Number': 232, 'Emit Time': 1627175544537, 'Expected Emit Time': 1627175541492, 'Name': 'Tumbling'}\n{'Number': 233, 'Emit Time': 1627175544537, 'Expected Emit Time': 1627175542492, 'Name': 'Tumbling'}\n{'Number': 234, 'Emit Time': 1627175544537, 'Expected Emit Time': 1627175543492, 'Name': 'Tumbling'}\n{'Number': 235, 'Emit Time': 1627175544537, 'Expected Emit Time': 1627175544492, 'Name': 'Tumbling'}\n{'Number': 236, 'Emit Time': 1627175545786, 'Expected Emit Time': 1627175545492, 'Name': 'Tumbling'}\n{'Number': 237, 'Emit Time': 1627175546969, 'Expected Emit Time': 1627175546492, 'Name': 'Tumbling'}\n{'Number': 238, 'Emit Time': 1627175547863, 'Expected Emit Time': 1627175547492, 'Name': 'Tumbling'}\n{'Number': 239, 'Emit Time': 1627175549424, 'Expected Emit Time': 1627175548492, 'Name': 'Tumbling'}\n{'Number': 240, 'Emit Time': 1627175550451, 'Expected Emit Time': 1627175549492, 'Name': 'Tumbling'}\n{'Number': 241, 'Emit Time': 1627175554528, 'Expected Emit Time': 1627175550492, 'Name': 'Tumbling'}\n{'Number': 242, 'Emit Time': 1627175554529, 'Expected Emit Time': 1627175551492, 'Name': 'Tumbling'}\n{'Number': 243, 'Emit Time': 1627175554529, 'Expected Emit Time': 1627175552492, 'Name': 'Tumbling'}\n{'Number': 244, 'Emit Time': 1627175554529, 'Expected Emit Time': 1627175553492, 'Name': 'Tumbling'}\n{'Number': 245, 'Emit Time': 1627175554529, 'Expected Emit Time': 1627175554492, 'Name': 'Tumbling'}\n{'Number': 246, 'Emit Time': 1627175555758, 'Expected Emit Time': 1627175555492, 'Name': 'Tumbling'}\n{'Number': 247, 'Emit Time': 1627175556905, 'Expected Emit Time': 1627175556492, 'Name': 'Tumbling'}\n{'Number': 248, 'Emit Time': 1627175557782, 'Expected Emit Time': 1627175557492, 'Name': 'Tumbling'}\n{'Number': 249, 'Emit Time': 1627175559430, 'Expected Emit Time': 1627175558492, 'Name': 'Tumbling'}\n{'Number': 250, 'Emit Time': 1627175560442, 'Expected Emit Time': 1627175559492, 'Name': 'Tumbling'}\n{'Number': 251, 'Emit Time': 1627175564536, 'Expected Emit Time': 1627175560492, 'Name': 'Tumbling'}\n{'Number': 252, 'Emit Time': 1627175564536, 'Expected Emit Time': 1627175561492, 'Name': 'Tumbling'}\n{'Number': 253, 'Emit Time': 1627175564536, 'Expected Emit Time': 1627175562492, 'Name': 'Tumbling'}\n{'Number': 254, 'Emit Time': 1627175564536, 'Expected Emit Time': 1627175563492, 'Name': 'Tumbling'}\n{'Number': 255, 'Emit Time': 1627175564536, 'Expected Emit Time': 1627175564492, 'Name': 'Tumbling'}\n{'Number': 256, 'Emit Time': 1627175565843, 'Expected Emit Time': 1627175565492, 'Name': 'Tumbling'}\n{'Number': 257, 'Emit Time': 1627175566492, 'Expected Emit Time': 1627175566492, 'Name': 'Tumbling'}\n{'Number': 258, 'Emit Time': 1627175567492, 'Expected Emit Time': 1627175567492, 'Name': 'Tumbling'}\n{'Number': 259, 'Emit Time': 1627175569481, 'Expected Emit Time': 1627175568492, 'Name': 'Tumbling'}\n{'Number': 260, 'Emit Time': 1627175569492, 'Expected Emit Time': 1627175569492, 'Name': 'Tumbling'}\n{'Number': 261, 'Emit Time': 1627175574544, 'Expected Emit Time': 1627175570492, 'Name': 'Tumbling'}\n{'Number': 262, 'Emit Time': 1627175574544, 'Expected Emit Time': 1627175571492, 'Name': 'Tumbling'}\n{'Number': 263, 'Emit Time': 1627175574544, 'Expected Emit Time': 1627175572492, 'Name': 'Tumbling'}\n{'Number': 264, 'Emit Time': 1627175574544, 'Expected Emit Time': 1627175573492, 'Name': 'Tumbling'}\n{'Number': 265, 'Emit Time': 1627175574544, 'Expected Emit Time': 1627175574492, 'Name': 'Tumbling'}\n{'Number': 266, 'Emit Time': 1627175575847, 'Expected Emit Time': 1627175575492, 'Name': 'Tumbling'}\n{'Number': 267, 'Emit Time': 1627175576547, 'Expected Emit Time': 1627175576492, 'Name': 'Tumbling'}\n{'Number': 268, 'Emit Time': 1627175577583, 'Expected Emit Time': 1627175577492, 'Name': 'Tumbling'}\n{'Number': 269, 'Emit Time': 1627175578497, 'Expected Emit Time': 1627175578492, 'Name': 'Tumbling'}\n{'Number': 270, 'Emit Time': 1627175580499, 'Expected Emit Time': 1627175579492, 'Name': 'Tumbling'}\n{'Number': 271, 'Emit Time': 1627175580499, 'Expected Emit Time': 1627175580492, 'Name': 'Tumbling'}\n{'Number': 272, 'Emit Time': 1627175584542, 'Expected Emit Time': 1627175581492, 'Name': 'Tumbling'}\n{'Number': 273, 'Emit Time': 1627175584542, 'Expected Emit Time': 1627175582492, 'Name': 'Tumbling'}\n{'Number': 274, 'Emit Time': 1627175584542, 'Expected Emit Time': 1627175583492, 'Name': 'Tumbling'}\n{'Number': 275, 'Emit Time': 1627175584542, 'Expected Emit Time': 1627175584492, 'Name': 'Tumbling'}\n{'Number': 276, 'Emit Time': 1627175585760, 'Expected Emit Time': 1627175585492, 'Name': 'Tumbling'}\n{'Number': 277, 'Emit Time': 1627175586869, 'Expected Emit Time': 1627175586492, 'Name': 'Tumbling'}\n{'Number': 278, 'Emit Time': 1627175587771, 'Expected Emit Time': 1627175587492, 'Name': 'Tumbling'}\n{'Number': 279, 'Emit Time': 1627175589458, 'Expected Emit Time': 1627175588492, 'Name': 'Tumbling'}\n{'Number': 280, 'Emit Time': 1627175589492, 'Expected Emit Time': 1627175589492, 'Name': 'Tumbling'}\n{'Number': 281, 'Emit Time': 1627175594542, 'Expected Emit Time': 1627175590492, 'Name': 'Tumbling'}\n{'Number': 282, 'Emit Time': 1627175594542, 'Expected Emit Time': 1627175591492, 'Name': 'Tumbling'}\n{'Number': 283, 'Emit Time': 1627175594542, 'Expected Emit Time': 1627175592492, 'Name': 'Tumbling'}\n{'Number': 284, 'Emit Time': 1627175594543, 'Expected Emit Time': 1627175593492, 'Name': 'Tumbling'}\n{'Number': 285, 'Emit Time': 1627175594543, 'Expected Emit Time': 1627175594492, 'Name': 'Tumbling'}\n{'Number': 286, 'Emit Time': 1627175595803, 'Expected Emit Time': 1627175595492, 'Name': 'Tumbling'}\n{'Number': 287, 'Emit Time': 1627175596492, 'Expected Emit Time': 1627175596492, 'Name': 'Tumbling'}\n{'Number': 288, 'Emit Time': 1627175597534, 'Expected Emit Time': 1627175597492, 'Name': 'Tumbling'}\n{'Number': 289, 'Emit Time': 1627175598498, 'Expected Emit Time': 1627175598492, 'Name': 'Tumbling'}\n{'Number': 290, 'Emit Time': 1627175600505, 'Expected Emit Time': 1627175599492, 'Name': 'Tumbling'}\n{'Number': 291, 'Emit Time': 1627175600505, 'Expected Emit Time': 1627175600492, 'Name': 'Tumbling'}\n{'Number': 292, 'Emit Time': 1627175604531, 'Expected Emit Time': 1627175601492, 'Name': 'Tumbling'}\n{'Number': 293, 'Emit Time': 1627175604531, 'Expected Emit Time': 1627175602492, 'Name': 'Tumbling'}\n{'Number': 294, 'Emit Time': 1627175604532, 'Expected Emit Time': 1627175603492, 'Name': 'Tumbling'}\n{'Number': 295, 'Emit Time': 1627175604532, 'Expected Emit Time': 1627175604492, 'Name': 'Tumbling'}\n{'Number': 296, 'Emit Time': 1627175605821, 'Expected Emit Time': 1627175605492, 'Name': 'Tumbling'}\n{'Number': 297, 'Emit Time': 1627175606958, 'Expected Emit Time': 1627175606492, 'Name': 'Tumbling'}\n{'Number': 298, 'Emit Time': 1627175607899, 'Expected Emit Time': 1627175607492, 'Name': 'Tumbling'}\n{'Number': 299, 'Emit Time': 1627175609047, 'Expected Emit Time': 1627175608492, 'Name': 'Tumbling'}\n############## END ##############\nEpoch: 1627175609.0588524\nUTC: 2021-07-25 01:13:29\n#################################\nQuery Receive Time: 1627175308753\n"
           },
           {
             "type": "TABLE",
-            "data": "COUNT(*)\tAVG(mf01)\tMIN(mf01)\tMAX(mf01)\n1001.0\t13430.314685314685\t12843.0\t14281.0\n1000.0\t13528.394\t13262.0\t14122.0\n1000.0\t13528.977\t13373.0\t13648.0\n4.0\t13612.5\t13609.0\t13618.0\n4.0\t13627.5\t13625.0\t13629.0\n6.0\t13611.5\t13602.0\t13624.0\n985.0\t13514.249746192894\t13420.0\t13638.0\n1000.0\t13454.598\t13292.0\t13557.0\n"
+            "data": "COUNT(*)\tAVG(mf01)\tMIN(mf01)\tMAX(mf01)\n21236.0\t14208.655396496515\t13576.0\t19291.0\n26.0\t14008.653846153846\t13903.0\t14141.0\n23.0\t14019.04347826087\t13899.0\t14118.0\n34.0\t13864.911764705883\t13840.0\t13895.0\n16.0\t13872.25\t13834.0\t13903.0\n19013.0\t14212.809340977226\t13572.0\t18967.0\n22340.0\t14192.17448522829\t13423.0\t19066.0\n20419.0\t14213.543807238357\t13356.0\t19070.0\n16186.0\t14228.914617570741\t13495.0\t19147.0\n9319.0\t14236.443287906428\t13628.0\t19035.0\n24.0\t14319.875\t14301.0\t14341.0\n9541.0\t14172.859658316738\t13573.0\t18933.0\n12.0\t14103.833333333334\t14079.0\t14175.0\n14.0\t14373.42857142857\t14207.0\t14458.0\n24.0\t14313.958333333334\t14226.0\t14429.0\n7811.0\t14276.379208808092\t13707.0\t19087.0\n9348.0\t14217.882755669661\t13516.0\t18814.0\n21790.0\t14218.524690224875\t13534.0\t19067.0\n20982.0\t14216.596892574587\t13369.0\t19087.0\n19852.0\t14228.627191214991\t13537.0\t19107.0\n18123.0\t14245.887270319483\t13669.0\t18996.0\n103.0\t14306.271844660194\t14266.0\t14353.0\n59.0\t14282.64406779661\t14229.0\t14310.0\n35.0\t14279.228571428572\t14250.0\t14302.0\n29.0\t14273.48275862069\t14239.0\t14303.0\n20425.0\t14270.28494492044\t13575.0\t19041.0\n18852.0\t14241.627572671334\t13536.0\t19183.0\n21966.0\t14282.170354183738\t13440.0\t19200.0\n19512.0\t14255.197058220581\t13534.0\t19189.0\n10929.0\t14195.633269283557\t13462.0\t19353.0\n135.0\t14293.274074074074\t14271.0\t14321.0\n11168.0\t14226.230479942693\t13699.0\t19294.0\n23.0\t14608.782608695652\t14236.0\t14801.0\n23.0\t14385.478260869566\t14311.0\t14564.0\n43.0\t14160.67441860465\t14033.0\t14332.0\n19193.0\t14238.846089720211\t13565.0\t19328.0\n21299.0\t14307.70256819569\t13530.0\t19447.0\n21116.0\t14268.325156279598\t13531.0\t19207.0\n21053.0\t14280.2437657341\t13642.0\t19078.0\n7062.0\t13843.757009345794\t13420.0\t18738.0\n12009.0\t13647.835873095179\t13250.0\t14544.0\n20.0\t14219.2\t14171.0\t14266.0\n20.0\t14277.9\t14259.0\t14310.0\n32.0\t14975.875\t14312.0\t15458.0\n18.0\t14496.5\t14200.0\t14872.0\n19697.0\t13786.968066202975\t13425.0\t18954.0\n17028.0\t13803.448320413436\t13120.0\t15068.0\n17737.0\t14047.980210858657\t13305.0\t19150.0\n19467.0\t14177.474187085838\t13597.0\t19169.0\n10417.0\t14240.474320821733\t13565.0\t19063.0\n4525.0\t14074.2408839779\t13550.0\t15340.0\n5940.0\t14275.299326599326\t13591.0\t18961.0\n16.0\t14384.6875\t14364.0\t14435.0\n19.0\t14313.78947368421\t14273.0\t14369.0\n32.0\t14311.90625\t14271.0\t14349.0\n9439.0\t14170.882614683758\t13620.0\t18923.0\n8366.0\t14199.461152283051\t13550.0\t19066.0\n18934.0\t14172.347628604626\t13549.0\t19142.0\n21604.0\t14283.430151823737\t13616.0\t19147.0\n18061.0\t14217.989535463154\t13482.0\t19216.0\n17573.0\t14285.00546292608\t13631.0\t19130.0\n56.0\t13922.482142857143\t13899.0\t13988.0\n59.0\t13935.525423728814\t13912.0\t13966.0\n118.0\t13953.99152542373\t13888.0\t14010.0\n100.0\t13860.59\t13815.0\t14259.0\n20031.0\t13831.584593879486\t13257.0\t19033.0\n30419.0\t13880.32387652454\t13413.0\t18921.0\n21270.0\t13966.898871650212\t13337.0\t18953.0\n10932.0\t14229.548390047566\t13663.0\t15038.0\n11309.0\t14200.960562383942\t13570.0\t19295.0\n9079.0\t14355.206190109044\t13793.0\t19235.0\n1798.0\t14333.833147942158\t13839.0\t14960.0\n37.0\t14152.297297297297\t14116.0\t14235.0\n27.0\t14478.518518518518\t14264.0\t14604.0\n52.0\t14456.25\t14317.0\t14675.0\n20188.0\t14220.998167228056\t13523.0\t19157.0\n22048.0\t14191.02626088534\t13557.0\t19313.0\n21571.0\t14186.101664271475\t13383.0\t19431.0\n18663.0\t14229.920109307186\t13457.0\t19219.0\n6470.0\t14341.646058732613\t13953.0\t15168.0\n3646.0\t14325.61135490949\t13813.0\t19363.0\n10410.0\t14118.368011527378\t13465.0\t19778.0\n16.0\t14509.5625\t14504.0\t14517.0\n9.0\t14502.555555555555\t14497.0\t14506.0\n32.0\t14500.03125\t14479.0\t14522.0\n22878.0\t14289.790715971676\t13423.0\t19309.0\n18269.0\t14257.376977393398\t13431.0\t19427.0\n18675.0\t14232.296331994645\t13454.0\t19331.0\n18741.0\t14035.747025238781\t13320.0\t19058.0\n12485.0\t13705.513976772127\t13349.0\t14325.0\n8454.0\t13957.702744263072\t13357.0\t15352.0\n18.0\t14005.5\t13999.0\t14013.0\n17.0\t14018.764705882353\t14001.0\t14035.0\n38.0\t14065.368421052632\t14040.0\t14089.0\n20.0\t14094.4\t14074.0\t14124.0\n10546.0\t14239.544661483027\t13694.0\t19104.0\n20846.0\t14234.50949822508\t13471.0\t19185.0\n8264.0\t14185.798523717329\t13549.0\t19208.0\n20274.0\t14235.982933806847\t13539.0\t19167.0\n16474.0\t14228.902998664562\t13599.0\t19182.0\n18236.0\t14190.685676683483\t13426.0\t19197.0\n18.0\t14210.333333333334\t14112.0\t14357.0\n20.0\t14102.95\t14079.0\t14116.0\n33.0\t14146.454545454546\t14067.0\t14204.0\n17.0\t14032.588235294117\t14007.0\t14061.0\n19968.0\t14222.55193309295\t13400.0\t19202.0\n10506.0\t14175.095088520846\t13456.0\t19117.0\n21251.0\t14223.758505482096\t13448.0\t19183.0\n30574.0\t13976.991299797213\t13223.0\t19060.0\n10474.0\t13538.631181974413\t13183.0\t15426.0\n8602.0\t14005.543013252733\t13497.0\t15411.0\n16.0\t14299.1875\t14287.0\t14304.0\n14.0\t14280.92857142857\t14276.0\t14290.0\n34.0\t14298.235294117647\t14290.0\t14306.0\n16.0\t14296.875\t14293.0\t14303.0\n21724.0\t14212.774765236605\t13547.0\t19482.0\n20644.0\t14161.196667312537\t13543.0\t19700.0\n20715.0\t14206.581559256578\t13345.0\t19592.0\n20240.0\t14154.277618577074\t13544.0\t19304.0\n15.0\t14365.6\t14350.0\t14375.0\n22278.0\t14172.949187539276\t13445.0\t19425.0\n21.0\t13898.761904761905\t13840.0\t13938.0\n21.0\t14088.714285714286\t13952.0\t14227.0\n38.0\t14129.78947368421\t13998.0\t14252.0\n22.0\t13937.727272727272\t13871.0\t13993.0\n20924.0\t14190.961623016632\t13596.0\t19388.0\n20128.0\t14144.242796104929\t13519.0\t19256.0\n20322.0\t14256.389233343174\t13568.0\t19531.0\n20058.0\t13925.25211885532\t13187.0\t19030.0\n11006.0\t13564.457023441759\t13254.0\t17927.0\n8884.0\t13269.992120666366\t12881.0\t18797.0\n13.0\t13041.384615384615\t13036.0\t13048.0\n17.0\t13045.0\t13037.0\t13049.0\n26.0\t13039.5\t13026.0\t13048.0\n13.0\t13015.307692307691\t12999.0\t13028.0\n16626.0\t12721.882052207386\t12430.0\t18468.0\n18945.0\t12594.99292689364\t12423.0\t12696.0\n20570.0\t12593.333155080214\t12416.0\t12754.0\n19951.0\t12595.929928324394\t12390.0\t12709.0\n10912.0\t12602.988819648093\t12434.0\t12714.0\n10267.0\t12613.202688224408\t12435.0\t12724.0\n12.0\t12593.166666666666\t12589.0\t12600.0\n12.0\t12595.5\t12591.0\t12602.0\n22.0\t12593.363636363636\t12584.0\t12602.0\n14.0\t12606.57142857143\t12595.0\t12612.0\n16701.0\t12604.606849889227\t12430.0\t12705.0\n18802.0\t12604.0\t12604.0\t12604.0\n22119.0\t12604.0\t12604.0\t12604.0\n19690.0\t12604.0\t12604.0\t12604.0\n7740.0\t12604.0\t12604.0\t12604.0\n12926.0\t12604.0\t12604.0\t12604.0\n19.0\t12604.0\t12604.0\t12604.0\n26.0\t12604.0\t12604.0\t12604.0\n40.0\t12604.0\t12604.0\t12604.0\n23.0\t12604.0\t12604.0\t12604.0\n11899.0\t12604.0\t12604.0\t12604.0\n20244.0\t12604.0\t12604.0\t12604.0\n9904.0\t12604.0\t12604.0\t12604.0\n29575.0\t12604.0\t12604.0\t12604.0\n20220.0\t12596.98387734916\t12411.0\t12695.0\n10018.0\t12594.821621082052\t12419.0\t12684.0\n15.0\t12643.733333333334\t12632.0\t12653.0\n14.0\t12647.714285714286\t12642.0\t12652.0\n27.0\t12654.074074074075\t12638.0\t12666.0\n22.0\t12646.454545454546\t12631.0\t12657.0\n17311.0\t12606.17266477962\t12413.0\t12713.0\n16156.0\t12609.87082198564\t12433.0\t12732.0\n24332.0\t12616.287645898405\t12415.0\t12765.0\n19522.0\t12605.019567667247\t12429.0\t12709.0\n5289.0\t12611.58215163547\t12452.0\t12714.0\n14272.0\t12622.449691704036\t12452.0\t12726.0\n20.0\t12687.95\t12681.0\t12696.0\n20.0\t12689.55\t12673.0\t12703.0\n48.0\t12675.791666666666\t12656.0\t12692.0\n21.0\t12704.190476190477\t12688.0\t12717.0\n20984.0\t12606.915792985132\t12419.0\t12718.0\n18940.0\t12610.861721224921\t12413.0\t12763.0\n18939.0\t12601.151275146523\t12412.0\t12738.0\n18391.0\t12600.617367190474\t12423.0\t12785.0\n7930.0\t12603.997225725094\t12431.0\t12705.0\n9052.0\t12606.049491825012\t12435.0\t12690.0\n16.0\t12580.0625\t12576.0\t12587.0\n19.0\t12578.157894736842\t12567.0\t12587.0\n38.0\t12551.921052631578\t12531.0\t12567.0\n23.0\t12528.652173913044\t12522.0\t12535.0\n10368.0\t12622.277102623457\t12461.0\t12710.0\n20017.0\t12606.681270919718\t12407.0\t12721.0\n9532.0\t12593.490977759127\t12422.0\t12697.0\n19901.0\t12603.618360886388\t12422.0\t12702.0\n26322.0\t12599.991186080086\t12392.0\t12716.0\n8020.0\t12593.301371571073\t12433.0\t12687.0\n18.0\t12576.444444444445\t12568.0\t12589.0\n19.0\t12580.631578947368\t12564.0\t12590.0\n33.0\t12574.60606060606\t12557.0\t12589.0\n19.0\t12586.736842105263\t12575.0\t12593.0\n8980.0\t12602.063697104677\t12409.0\t12724.0\n17687.0\t12614.524452988071\t12426.0\t12728.0\n9777.0\t12612.184514677303\t12404.0\t12868.0\n20051.0\t12613.781407411101\t12433.0\t12718.0\n31887.0\t12620.550976887132\t12433.0\t12733.0\n10497.0\t12638.632180623035\t12475.0\t12744.0\n17.0\t12659.529411764706\t12653.0\t12667.0\n28.0\t12647.214285714286\t12621.0\t12668.0\n77.0\t12636.038961038961\t12614.0\t12662.0\n39.0\t12641.25641025641\t12620.0\t12665.0\n18184.0\t12613.603772547294\t12444.0\t12702.0\n14890.0\t12628.322834116858\t12473.0\t12729.0\n17948.0\t12622.955649654557\t12441.0\t12725.0\n26088.0\t12619.26238117142\t12448.0\t12726.0\n8239.0\t12618.591576647652\t12431.0\t12723.0\n10756.0\t12621.152566009669\t12453.0\t12719.0\n17.0\t12574.0\t12562.0\t12589.0\n27.0\t12598.851851851852\t12587.0\t12608.0\n27.0\t12603.703703703704\t12595.0\t12616.0\n21.0\t12608.095238095239\t12595.0\t12620.0\n21255.0\t12628.815902140674\t12455.0\t12770.0\n20464.0\t13116.3450938233\t12357.0\t18132.0\n21260.0\t13568.928363123236\t12913.0\t19402.0\n20665.0\t14137.202564722962\t13462.0\t18991.0\n10183.0\t13832.069527644113\t13195.0\t19006.0\n2066.0\t13785.877541142305\t13614.0\t13956.0\n9046.0\t13853.414658412557\t13281.0\t18575.0\n20.0\t13553.8\t13542.0\t13573.0\n19.0\t13559.052631578947\t13553.0\t13570.0\n37.0\t13594.972972972973\t13576.0\t13604.0\n19171.0\t13193.28955192739\t12735.0\t18792.0\n10471.0\t13026.109349632317\t12439.0\t18095.0\n21059.0\t12572.112351013819\t12389.0\t12790.0\n19564.0\t12964.049376405643\t12372.0\t18149.0\n20922.0\t13269.855702131727\t12858.0\t18112.0\n10160.0\t13224.117421259842\t12654.0\t17772.0\n21.0\t13613.761904761905\t13597.0\t13627.0\n14.0\t13586.142857142857\t13577.0\t13597.0\n28.0\t13562.5\t13524.0\t13589.0\n17.0\t13524.70588235294\t13519.0\t13529.0\n17185.0\t13509.12540005819\t13270.0\t18381.0\n19280.0\t13922.685114107884\t13264.0\t19040.0\n17930.0\t14128.521639709983\t13415.0\t19507.0\n20071.0\t14136.394599172936\t13383.0\t19487.0\n10395.0\t14121.47619047619\t13513.0\t19062.0\n10257.0\t14243.43521497514\t13534.0\t19003.0\n18.0\t14192.444444444445\t14117.0\t14249.0\n15.0\t14097.666666666666\t14085.0\t14111.0\n33.0\t14071.90909090909\t14011.0\t14306.0\n14.0\t14478.142857142857\t14348.0\t14548.0\n19847.0\t14140.425555499573\t13369.0\t19356.0\n19210.0\t14169.489328474752\t13476.0\t19053.0\n19683.0\t14116.190976985215\t13435.0\t19397.0\n21790.0\t14162.22950894906\t13366.0\t19030.0\n11201.0\t14146.562003392553\t13553.0\t18933.0\n10900.0\t14088.894862385321\t13477.0\t19093.0\n18.0\t13826.888888888889\t13817.0\t13847.0\n2.0\t13846.0\t13845.0\t13847.0\n128.0\t14093.4296875\t13830.0\t14184.0\n26.0\t14150.346153846154\t14144.0\t14157.0\n21590.0\t13684.66373320982\t13138.0\t18617.0\n15187.0\t14579.805820767762\t13830.0\t19505.0\n25264.0\t14821.27374920836\t13921.0\t19740.0\n23354.0\t14927.556050355399\t14328.0\t20220.0\n2522.0\t14921.203806502775\t14531.0\t16526.0\n14746.0\t14936.601247796012\t14423.0\t20316.0\n16.0\t14627.375\t14617.0\t14641.0\n17.0\t14841.64705882353\t14645.0\t15004.0\n36.0\t14997.416666666666\t14936.0\t15092.0\n19.0\t14969.578947368422\t14934.0\t15003.0\n18237.0\t14929.72111641169\t14373.0\t20368.0\n8775.0\t14980.561367521368\t14440.0\t19808.0\n20625.0\t14957.590836363637\t13993.0\t20633.0\n21822.0\t14218.113738429109\t13683.0\t19501.0\n21063.0\t13504.629444998338\t12660.0\t18903.0\n17.0\t13060.29411764706\t13051.0\t13071.0\n9370.0\t13055.402027748132\t12882.0\t13135.0\n14.0\t13015.0\t13003.0\t13031.0\n11.0\t13012.818181818182\t13001.0\t13025.0\n28.0\t13003.714285714286\t12992.0\t13016.0\n19831.0\t12769.464525238263\t12458.0\t18457.0\n20189.0\t12627.006439150033\t12450.0\t12777.0\n19751.0\t12636.779757986937\t12457.0\t12753.0\n19958.0\t12649.318919731437\t12435.0\t12770.0\n8305.0\t12682.530523780855\t12475.0\t12862.0\n11078.0\t12724.690196786423\t12457.0\t14985.0\n28.0\t13549.82142857143\t13536.0\t13573.0\n22.0\t13569.272727272728\t13558.0\t13583.0\n23.0\t13570.08695652174\t13550.0\t13590.0\n15.0\t13558.666666666666\t13547.0\t13568.0\n20245.0\t13914.93983699679\t13379.0\t19111.0\n15110.0\t13699.028259430841\t13226.0\t14998.0\n13984.0\t13927.491990846682\t13390.0\t18845.0\n19791.0\t14268.443686524177\t13387.0\t19178.0\n17801.0\t14297.38115836189\t13644.0\t19408.0\n12.0\t13961.333333333334\t13947.0\t13975.0\n9025.0\t14255.181163434903\t13428.0\t19095.0\n23.0\t14392.869565217392\t14378.0\t14413.0\n21.0\t14391.142857142857\t14378.0\t14407.0\n48.0\t14392.229166666666\t14377.0\t14414.0\n16599.0\t14262.26664256883\t13537.0\t19401.0\n19526.0\t14205.09587217044\t13521.0\t19333.0\n21772.0\t14302.439233878376\t13540.0\t19447.0\n20137.0\t14255.7268709341\t13486.0\t19146.0\n"
           }
         ]
-      }
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627163020971_278436905",
+      "id": "paragraph_1627074417073_567825142",
+      "dateCreated": "2021-07-24T21:43:40+0000",
+      "dateStarted": "2021-07-25T01:08:28+0000",
+      "dateFinished": "2021-07-25T01:13:29+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:191"
     },
     {
+      "text": "%md\n\n## Query 2: Determine Outliers\n\n> Detect outliers based on quantiles as suggested by [Apache DataSketches](https://datasketches.apache.org/docs/Community/Research.html) for anomaly/outlier detection\n\n**CQL:**\n\n```sql\nSELECT \n  QUANTILE(mf01, linear, 11)\nFROM \n  STREAM_SENSOR;\n```",
       "user": "anonymous",
+      "dateUpdated": "2021-07-24T21:43:40+0000",
       "progress": 0,
       "config": {
         "tableHide": false,
@@ -430,19 +425,6 @@
         "params": {},
         "forms": {}
       },
-      "apps": [],
-      "runtimeInfos": {},
-      "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627074435918_1009489766",
-      "id": "paragraph_1627074435918_1009489766",
-      "dateCreated": "2021-07-23T21:07:15+0000",
-      "status": "FINISHED",
-      "focus": true,
-      "$$hashKey": "object:3280",
-      "text": "%md\n\n## Query 2: Determine Outliers\n\n> Detect outliers based on quantiles as suggested by [Apache DataSketches](https://datasketches.apache.org/docs/Community/Research.html) for anomaly/outlier detection\n\n**CQL:**\n\n```sql\nSELECT \n  QUANTILE(mf01, linear, 11)\nFROM \n  STREAM_SENSOR;\n```",
-      "dateUpdated": "2021-07-23T22:14:33+0000",
-      "dateFinished": "2021-07-23T22:14:36+0000",
-      "dateStarted": "2021-07-23T22:14:33+0000",
       "results": {
         "code": "SUCCESS",
         "msg": [
@@ -451,12 +433,20 @@
             "data": "<div class=\"markdown-body\">\n<h2>Query 2: Determine Outliers</h2>\n<blockquote>\n<p>Detect outliers based on quantiles as suggested by <a href=\"https://datasketches.apache.org/docs/Community/Research.html\">Apache DataSketches</a> for anomaly/outlier detection</p>\n</blockquote>\n<p><strong>CQL:</strong></p>\n<pre><code class=\"language-sql\">SELECT \n  QUANTILE(mf01, linear, 11)\nFROM \n  STREAM_SENSOR;\n</code></pre>\n\n</div>"
           }
         ]
-      }
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627163020971_1587020546",
+      "id": "paragraph_1627074435918_1009489766",
+      "dateCreated": "2021-07-24T21:43:40+0000",
+      "status": "READY",
+      "$$hashKey": "object:192"
     },
     {
-      "text": "# Processing stream data for 10 seconds\n\nquery_2_bql = '''\nSELECT \n  QUANTILE(mf01, linear, 11) \nfrom \n  STREAM(10000, TIME);\n'''\nhttp_request(query_2_bql)",
+      "text": "# Processing stream data for 10 seconds\n\n# DURATION = 60000 # 1min\nDURATION = 300000 # 5min\n\nquery_2_bql = '''\nSELECT \n  QUANTILE(mf01, linear, 11) \nfrom \n  STREAM({0}, TIME);\n'''.format(DURATION)\n\nhttp_request(query_2_bql)",
       "user": "anonymous",
-      "dateUpdated": "2021-07-23T22:18:24+0000",
+      "dateUpdated": "2021-07-25T02:03:43+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -503,45 +493,45 @@
         "params": {},
         "forms": {}
       },
-      "apps": [],
-      "runtimeInfos": {},
-      "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627078338380_618797484",
-      "id": "paragraph_1627078338380_618797484",
-      "dateCreated": "2021-07-23T22:12:18+0000",
-      "status": "FINISHED",
-      "focus": true,
-      "$$hashKey": "object:10024",
-      "dateFinished": "2021-07-23T22:18:24+0000",
-      "dateStarted": "2021-07-23T22:18:12+0000",
       "results": {
         "code": "SUCCESS",
         "msg": [
           {
             "type": "TEXT",
-            "data": "{\n  \"Query\": {\n    \"Finish Time\": 1627078704081,\n    \"ID\": \"6b264349-8224-4a6e-8686-de257ac33aaa\",\n    \"Query String\": \"SELECT QUANTILE(mf01, LINEAR, 11) FROM STREAM(10000, TIME)\",\n    \"Receive Time\": 1627078692933\n  },\n  \"Sketch\": {\n    \"Family\": \"QUANTILES\",\n    \"Items Seen\": 5991,\n    \"Maximum Value\": 14510.0,\n    \"Minimum Value\": 13240.0,\n    \"Normalized Rank Error\": 0.002389303789572841,\n    \"Size\": 32800,\n    \"Was Estimated\": true\n  },\n  \"Window\": {\n    \"Emit Time\": 1627078704080,\n    \"Name\": \"Windowless\",\n    \"Number\": 1\n  }\n}\n"
+            "data": "############# START #############\nEpoch: 1627178623.3712895\nUTC: 2021-07-25 02:03:43\n#################################\n############## END ##############\nEpoch: 1627178924.553726\nUTC: 2021-07-25 02:08:44\n#################################\n{\n  \"Query\": {\n    \"Finish Time\": 1627178924530,\n    \"ID\": \"da34bcd5-a79b-4e0b-83f9-951938d146e9\",\n    \"Query String\": \"SELECT QUANTILE(mf01, LINEAR, 11) FROM STREAM(300000, TIME)\",\n    \"Receive Time\": 1627178623382\n  },\n  \"Sketch\": {\n    \"Family\": \"QUANTILES\",\n    \"Items Seen\": 297000,\n    \"Maximum Value\": 20057.0,\n    \"Minimum Value\": 12654.0,\n    \"Normalized Rank Error\": 0.002389303789572841,\n    \"Size\": 81952,\n    \"Was Estimated\": true\n  },\n  \"Window\": {\n    \"Emit Time\": 1627178924529,\n    \"Name\": \"Windowless\",\n    \"Number\": 1\n  }\n}\n"
           },
           {
             "type": "TABLE",
-            "data": "Value\tQuantile\n13240.0\t0.0\n13442.0\t0.1\n13490.0\t0.2\n13551.0\t0.3\n13680.0\t0.4\n13728.0\t0.5\n13747.0\t0.6\n13760.0\t0.7\n13777.0\t0.8\n13797.0\t0.9\n14510.0\t1.0\n"
+            "data": "Value\tQuantile\n12654.0\t0.0\n13226.0\t0.1\n13321.0\t0.2\n13391.0\t0.3\n13441.0\t0.4\n13503.0\t0.5\n13601.0\t0.6\n13669.0\t0.7\n13722.0\t0.8\n14378.0\t0.9\n20057.0\t1.0\n"
           }
         ]
-      }
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627163020972_1918814918",
+      "id": "paragraph_1627078338380_618797484",
+      "dateCreated": "2021-07-24T21:43:40+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:193",
+      "dateFinished": "2021-07-25T02:08:44+0000",
+      "dateStarted": "2021-07-25T02:03:43+0000"
     },
     {
       "user": "anonymous",
+      "dateUpdated": "2021-07-24T21:43:40+0000",
       "progress": 0,
       "config": {
-        "colWidth": 12,
-        "fontSize": 9,
-        "enabled": true,
-        "results": {},
         "editorSetting": {
           "language": "python",
           "editOnDblClick": false,
           "completionSupport": true
         },
-        "editorMode": "ace/mode/python"
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
       },
       "settings": {
         "params": {},
@@ -550,16 +540,15 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627078692889_2128591818",
+      "jobName": "paragraph_1627163020972_313407817",
       "id": "paragraph_1627078692889_2128591818",
-      "dateCreated": "2021-07-23T22:18:12+0000",
+      "dateCreated": "2021-07-24T21:43:40+0000",
       "status": "READY",
-      "focus": true,
-      "$$hashKey": "object:10243"
+      "$$hashKey": "object:194"
     }
   ],
   "name": "ESPBench (Bullet)",
-  "id": "2GBCSXD7W",
+  "id": "2GAMSUWKX",
   "defaultInterpreterGroup": "python",
   "version": "0.9.0",
   "noteParams": {},

@@ -1,0 +1,30 @@
+############# START #############
+Epoch: 1627178214.17461
+UTC: 2021-07-25 01:56:54
+#################################
+############## END ##############
+Epoch: 1627178514.5654047
+UTC: 2021-07-25 02:01:54
+#################################
+{
+  "Query": {
+    "Finish Time": 1627178514534,
+    "ID": "ac53d966-0dca-4a9b-8cdf-d24f4ec32ad9",
+    "Query String": "SELECT QUANTILE(mf01, LINEAR, 11) FROM STREAM(300000, TIME)",
+    "Receive Time": 1627178214187
+  },
+  "Sketch": {
+    "Family": "QUANTILES",
+    "Items Seen": 296000,
+    "Maximum Value": 18703.0,
+    "Minimum Value": 12746.0,
+    "Normalized Rank Error": 0.002389303789572841,
+    "Size": 81952,
+    "Was Estimated": true
+  },
+  "Window": {
+    "Emit Time": 1627178514533,
+    "Name": "Windowless",
+    "Number": 1
+  }
+}

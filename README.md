@@ -172,5 +172,5 @@ kubectl port-forward service/sketchbench-zeppelin-standalone 4040:4040
 ### Accessing Grafana locally
 
 ```bash
-kubectl port-forward service/sketchbench-o11y-grafana 8000:80
+kubectl port-forward service/sketchbench-espbench-grafana 8000:80
 ```
