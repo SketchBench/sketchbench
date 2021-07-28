@@ -1,0 +1,171 @@
+﻿{
+  "paragraphs": [
+    {
+      "text": "%md\n## Query: Statistics of each Auction over a day. Calculates count, min, max, avg and sum of all bids.\n\n**CQL:**\n\n```sql\nSELECT\n  auction ,\n  DATE_FORMAT ( dateTime , ’yyyy -MM -dd ’) AS ‘day ‘,\n  COUNT (*) AS total_bids ,\n  MIN ( price ) AS min_price ,\n  MAX ( price ) AS max_price ,\n  AVG ( price ) AS avg_price ,\n  SUM ( price ) AS sum_price\n FROM\n  BID [ ROWS UNBOUNDED ]\n GROUP BY\n  auction ,\n  DATE_FORMAT ( dateTime , ’yyyy -MM -dd ’);\n```",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-28T05:35:33+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h2>Query: Statistics of each Auction over a day. Calculates count, min, max, avg and sum of all bids.</h2>\n<p><strong>CQL:</strong></p>\n<pre><code class=\"language-sql\">SELECT\n  auction ,\n  DATE_FORMAT ( dateTime , ’yyyy -MM -dd ’) AS ‘day ‘,\n  COUNT (*) AS total_bids ,\n  MIN ( price ) AS min_price ,\n  MAX ( price ) AS max_price ,\n  AVG ( price ) AS avg_price ,\n  SUM ( price ) AS sum_price\n FROM\n  BID [ ROWS UNBOUNDED ]\n GROUP BY\n  auction ,\n  DATE_FORMAT ( dateTime , ’yyyy -MM -dd ’);\n</code></pre>\n\n</div>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627442181603_936212460",
+      "id": "paragraph_1627432435328_550499922",
+      "dateCreated": "2021-07-28T03:16:21+0000",
+      "dateStarted": "2021-07-28T05:35:33+0000",
+      "dateFinished": "2021-07-28T05:35:36+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:1063"
+    },
+    {
+      "title": "Daily Auction Statistics",
+      "text": "%spark\nimport org.apache.kafka.clients.consumer.ConsumerRecord\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.streaming.kafka010._\nimport org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent\nimport org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe\nimport org.apache.spark.SparkContext\n\nimport org.apache.spark.sql.Row\nimport org.apache.spark.sql.types.{StringType, StructField, StructType, DoubleType}\n\nimport org.apache.kafka.clients.consumer.ConsumerConfig\nimport org.apache.kafka.common.serialization.StringDeserializer\n\nimport org.apache.spark.sql.SQLContext\n\nimport org.apache.spark.util.LongAccumulator\nimport org.apache.spark.streaming._\n\nimport org.apache.spark.ml.feature.QuantileDiscretizer\n\nimport scala.util.parsing.json.JSON\nimport java.util.{Calendar, Date}\nimport java.text.SimpleDateFormat\n\nval ssc = new StreamingContext(sc, Seconds(10))\n\nval sqlContext = new SQLContext(sc)\nimport sqlContext.implicits._\n\nval r = scala.util.Random\nval groupId = s\"stream-nexmark-v${r.nextInt.toString}\"\n\nval batchesToRun = 300\n\nobject FinishedBatchesCounter {\n  @volatile private var instance: LongAccumulator = null\n\n  def getInstance(sc: SparkContext): LongAccumulator = {\n    if (instance == null) {\n      synchronized {\n        if (instance == null) {\n      \tinstance = sc.longAccumulator(\"FinishedBatchesCounter\")\n        }\n      }\n    }\n    instance\n  }\n}\n    \nval kafkaParams = Map[String, Object](\n  \"bootstrap.servers\" -> \"kafka:9092\",\n  \"key.deserializer\" -> classOf[StringDeserializer],\n  \"value.deserializer\" -> classOf[StringDeserializer],\n  \"group.id\" -> groupId,\n  \"auto.offset.reset\" -> \"latest\",\n  \"enable.auto.commit\" -> (false: java.lang.Boolean)\n)\n\n//val topics = Array(\"SketchBench-nexmark\")\nval topics = Array(\"NEXMarkTest1\")\nval stream = KafkaUtils.createDirectStream[String, String](\n  ssc,\n  PreferConsistent,\n  Subscribe[String, String](topics, kafkaParams)\n)\n\nssc.checkpoint(\"hdfs://namenode:9000/tmp/checkpoint-test/\") \n\nval dateFormat = new SimpleDateFormat(\"YYYY-MM-d\")\n\nval messages = stream\n    .map(record => record.value)\n    .flatMap(record => {\n         JSON.parseFull(record).map(rawMap =>{\n            val map = rawMap.asInstanceOf[Map[String,Map[String,Double]]]\n            val inMap = map.get(\"event\")\n            val dt = new Date(inMap.get(\"time\").toLong)\n            ((dateFormat.format(dt), inMap.get(\"auction_id\").toInt), inMap.get(\"bid\").toInt)\n         } )\n    })\n\nmessages.checkpoint(Seconds(60))\n\ndef updateStateFunc(bids: Seq[(Int)], runningstate: Option[(Long,Long,Long,Double,Long)]):  Option[(Long,Long,Long,Double,Long)] = {\n\n    val previousState = runningstate.getOrElse((0l,1234567l,0l,0d,0l))\n    var newState = previousState\n    if(!bids.isEmpty) {\n\n        val count = previousState._1\n        val min = previousState._2\n        val max = previousState._3\n        val avg = previousState._4\n        val sum = previousState._5\n        \n        val currCount = bids.length\n        val currmin = bids.min\n        val currmax = bids.max\n        val currsum = bids.sum\n        \n        val newCount = count + currCount\n        val runavg = ((currsum + sum).toDouble/newCount)\n    \n        val newMin =  if (currmin <= min && currmin !=0) currmin else min\n        val newMax =  if (currmax > max) currmax else max\n        val newSum = sum + currsum\n        newState = (newCount,newMin,newMax,runavg,newSum)\n    }\n        \n    Some(newState)\n}\n\nval result = messages.updateStateByKey(updateStateFunc _)\n\nresult.print()\n\nssc.start()  \nssc.awaitTermination()",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-28T03:48:03+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627442181608_1103844555",
+      "id": "paragraph_1627434483639_1937179438",
+      "dateCreated": "2021-07-28T03:16:21+0000",
+      "dateStarted": "2021-07-28T03:48:03+0000",
+      "dateFinished": "2021-07-28T03:45:26+0000",
+      "status": "ABORT",
+      "$$hashKey": "object:1064"
+    },
+    {
+      "text": "",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-28T05:35:42+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mupdateStateFunc\u001b[0m: \u001b[1m\u001b[32m(bids: Seq[Int], runningstate: Option[(Long, Long, Long, Double, Long)])Option[(Long, Long, Long, Double, Long)]\u001b[0m\n\u001b[1m\u001b[34mnums\u001b[0m: \u001b[1m\u001b[32mSeq[Int]\u001b[0m = List(189, 115, 343, 147, 249, 176, 376, 212, 189, 115, 343, 147, 144, 275, 194, 249, 176, 376, 85, 20, 90, 279, 339, 256, 229, 102, 199, 212)\n\u001b[1m\u001b[34marrVals\u001b[0m: \u001b[1m\u001b[32mOption[(Long, Long, Long, Double, Long)]\u001b[0m = Some((56,20,376,208.07142857142858,11652))\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627442181609_947999458",
+      "id": "paragraph_1627434726187_832889683",
+      "dateCreated": "2021-07-28T03:16:21+0000",
+      "status": "READY",
+      "$$hashKey": "object:1065"
+    },
+    {
+      "text": "%spark\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-28T03:16:21+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627442181610_394179989",
+      "id": "paragraph_1627436681375_367010683",
+      "dateCreated": "2021-07-28T03:16:21+0000",
+      "status": "READY",
+      "$$hashKey": "object:1066"
+    }
+  ],
+  "name": "Nexmark Query 1 (Standalone)",
+  "id": "2GDWP1QF7",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.9.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {},
+  "path": "/Nexmark Query 1 (Standalone)"
+}
