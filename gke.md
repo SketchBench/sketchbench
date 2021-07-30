@@ -16,8 +16,8 @@ SketchBench utilizes 5 node pools:
 |                             |                    Description                    |   Node type   | Number of Nodes | Disk Size per Node |
 |-----------------------------|---------------------------------------------------|---------------|-----------------|--------------------|
 | **control-plane**           | SketchBench components such as the data generator | e2-standard-4 |        3        |        100GB       |
-| **data-ingestion**          |  Isolated Apache Kafka cluster for data ingestion | c2-standard-8 |        1        |        100GB       |
-| **system-under-test**       |          Isolated SUT (e.g. Apache Spark)         | c2-standard-8 |        4        |        100GB       |
+| **data-ingestion**          |  Isolated Apache Kafka cluster for data ingestion | c2-standard-8 |        2        |        100GB       |
+| **system-under-test**       |          Isolated SUT (e.g. Apache Spark)         | c2-standard-8 |        5        |        100GB       |
 | **observability**           |       Observability stack (e.g. Prometheus)       | e2-standard-4 |        2        |        100GB       |
 | **data-plane**              |    Persistency services (e.g. HDFS & Zookeeper)   | e2-standard-4 |        2        |        100GB       |
 
@@ -26,8 +26,8 @@ SketchBench utilizes 5 node pools:
 |                             |                    Description                    |   Node Type   | Number of Nodes | Disk Size per Node |
 |-----------------------------|---------------------------------------------------|---------------|-----------------|--------------------|
 | **control-plane**           | SketchBench components such as the data generator | e2-standard-4 |        3        |        30GB        |
-| **data-ingestion**          |  Isolated Apache Kafka cluster for data ingestion | e2-standard-4 |        1        |        30GB        |
-| **system-under-test**       |          Isolated SUT (e.g. Apache Spark)         | e2-standard-4 |        3        |        30GB        |
+| **data-ingestion**          |  Isolated Apache Kafka cluster for data ingestion | e2-standard-4 |        2        |        30GB        |
+| **system-under-test**       |          Isolated SUT (e.g. Apache Spark)         | e2-standard-4 |        5        |        30GB        |
 | **observability**           |       Observability stack (e.g. Prometheus)       | e2-standard-2 |        2        |        30GB        |
 | **data-plane**              |    Persistency services (e.g. HDFS & Zookeeper)   | e2-standard-2 |        2        |        30GB        |
 
@@ -78,14 +78,14 @@ gcloud beta container \
 --project "sketchbench-320518" node-pools create "data-ingestion" \
 --cluster "sketchbench-cluster" \
 --zone "us-west1-a" \
---machine-type "c2-standard-8" \
+--machine-type "e2-standard-4" \
 --image-type "COS_CONTAINERD" \
 --disk-type "pd-ssd" \
---disk-size "100" \
+--disk-size "30" \
 --node-labels sketchbench/pool=data-ingestion \
 --metadata disable-legacy-endpoints=true \
 --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \
---num-nodes "1" \
+--num-nodes "2" \
 --enable-autoupgrade \
 --enable-autorepair \
 --max-surge-upgrade 1 \
@@ -108,7 +108,7 @@ gcloud beta container \
 --node-labels sketchbench/pool=system-under-test \
 --metadata disable-legacy-endpoints=true \
 --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \
---num-nodes "4" \
+--num-nodes "5" \
 --enable-autoupgrade \
 --enable-autorepair \
 --max-surge-upgrade 1 \
@@ -147,10 +147,10 @@ gcloud beta container \
 --project "sketchbench-320518" node-pools create "data-plane" \
 --cluster "sketchbench-cluster" \
 --zone "us-west1-a" \
---machine-type "e2-standard-4" \
+--machine-type "e2-standard-2" \
 --image-type "COS_CONTAINERD" \
 --disk-type "pd-ssd" \
---disk-size "100" \
+--disk-size "50" \
 --node-labels sketchbench/pool=data-plane \
 --metadata disable-legacy-endpoints=true \
 --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \
