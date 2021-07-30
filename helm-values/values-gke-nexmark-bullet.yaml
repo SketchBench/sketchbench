@@ -1,17 +1,13 @@
 ### Benchmark Control Plane ###
 
 dataIngestion:
-  espbench:
+  nexmark:
     enabled: true
     nodeSelector:
       sketchbench/pool: data-ingestion
-    # 125000 ns interval = 8,000 msg /sec
-    # 1000000 ns interval = 1,000 msg /sec
-    # sendingInterval: 125000
-    sendingInterval: 1000000
-    sendingIntervalTimeUnit: NANOSECONDS
-    duration: 1
-    durationTimeUnit: HOURS
+    kafkaTopic: sketchbench-nexmark
+    # threadSleep: 8  # 1,000 msg/sec
+    threadSleep: 8  # 1,000 msg/sec
     resources:
       requests:
         memory: "12Gi"
@@ -170,7 +166,7 @@ bullet:
               name: com.yahoo.bullet.dsl.connector.KafkaConnector
             kafka:
               topics:
-                - SketchBench-1-1
+                - sketchbench-nexmark
               bootstrap:
                 servers:
                   - kafka:9092
@@ -193,55 +189,33 @@ bullet:
         {
           "fields": [
             {
-              "name": "messageID",
-              "type": "INTEGER"
-            },
-            {
-              "name": "ts",
-              "type": "STRING"
-            },
-            {
-              "name": "index",
+              "name": "iij_timestamp",
+              "reference": "event.iij_timestamp",
               "type": "LONG"
             },
             {
-              "name": "mf01",
+              "name": "auction_id",
+              "reference": "event.auction_id",
               "type": "INTEGER"
             },
             {
-              "name": "mf02",
+              "name": "partition_id",
+              "reference": "event.partition_id",
               "type": "INTEGER"
             },
             {
-              "name": "mf03",
+              "name": "time",
+              "reference": "event.time",
+              "type": "LONG"
+            },
+            {
+              "name": "person",
+              "reference": "event.person",
               "type": "INTEGER"
             },
             {
-              "name": "pc13",
-              "type": "INTEGER"
-            },
-            {
-              "name": "pc14",
-              "type": "INTEGER"
-            },
-            {
-              "name": "pc15",
-              "type": "INTEGER"
-            },
-            {
-              "name": "pc25",
-              "type": "INTEGER"
-            },
-            {
-              "name": "pc26",
-              "type": "INTEGER"
-            },
-            {
-              "name": "pc27",
-              "type": "INTEGER"
-            },
-            {
-              "name": "res",
+              "name": "bid",
+              "reference": "event.bid",
               "type": "INTEGER"
             }
           ]
