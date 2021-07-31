@@ -2,7 +2,7 @@
 
 dataIngestion:
   espbench:
-    enabled: true
+    enabled: false
     nodeSelector:
       sketchbench/pool: control-plane
     # 10000 ns interval = 100,000 msg/sec
@@ -197,7 +197,7 @@ bullet:
         }
 
 spark: # System Under Test (isolated Spark cluster)
-  enabled: true
+  enabled: false
   image:
     repository: sketchbench/bullet-spark-3.0
     tag: "1.0.4"
@@ -231,7 +231,7 @@ spark: # System Under Test (isolated Spark cluster)
       enabled: true
 
 zeppelin:
-  enabled: true
+  enabled: false
   nodeSelector:
     sketchbench/pool: system-under-test
   runMode: local
@@ -267,6 +267,7 @@ zeppelin:
 ### Data Ingestion (isolated Kafka cluster) ###
 
 kafka:
+  enabled: false
   nodeSelector:
     sketchbench/pool: data-ingestion
   podAntiAffinitypreset: hard

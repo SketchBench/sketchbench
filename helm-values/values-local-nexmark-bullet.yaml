@@ -3,88 +3,85 @@
 dataIngestion:
   nexmark:
     enabled: true
-    nodeSelector:
-      sketchbench/pool: control-plane
+
+
+  nexmark:
+    enabled: false
+    jar: /NEXMarkStream/NEXMarkStream-jar-with-dependencies.jar
+    javaOpts: -Xms1g
+    runClass: edu.illinois.sketchbench.datagen.JSONAuctionStreamGenerator
+    kafkaBootServers: kafka:9092
+    kafkaTopic: SketchBench-nexmark
+    threadSleep: 1
+    replicaCount: 1
+    image:
+      repository: sketchbench/sketchbench-data-ingestion-nexmark
+      pullPolicy: IfNotPresent
+      tag: "0.1.2"
+    podAnnotations: {}
+    podSecurityContext: {}
+    securityContext: {}
+    resources: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+
+
 
 bullet:
   enabled: true
-  spark: # System Under Test (isolated Spark cluster)
+  spark: # System Under Test
     enabled: true
     image:
       repository: sketchbench/bullet-spark-3.0
       tag: "1.0.4"
       pullPolicy: IfNotPresent
     worker:
-      replicaCount: 3
+      replicaCount: 2
       coreLimit: 3
-      nodeSelector:
-        sketchbench/pool: system-under-test
       resources:
         requests:
-          memory: "12Gi"
+          memory: "4Gi"
           cpu: "3.5"
         limits:
-          memory: "12Gi"
+          memory: "4Gi"
           cpu: "3.5"
     master:
-      nodeSelector:
-        sketchbench/pool: system-under-test
       resources:
         requests:
-          memory: "12Gi"
-          cpu: "3.5"
+          memory: "4Gi"
+          cpu: "1"
         limits:
-          memory: "12Gi"
-          cpu: "3.5"
+          memory: "4Gi"
+          cpu: "1"
     podAntiAffinitypreset: hard
     metrics:
       enabled: true
       podMonitor:
         enabled: true
-  hdfs:
-    namenode:
-      nodeSelector:
-        sketchbench/pool: data-plane
-    datanode:
-      nodeSelector:
-        sketchbench/pool: data-plane
-    shell:
-      nodeSelector:
-        sketchbench/pool: data-plane
   pubsub:
-    nodeSelector:
-      sketchbench/pool: control-plane
     metrics:
       kafka:
         enabled: true
-        nodeSelector:
-          sketchbench/pool: observability
       jmx:
         enabled: true
       serviceMonitor:
         enabled: true
     zookeeper:
-      nodeSelector:
-        sketchbench/pool: data-plane
       metrics:
         enabled: true
         serviceMonitor:
           enabled: true
-  pubsubMonit:
-    deployment:
-      nodeSelector:
-        sketchbench/pool: observability
-  ui:
-    nodeSelector:
-      sketchbench/pool: control-plane
-  webservice:
-    nodeSelector:
-      sketchbench/pool: control-plane
   sparkBackend:
-    executorCores: 3
-    executorMemory: 10G
-    nodeSelector:
-      sketchbench/pool: control-plane
+    executorCores: 2
+    executorMemory: 3G
+    resources:
+      requests:
+        memory: "4Gi"
+        cpu: "1"
+      limits:
+        memory: "4Gi"
+        cpu: "1"
     image:
       repository: sketchbench/bullet-spark-3.0
     hdfsUser: hadoop
@@ -109,7 +106,7 @@ bullet:
               name: com.yahoo.bullet.dsl.connector.KafkaConnector
             kafka:
               topics:
-                - SketchBench-nexmark
+                - SketchBench-1-1
               bootstrap:
                 servers:
                   - kafka:9092
@@ -128,33 +125,55 @@ bullet:
         {
           "fields": [
             {
-              "name": "iij_timestamp",
-              "reference": "event.iij_timestamp",
+              "name": "messageID",
+              "type": "INTEGER"
+            },
+            {
+              "name": "ts",
+              "type": "STRING"
+            },
+            {
+              "name": "index",
               "type": "LONG"
             },
             {
-              "name": "auction_id",
-              "reference": "event.auction_id",
+              "name": "mf01",
               "type": "INTEGER"
             },
             {
-              "name": "partition_id",
-              "reference": "event.partition_id",
+              "name": "mf02",
               "type": "INTEGER"
             },
             {
-              "name": "time",
-              "reference": "event.time",
-              "type": "LONG"
-            },
-            {
-              "name": "person",
-              "reference": "event.person",
+              "name": "mf03",
               "type": "INTEGER"
             },
             {
-              "name": "bid",
-              "reference": "event.bid",
+              "name": "pc13",
+              "type": "INTEGER"
+            },
+            {
+              "name": "pc14",
+              "type": "INTEGER"
+            },
+            {
+              "name": "pc15",
+              "type": "INTEGER"
+            },
+            {
+              "name": "pc25",
+              "type": "INTEGER"
+            },
+            {
+              "name": "pc26",
+              "type": "INTEGER"
+            },
+            {
+              "name": "pc27",
+              "type": "INTEGER"
+            },
+            {
+              "name": "res",
               "type": "INTEGER"
             }
           ]
@@ -162,65 +181,54 @@ bullet:
 
 zeppelin:
   enabled: true
-  nodeSelector:
-    sketchbench/pool: control-plane
   runMode: local
   interpreters:
     - file
-    - spark
     - md
     - python
+    - sh
   metrics:
     enabled: true
     podMonitor:
       enabled: true
-  sparkInterpreter:
-    spark:
-      master: "spark://sketchbench-nexmark-spark-master-svc:7077"
-      submit:
-        deployMode: "client"
-      app:
-        name: "zeppelin"
-      jar:
-        packages: org.apache.spark:spark-sql-kafka-0-10_2.12:3.0.2,org.apache.spark:spark-streaming-kafka-0-10-assembly_2.12:3.0.2
-      cores:
-        max: 1
-
-### Benchmark Observability Stack ###
-
-kafdrop:
-  enabled: true
-  deployment:
-    nodeSelector:
-      sketchbench/pool: observability
 
 ### Data Ingestion (isolated Kafka cluster) ###
 
 kafka:
-  nodeSelector:
-    sketchbench/pool: data-ingestion
   podAntiAffinitypreset: hard
   logRetentionHours: 6
+  numPartitions: 7
   resources:
     requests:
-      memory: "5Gi"
-      cpu: "1.5"
+      memory: "2Gi"
+      cpu: "1"
     limits:
-      memory: "5Gi"
-      cpu: "1.5"
+      memory: "2Gi"
+      cpu: "1"
   metrics:
     kafka:
       enabled: true
-      nodeSelector:
-        sketchbench/pool: observability
     jmx:
       enabled: true
     serviceMonitor:
       enabled: true
   zookeeper:
-    nodeSelector:
-      sketchbench/pool: data-plane
     metrics:
       enabled: true
       serviceMonitor:
         enabled: true
+
+### Benchmark Observability Stack ###
+
+kafdrop:
+  enabled: true
+
+tobs:
+  enabled: true
+  kube-prometheus-stack:
+    alertmanager:
+      enabled: false # not needed
+    prometheus:
+      prometheusSpec:
+        podMonitorSelectorNilUsesHelmValues: false
+        serviceMonitorSelectorNilUsesHelmValues: false

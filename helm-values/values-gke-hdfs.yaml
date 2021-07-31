@@ -1,0 +1,13 @@
+namenode:
+  nodeSelector:
+    sketchbench/pool: data-plane
+datanode:
+  nodeSelector:
+    sketchbench/pool: data-plane
+shell:
+  nodeSelector:
+    sketchbench/pool: data-plane
+config:
+  hdfsSite:
+    # https://github.com/gchq/gaffer-docker/pull/152
+    dfs.namenode.datanode.registration.ip-hostname-check: false
