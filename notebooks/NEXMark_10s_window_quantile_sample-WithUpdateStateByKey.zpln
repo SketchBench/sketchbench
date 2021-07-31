@@ -1,0 +1,397 @@
+﻿{
+  "paragraphs": [
+    {
+      "text": "%md\n\n## Query: Quantiles over stream implemented using 10 second Batch window in Spark  \n\n**CQL:**\n\n```sql\nSELECT \n  QUANTILE(bid, linear, 11)\nFROM \n  STREAM_SENSOR;\n```",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-24T23:58:47+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h2>Query: Quantiles over stream implemented using 10 second Batch window in Spark</h2>\n<p><strong>CQL:</strong></p>\n<pre><code class=\"language-sql\">SELECT \n  QUANTILE(bid, linear, 11)\nFROM \n  STREAM_SENSOR;\n</code></pre>\n\n</div>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627171127793_1369563786",
+      "id": "paragraph_1627099023257_383338127",
+      "dateCreated": "2021-07-24T23:58:47+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:2178"
+    },
+    {
+      "title": "Spark Quantile with 10 second Batch Window and ML QuantileDiscretizer",
+      "text": "%spark\nimport org.apache.kafka.clients.consumer.ConsumerRecord\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.streaming.kafka010._\nimport org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent\nimport org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe\nimport org.apache.spark.SparkContext\n\nimport org.apache.spark.sql.Row\nimport org.apache.spark.sql.types.{StringType, StructField, StructType, DoubleType}\n\nimport org.apache.kafka.clients.consumer.ConsumerConfig\nimport org.apache.kafka.common.serialization.StringDeserializer\n\nimport org.apache.spark.sql.SQLContext\n\nimport org.apache.spark.util.LongAccumulator\nimport org.apache.spark.streaming._\n\nimport org.apache.spark.ml.feature.QuantileDiscretizer\n\nimport scala.util.parsing.json.JSON\nimport java.util.{Calendar, Date}\nimport java.text.SimpleDateFormat\n\nval ssc = new StreamingContext(sc, Seconds(10))\n\nval sqlContext = new SQLContext(sc)\nimport sqlContext.implicits._\n\nval r = scala.util.Random\nval groupId = s\"stream-nexmark-v${r.nextInt.toString}\"\n\nval batchesToRun = 3\n\nobject FinishedBatchesCounter {\n  @volatile private var instance: LongAccumulator = null\n\n  def getInstance(sc: SparkContext): LongAccumulator = {\n    if (instance == null) {\n      synchronized {\n        if (instance == null) {\n      \tinstance = sc.longAccumulator(\"FinishedBatchesCounter\")\n        }\n      }\n    }\n    instance\n  }\n}\n    \nval kafkaParams = Map[String, Object](\n  \"bootstrap.servers\" -> \"my-sketchbench-kafka:9092\",\n  \"key.deserializer\" -> classOf[StringDeserializer],\n  \"value.deserializer\" -> classOf[StringDeserializer],\n  \"group.id\" -> groupId,\n  \"auto.offset.reset\" -> \"latest\",\n  \"enable.auto.commit\" -> (false: java.lang.Boolean)\n)\n\nval topics = Array(\"SketchBench-nexmark\")\nval stream = KafkaUtils.createDirectStream[String, String](\n  ssc,\n  PreferConsistent,\n  Subscribe[String, String](topics, kafkaParams)\n)\n\nval messages = stream\n    .map(record => record.value)\n    .flatMap(record => {\n         JSON.parseFull(record).map(rawMap =>{\n            val map = rawMap.asInstanceOf[Map[String,Map[String,String]]]\n            val inMap = map.get(\"event\")\n            inMap\n         } )\n    })\nval dateFormat = new SimpleDateFormat(\"YYYY-MM-d hh:mm:ss.SSS\")\n\nmessages.foreachRDD { rdd =>\n  \n  val dinishedBatchesCounter = FinishedBatchesCounter.getInstance(sc)\n  println(s\">>> Batch ${dinishedBatchesCounter.count + 1} ---\")\n  \n  val start = Calendar.getInstance().getTime()\n  println(s\"--- Start Time - \"+dateFormat.format(start))\n  \n  val newRDD = rdd.map(p =>\n  Row(p.get(\"time\"),\n    p.get(\"auction_id\"),\n    p.get(\"person\"),\n    p.get(\"bid\")))\n \n    val columns = Seq(\"time\",\"auction_id\",\"person\",\"bid\")\n    \n    val schema = StructType(columns.map(fieldName => StructField(fieldName, DoubleType, nullable = true)))\n    val rddDF = spark.createDataFrame(newRDD,schema)\n    \n    val max_message_time =  rddDF.select(\"time\").agg(max(\"time\")).first().getDouble(0).longValue()\n    \n    // https://spark.apache.org/docs/latest/ml-features#quantilediscretizer\n    \n    val discretizer = new QuantileDiscretizer()\n  .setInputCol(\"bid\")\n  .setOutputCol(\"result\")\n  .setNumBuckets(11)\n  \n    val result = discretizer.fit(rddDF).transform(rddDF)\n    result.groupBy(\"result\").agg(min(\"bid\"),max(\"bid\"),avg(\"bid\"),count(\"bid\")).orderBy(\"result\").show(false)\n    \n    val max_record_time = new Date(max_message_time)\n    println(s\"--- Max Message Time - \"+dateFormat.format(max_record_time))\n    \n    val end = Calendar.getInstance().getTime()\n    val diff = end.getTime() - start.getTime()\n    println(s\"--- End Time - \"+dateFormat.format(end))\n    println(s\"--- Processing Time in Millis - \"+diff)\n    println(\"--- Processed messages in this batch: \" + rdd.count())  \n    \n  if (dinishedBatchesCounter.count >= batchesToRun - 1) {\n    ssc.stop()\n  } else {\n    dinishedBatchesCounter.add(1)\n  }\n}\n\nssc.start()  \nssc.awaitTermination()",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-24T23:58:47+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[33mwarning: \u001b[0mthere was one deprecation warning (since 1.0.6)\n\u001b[33mwarning: \u001b[0mthere was one deprecation warning (since 2.0.0)\n\u001b[33mwarning: \u001b[0mthere were two deprecation warnings in total; for details, enable `:setting -deprecation' or `:replay -deprecation'\njava.lang.IllegalStateException: Cannot call methods on a stopped SparkContext.\nThis stopped SparkContext was created at:\n\norg.apache.spark.sql.SparkSession$Builder.getOrCreate(SparkSession.scala:928)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\norg.apache.zeppelin.spark.BaseSparkScalaInterpreter.spark2CreateContext(BaseSparkScalaInterpreter.scala:301)\norg.apache.zeppelin.spark.BaseSparkScalaInterpreter.createSparkContext(BaseSparkScalaInterpreter.scala:230)\norg.apache.zeppelin.spark.SparkScala212Interpreter.open(SparkScala212Interpreter.scala:90)\norg.apache.zeppelin.spark.SparkInterpreter.open(SparkInterpreter.java:106)\norg.apache.zeppelin.interpreter.LazyOpenInterpreter.open(LazyOpenInterpreter.java:70)\norg.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:836)\norg.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:744)\norg.apache.zeppelin.scheduler.Job.run(Job.java:172)\norg.apache.zeppelin.scheduler.AbstractScheduler.runJob(AbstractScheduler.java:132)\norg.apache.zeppelin.scheduler.FIFOScheduler.lambda$runJobInScheduler$0(FIFOScheduler.java:42)\njava.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\njava.lang.Thread.run(Thread.java:748)\n\nThe currently active SparkContext was created at:\n\norg.apache.spark.sql.SparkSession$Builder.getOrCreate(SparkSession.scala:928)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\norg.apache.zeppelin.spark.BaseSparkScalaInterpreter.spark2CreateContext(BaseSparkScalaInterpreter.scala:301)\norg.apache.zeppelin.spark.BaseSparkScalaInterpreter.createSparkContext(BaseSparkScalaInterpreter.scala:230)\norg.apache.zeppelin.spark.SparkScala212Interpreter.open(SparkScala212Interpreter.scala:90)\norg.apache.zeppelin.spark.SparkInterpreter.open(SparkInterpreter.java:106)\norg.apache.zeppelin.interpreter.LazyOpenInterpreter.open(LazyOpenInterpreter.java:70)\norg.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:836)\norg.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:744)\norg.apache.zeppelin.scheduler.Job.run(Job.java:172)\norg.apache.zeppelin.scheduler.AbstractScheduler.runJob(AbstractScheduler.java:132)\norg.apache.zeppelin.scheduler.FIFOScheduler.lambda$runJobInScheduler$0(FIFOScheduler.java:42)\njava.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\njava.lang.Thread.run(Thread.java:748)\n\n  at org.apache.spark.SparkContext.assertNotStopped(SparkContext.scala:116)\n  at org.apache.spark.sql.SparkSession.<init>(SparkSession.scala:103)\n  at org.apache.spark.sql.SparkSession$Builder.getOrCreate(SparkSession.scala:942)\n  at org.apache.spark.sql.SQLContext.<init>(SQLContext.scala:70)\n  ... 50 elided\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627171127794_1326345476",
+      "id": "paragraph_1626035545319_1260970793",
+      "dateCreated": "2021-07-24T23:58:47+0000",
+      "status": "READY",
+      "$$hashKey": "object:2179"
+    },
+    {
+      "title": "Spark Quantile with 10 second Batch Window and DataFrame Stat Functions",
+      "text": "%spark\nimport org.apache.kafka.clients.consumer.ConsumerRecord\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.streaming.kafka010._\nimport org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent\nimport org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe\nimport org.apache.spark.SparkContext\n\nimport org.apache.spark.sql.Row\nimport org.apache.spark.sql.types.{StringType, StructField, StructType, DoubleType}\n\nimport org.apache.kafka.clients.consumer.ConsumerConfig\n\nimport org.apache.spark.sql.SQLContext\n\nimport org.apache.spark.util.LongAccumulator\nimport org.apache.spark.streaming._\n\nimport org.apache.spark.ml.feature.QuantileDiscretizer\n\nimport scala.util.parsing.json.JSON\nimport java.util.{Calendar, Date}\nimport java.text.SimpleDateFormat\n\nval ssc = new StreamingContext(sc, Seconds(10))\n\nval sqlContext = new SQLContext(sc)\nimport sqlContext.implicits._\n\nval r = scala.util.Random\nval groupId = s\"stream-nexmark-v${r.nextInt.toString}\"\n\nval batchesToRun = 3\n\nobject FinishedBatchesCounter {\n  @volatile private var instance: LongAccumulator = null\n\n  def getInstance(sc: SparkContext): LongAccumulator = {\n    if (instance == null) {\n      synchronized {\n        if (instance == null) {\n      \tinstance = sc.longAccumulator(\"FinishedBatchesCounter\")\n        }\n      }\n    }\n    instance\n  }\n}\n    \nval kafkaParams = Map[String, Object](\n  \"bootstrap.servers\" -> \"my-sketchbench-kafka:9092\",\n  \"key.deserializer\" -> classOf[StringDeserializer],\n  \"value.deserializer\" -> classOf[StringDeserializer],\n  \"group.id\" -> groupId,\n  \"auto.offset.reset\" -> \"latest\",\n  \"enable.auto.commit\" -> (false: java.lang.Boolean)\n)\n\nval topics = Array(\"SketchBench-nexmark\")\nval stream = KafkaUtils.createDirectStream[String, String](\n  ssc,\n  PreferConsistent,\n  Subscribe[String, String](topics, kafkaParams)\n)\n\nval messages = stream\n    .map(record => record.value)\n    .flatMap(record => {\n         JSON.parseFull(record).map(rawMap =>{\n            val map = rawMap.asInstanceOf[Map[String,Map[String,String]]]\n            val inMap = map.get(\"event\")\n            inMap\n         } )\n    })\nval dateFormat = new SimpleDateFormat(\"YYYY-MM-d hh:mm:ss.SSS\")\n\nmessages.foreachRDD { rdd =>\n  \n  val dinishedBatchesCounter = FinishedBatchesCounter.getInstance(sc)\n  println(s\">>> Batch ${dinishedBatchesCounter.count + 1} ---\")\n  \n  val start = Calendar.getInstance().getTime()\n  println(s\"--- Start Time - \"+dateFormat.format(start))\n  \n  val newRDD = rdd.map(p =>\n  Row(p.get(\"time\"),\n    p.get(\"auction_id\"),\n    p.get(\"person\"),\n    p.get(\"bid\")))\n \n    val columns = Seq(\"time\",\"auction_id\",\"person\",\"bid\")\n    \n    val schema = StructType(columns.map(fieldName => StructField(fieldName, DoubleType, nullable = true)))\n    val rddDF = spark.createDataFrame(newRDD,schema)\n    \n    val max_message_time =  rddDF.select(\"time\").agg(max(\"time\")).first().getDouble(0).longValue()\n    \n    \n    val quantiles = rddDF.stat.approxQuantile(\"bid\", Array(0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0), 0.01)\n    println(quantiles.mkString(\" \"))\n    \n    println(quantiles.length)\n    \n    quantiles.foreach(println)\n    \n    \n    val discretizer = new QuantileDiscretizer()\n  .setInputCol(\"bid\")\n  .setOutputCol(\"result\")\n  .setNumBuckets(11)\n  \n    val result = discretizer.fit(rddDF).transform(rddDF)\n    result.groupBy(\"result\").agg(min(\"bid\"),max(\"bid\"),avg(\"bid\"),count(\"bid\")).orderBy(\"result\").show(false)\n    \n    \n    val max_record_time = new Date(max_message_time)\n    println(s\"--- Max Message Time - \"+dateFormat.format(max_record_time))\n    \n    val end = Calendar.getInstance().getTime()\n    val diff = end.getTime() - start.getTime()\n    println(s\"--- End Time - \"+dateFormat.format(end))\n    println(s\"--- Processing Time in Millis - \"+diff)\n    println(\"--- Processed messages in this batch: \" + rdd.count())  \n    \n  if (dinishedBatchesCounter.count >= batchesToRun - 1) {\n    ssc.stop()\n  } else {\n    dinishedBatchesCounter.add(1)\n  }\n}\n\nssc.start()  \nssc.awaitTermination()",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-24T23:58:47+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[33mwarning: \u001b[0mthere was one deprecation warning (since 1.0.6)\n\u001b[33mwarning: \u001b[0mthere was one deprecation warning (since 2.0.0)\n\u001b[33mwarning: \u001b[0mthere were two deprecation warnings in total; for details, enable `:setting -deprecation' or `:replay -deprecation'\n>>> Batch 1 ---\n--- Start Time - 2021-07-24 04:08:20.237\n80.0 110.0 136.0 163.0 186.0 208.0 226.0 257.0 311.0 582.0\n10\n80.0\n110.0\n136.0\n163.0\n186.0\n208.0\n226.0\n257.0\n311.0\n582.0\n+------+--------+--------+------------------+----------+\n|result|min(bid)|max(bid)|avg(bid)          |count(bid)|\n+------+--------+--------+------------------+----------+\n|0.0   |5.0     |78.0    |49.4              |30        |\n|1.0   |79.0    |105.0   |90.56666666666666 |30        |\n|2.0   |106.0   |132.0   |118.75862068965517|29        |\n|3.0   |133.0   |154.0   |142.33333333333334|30        |\n|4.0   |156.0   |179.0   |165.6451612903226 |31        |\n|5.0   |180.0   |199.0   |188.33333333333334|30        |\n|6.0   |201.0   |213.0   |207.39285714285714|28        |\n|7.0   |214.0   |237.0   |224.125           |32        |\n|8.0   |240.0   |271.0   |251.57142857142858|28        |\n|9.0   |272.0   |321.0   |291.5             |32        |\n|10.0  |322.0   |582.0   |383.5483870967742 |31        |\n+------+--------+--------+------------------+----------+\n\n--- Max Message Time - 2021-07-24 04:08:19.861\n--- End Time - 2021-07-24 04:08:51.818\n--- Processing Time in Millis - 31581\n--- Processed messages in this batch: 331\n>>> Batch 2 ---\n--- Start Time - 2021-07-24 04:08:52.187\n86.0 117.0 141.0 163.0 189.0 211.0 233.0 259.0 307.0 461.0\n10\n86.0\n117.0\n141.0\n163.0\n189.0\n211.0\n233.0\n259.0\n307.0\n461.0\n+------+--------+--------+------------------+----------+\n|result|min(bid)|max(bid)|avg(bid)          |count(bid)|\n+------+--------+--------+------------------+----------+\n|0.0   |10.0    |79.0    |56.12820512820513 |78        |\n|1.0   |80.0    |112.0   |97.8125           |80        |\n|2.0   |113.0   |136.0   |123.15            |80        |\n|3.0   |137.0   |156.0   |146.40540540540542|74        |\n|4.0   |157.0   |179.0   |166.17857142857142|84        |\n|5.0   |180.0   |200.0   |190.2875          |80        |\n|6.0   |201.0   |220.0   |210.0875          |80        |\n|7.0   |221.0   |240.0   |231.08641975308643|81        |\n|8.0   |241.0   |266.0   |252.98666666666668|75        |\n|9.0   |267.0   |317.0   |288.98823529411766|85        |\n|10.0  |318.0   |461.0   |370.0740740740741 |81        |\n+------+--------+--------+------------------+----------+\n\n--- Max Message Time - 2021-07-24 04:08:29.861\n--- End Time - 2021-07-24 04:09:00.830\n--- Processing Time in Millis - 8643\n--- Processed messages in this batch: 878\n>>> Batch 3 ---\n--- Start Time - 2021-07-24 04:09:01.826\n88.0 121.0 141.0 165.0 188.0 207.0 231.0 265.0 306.0 574.0\n10\n88.0\n121.0\n141.0\n165.0\n188.0\n207.0\n231.0\n265.0\n306.0\n574.0\n+------+--------+--------+------------------+----------+\n|result|min(bid)|max(bid)|avg(bid)          |count(bid)|\n+------+--------+--------+------------------+----------+\n|0.0   |8.0     |82.0    |56.76315789473684 |76        |\n|1.0   |83.0    |114.0   |97.86585365853658 |82        |\n|2.0   |115.0   |135.0   |125.59740259740259|77        |\n|3.0   |136.0   |155.0   |145.23456790123456|81        |\n|4.0   |156.0   |174.0   |165.26315789473685|76        |\n|5.0   |175.0   |196.0   |186.26582278481013|79        |\n|6.0   |197.0   |216.0   |206.0705882352941 |85        |\n|7.0   |217.0   |242.0   |229.1012658227848 |79        |\n|8.0   |243.0   |274.0   |258.7088607594937 |79        |\n|9.0   |275.0   |311.0   |291.5897435897436 |78        |\n|10.0  |312.0   |574.0   |358.7261904761905 |84        |\n+------+--------+--------+------------------+----------+\n\n--- Max Message Time - 2021-07-24 04:08:39.843\n--- End Time - 2021-07-24 04:09:10.375\n--- Processing Time in Millis - 8549\n--- Processed messages in this batch: 876\nimport org.apache.kafka.clients.consumer.ConsumerRecord\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.streaming.kafka010._\nimport org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent\nimport org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe\nimport org.apache.spark.SparkContext\nimport org.apache.spark.sql.Row\nimport org.apache.spark.sql.types.{StringType, StructField, StructType, DoubleType}\nimport org.apache.kafka.clients.consumer.ConsumerConfig\nimport org.apache.spark.sql.SQLContext\nimport org.apache.spark.util.LongAccumulator\nimport org.apache.spark.streaming._\nimport org.apache.spark.ml.feature.QuantileDiscretizer\nimport scala.util.parsing.json.JSON\nimport java.util.{Calendar, Date}\nimport java.text.SimpleDate...\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627171127795_1136189841",
+      "id": "paragraph_1627098984332_1153533998",
+      "dateCreated": "2021-07-24T23:58:47+0000",
+      "status": "READY",
+      "$$hashKey": "object:2180"
+    },
+    {
+      "title": "Original Source - Spark - Kafka DStream Approach",
+      "text": "%spark\nimport org.apache.kafka.clients.consumer.ConsumerRecord\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.SparkContext\nimport org.apache.spark.streaming.kafka010._\nimport org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent\nimport org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe\nimport org.apache.spark.streaming.StreamingContext\nimport org.apache.spark.streaming.Seconds\nimport org.apache.spark.streaming.scheduler._\nimport org.apache.spark.sql.SparkSession\nimport org.apache.spark.sql.functions._\nimport org.apache.spark.sql.types._\nimport org.apache.spark.util.LongAccumulator\nimport scala.util.parsing.json.JSON\n\nval r = scala.util.Random\n// Generate a new Kafka Consumer group id every run\nval groupId = s\"stream-checker-v${r.nextInt.toString}\"\n\nval kafkaParams = Map[String, Object](\n  \"bootstrap.servers\" -> \"kafka:9092\",\n  \"key.deserializer\" -> classOf[StringDeserializer],\n  \"value.deserializer\" -> classOf[StringDeserializer],\n  \"group.id\" -> groupId,\n  // remove this if your Kafka doesn't use SSL\n  \"security.protocol\" -> \"SSL\",\n  \"auto.offset.reset\" -> \"latest\",\n  \"enable.auto.commit\" -> (false: java.lang.Boolean)\n)\n\nval topics = Array(\"topic-to-consume\")\n\n// Accumulating results in batches of\nval batchInterval = Seconds(5)\n\n// How many batches to run before terminating\nval batchesToRun = 10\n\ncase class Message(\n      platform: String,\n      uid: String,\n      key: String,\n      value: String\n)\n\n// Counter for the number of batches. The job will stop after it reaches 'batchesToRun' value\n// Looks ugly, but this is what documentation uses as an example ¯\\_(ツ)_/¯\nobject FinishedBatchesCounter {\n  @volatile private var instance: LongAccumulator = null\n\n  def getInstance(sc: SparkContext): LongAccumulator = {\n    if (instance == null) {\n      synchronized {\n        if (instance == null) {\n      \tinstance = sc.longAccumulator(\"FinishedBatchesCounter\")\n        }\n      }\n    }\n    instance\n  }\n}\n\n// 'sc' is a SparkContext, here it's provided by Zeppelin\nval ssc = new StreamingContext(sc, batchInterval)\n\nval stream = KafkaUtils.createDirectStream[String, String](\n  ssc,\n  PreferConsistent,\n  Subscribe[String, String](topics, kafkaParams)\n)\n\nval messages = stream\n    // We get a bunch of metadata from Kafka like partitions, timestamps, etc. Only interested in message payload\n    .map(record => record.value)\n    // We use flatMap to handle errors\n    // by returning an empty list (None) if we encounter an issue and a\n    // list with one element if everything is ok (Some(_)).\t\n    .flatMap(record => {\n        // Deserializing JSON using built-in Scala parser and converting it to a Message case class\n        JSON.parseFull(record).map(rawMap => {\n        \tval map = rawMap.asInstanceOf[Map[String,String]]\n            Message(map.get(\"platform\").get, map.get(\"uid\").get, map.get(\"key\").get, map.get(\"value\").get)\n        })\n    })\n\n// Cache DStream now, it'll speed up most of the operations below\t\nmessages.cache()\t\n\n// Counting batches and terminating after 'batchesToRun'\nmessages.foreachRDD { rdd =>\n\n  val dinishedBatchesCounter = FinishedBatchesCounter.getInstance(sc)\n\n  println(s\"--- Batch ${dinishedBatchesCounter.count + 1} ---\")\n  println(\"Processed messages in this batch: \" + rdd.count())\n\n  if (dinishedBatchesCounter.count >= batchesToRun - 1) {\n    ssc.stop()\n  } else {\n    dinishedBatchesCounter.add(1)\n  }\n}\n\n// Printing aggregation for the platforms:\nmessages\n    .map(msg => (msg.fp, 1))\n    .reduceByKey(_ + _)\n    .print()\n\n// Printing messages with 'weird' uids\nval weirdUidMessages = messages.filter(msg => msg.uid == \"NULL\" || msg.uid == \"\" || msg.uid == \" \" || msg.uid.length < 10)\nweirdUidMessages.print(20)\nweirdUidMessages.count().print()\n\n// TODO: catch more violations here using filtering on 'messages'\n\nssc.start()\nssc.awaitTermination()",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-24T23:58:47+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627171127795_1547773730",
+      "id": "paragraph_1626135921569_832053266",
+      "dateCreated": "2021-07-24T23:58:47+0000",
+      "status": "READY",
+      "$$hashKey": "object:2181"
+    },
+    {
+      "text": "%spark\nimport org.apache.kafka.clients.consumer.ConsumerRecord\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.streaming.kafka010._\nimport org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent\nimport org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe\nimport org.apache.spark.SparkContext\n\nimport org.apache.spark.sql.Row\nimport org.apache.spark.sql.types.{StringType, StructField, StructType, DoubleType}\n\nimport org.apache.kafka.clients.consumer.ConsumerConfig\nimport org.apache.kafka.common.serialization.StringDeserializer\n\nimport org.apache.spark.sql.SQLContext\n\nimport org.apache.spark.util.LongAccumulator\nimport org.apache.spark.streaming._\n\nimport org.apache.spark.ml.feature.QuantileDiscretizer\n\nimport scala.util.parsing.json.JSON\n\nval ssc = new StreamingContext(sc, Seconds(10))\n\nval sqlContext = new SQLContext(sc)\nimport sqlContext.implicits._\n\nval r = scala.util.Random\nval groupId = s\"stream-nexmark-v${r.nextInt.toString}\"\n\nval batchesToRun = 10\n\nobject FinishedBatchesCounter {\n  @volatile private var instance: LongAccumulator = null\n\n  def getInstance(sc: SparkContext): LongAccumulator = {\n    if (instance == null) {\n      synchronized {\n        if (instance == null) {\n      \tinstance = sc.longAccumulator(\"FinishedBatchesCounter\")\n        }\n      }\n    }\n    instance\n  }\n}\n    \nval kafkaParams = Map[String, Object](\n  \"bootstrap.servers\" -> \"my-sketchbench-kafka:9092\",\n  \"key.deserializer\" -> classOf[StringDeserializer],\n  \"value.deserializer\" -> classOf[StringDeserializer],\n  \"group.id\" -> groupId,\n  \"auto.offset.reset\" -> \"latest\",\n  \"enable.auto.commit\" -> (false: java.lang.Boolean)\n)\n\nval topics = Array(\"SketchBench-nexmark\")\nval stream = KafkaUtils.createDirectStream[String, String](\n  ssc,\n  PreferConsistent,\n  Subscribe[String, String](topics, kafkaParams)\n)\n\nval messages = stream\n    .map(record => record.value)\n    .flatMap(record => {\n        // // Deserializing JSON using built-in Scala parser and converting it to a Message case class\n        // JSON.parseFull(record).map(rawMap => {\n        //     val map = rawMap.asInstanceOf[Map[String,String]]\n        //     print(rawMap)\n        //     //Message(map.get(\"time\").get, map.get(\"auction_id\").get, map.get(\"person\").get, map.get(\"bid\").get)\n        // })\n         JSON.parseFull(record).map(rawMap =>{\n            val map = rawMap.asInstanceOf[Map[String,Map[String,String]]]\n            val inMap = map.get(\"event\")\n            //Message(inMap.get(\"time\"), inMap.get(\"auction_id\"), inMap.get(\"person\"),inMap.get(\"bid\"))\n            inMap\n         } )\n    })\n\nmessages.foreachRDD { rdd =>\n\n  val dinishedBatchesCounter = FinishedBatchesCounter.getInstance(sc)\n  println(s\"--- Batch ${dinishedBatchesCounter.count + 1} ---\")\n  println(\"Processed messages in this batch: \" + rdd.count())\n  \n  val newRDD = rdd.map(p =>\n  Row(p.get(\"time\"),\n    p.get(\"auction_id\"),\n    p.get(\"person\"),\n    p.get(\"bid\")))\n    \n    newRDD.take(2).foreach(println)\n    \n    val columns = Seq(\"time\",\"auction_id\",\"person\",\"bid\")\n    \n    val schema = StructType(columns.map(fieldName => StructField(fieldName, DoubleType, nullable = true)))\n    val rddDF = spark.createDataFrame(newRDD,schema)\n   \n   \n   // val quantiles = rddDF.stat.approxQuantile(\"bid\", Array(0.1,0.2,0.3,0,4,0.5,0.6,0.7,0.8,0.9,1), 0.25)\n   // println(quantiles)\n    \n    \n    // val myDataFrame = spark.createDataFrame(rdd).toDF()\n    //val myDataFrame = newRDD.toDF(\"time\",\"auction_id\",\"person\",\"bid\")\n    //myDataFrame.show()  \n    \n    \n    // https://spark.apache.org/docs/latest/ml-features#quantilediscretizer\n    \n    val discretizer = new QuantileDiscretizer()\n  .setInputCol(\"bid\")\n  .setOutputCol(\"result\")\n  .setNumBuckets(11)\n  \n    val result = discretizer.fit(rddDF).transform(rddDF)\n    result.groupBy(\"result\").agg(min(\"bid\"),max(\"bid\"),avg(\"bid\")).orderBy(\"result\").show(false)\n    \n  if (dinishedBatchesCounter.count >= batchesToRun - 1) {\n    ssc.stop()\n  } else {\n    dinishedBatchesCounter.add(1)\n  }\n}\n\n\nssc.start()  \nssc.awaitTermination()\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-24T23:58:47+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627171127795_2112863454",
+      "id": "paragraph_1627084104952_1242418499",
+      "dateCreated": "2021-07-24T23:58:47+0000",
+      "status": "READY",
+      "$$hashKey": "object:2182"
+    },
+    {
+      "text": "%spark\nimport org.apache.kafka.clients.consumer.ConsumerRecord\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.streaming.kafka010._\nimport org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent\nimport org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe\nimport org.apache.spark.SparkContext\n\nimport org.apache.spark.sql.Row\nimport org.apache.spark.sql.types.{StringType, StructField, StructType, DoubleType, LongType, ArrayType, IntegerType}\n\nimport org.apache.kafka.clients.consumer.ConsumerConfig\nimport org.apache.kafka.common.serialization.StringDeserializer\n\nimport org.apache.spark.sql.SQLContext\n\nimport org.apache.spark.util.LongAccumulator\nimport org.apache.spark.streaming._\n\nimport org.apache.spark.ml.feature.QuantileDiscretizer\n\nimport scala.util.parsing.json.JSON\nimport java.util.{Calendar, Date}\nimport java.text.SimpleDateFormat\n\nimport scala.collection.immutable.Map\n\nval ssc = new StreamingContext(sc, Seconds(1))\n\nval sqlContext = new SQLContext(sc)\nimport sqlContext.implicits._\n\nval r = scala.util.Random\nval groupId = s\"stream-nexmark-v${r.nextInt.toString}\"\n\nval batchesToRun = 9\n\nobject FinishedBatchesCounter {\n  @volatile private var instance: LongAccumulator = null\n\n  def getInstance(sc: SparkContext): LongAccumulator = {\n    if (instance == null) {\n      synchronized {\n        if (instance == null) {\n      \tinstance = sc.longAccumulator(\"FinishedBatchesCounter\")\n        }\n      }\n    }\n    instance\n  }\n}\n    \nval kafkaParams = Map[String, Object](\n  \"bootstrap.servers\" -> \"my-sketchbench-kafka:9092\",\n  \"key.deserializer\" -> classOf[StringDeserializer],\n  \"value.deserializer\" -> classOf[StringDeserializer],\n  \"group.id\" -> groupId,\n  \"auto.offset.reset\" -> \"latest\",\n  \"enable.auto.commit\" -> (false: java.lang.Boolean)\n)\n\nval topics = Array(\"SketchBench-nexmark\")\nval stream = KafkaUtils.createDirectStream[String, String](\n  ssc,\n  PreferConsistent,\n  Subscribe[String, String](topics, kafkaParams)\n)\n\n\nval messages = stream\n    .map(record => record.value)\n    .flatMap(record => {\n         JSON.parseFull(record).map(rawMap =>{\n            val map = rawMap.asInstanceOf[Map[String,Map[String,Double]]]\n            val inMap = map.get(\"event\")\n            (\"bid\",inMap.get(\"bid\").toInt)\n         } )\n    })\n\nssc.checkpoint(\"/tmp/checkpoint-test/\") \n\ndef updateStateFunc(bids: Seq[Int], runningstate: Option[Array[(Double,Long,Long,Long,Long)]]):  Option[Array[(Double,Long,Long,Long,Long)]] = {\n    \n    val previousState = runningstate.getOrElse(Array((0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l)))\n    \n    val newState =Array((0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l))\n    \n    val totalRecords = bids.length\n    \n    val initArray = Array(0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1)\n\n    val limitArray = initArray.map(_ * totalRecords)\n        \n    val sortedBids = bids.sortWith(_ < _)\n    print(\"Total Records =\"+totalRecords)\n    for(i <- 0 until initArray.length-1){\n        //println(\"=========\")\n        //println(i)\n        val next = i+1\n        val sliceStart = initArray(i) * totalRecords\n        val sliceEnd = initArray(next) * totalRecords\n        val subSeq = sortedBids.slice(sliceStart.toInt,sliceEnd.toInt)\n        //println(subSeq)\n        val mapValue =  previousState(i)\n        val min = mapValue._2\n        val max = mapValue._3\n        val count = mapValue._4\n        val total = mapValue._5\n\n        //println(count)\n        //println(total)\n        if(!subSeq.isEmpty){\n        val newCount = count + subSeq.size\n        val newTotal = count * total + subSeq.sum\n        val newMin =  if (min <= subSeq.min && min != 0 ) min else subSeq.min\n        val newMax =  if (max > subSeq.max) max else subSeq.max\n        //println(newCount)\n        //println(newTotal)\n        \n        newState(i) = (initArray(i),newMin,newMax,newCount,newTotal)\n        \n        }\n   \n    }\n\n    Some(newState)\n}\n\nval result = messages.updateStateByKey(updateStateFunc _)\n\nval result_map = result.flatMap(m => m._2)\n\nresult_map.print()\n\nssc.start()  \nssc.awaitTermination()",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-25T02:23:47+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[33mwarning: \u001b[0mthere was one deprecation warning (since 1.0.6)\n\u001b[33mwarning: \u001b[0mthere was one deprecation warning (since 2.0.0)\n\u001b[33mwarning: \u001b[0mthere were two deprecation warnings in total; for details, enable `:setting -deprecation' or `:replay -deprecation'\n-------------------------------------------\nTime: 1627179876000 ms\n-------------------------------------------\n(0.0,0,0,0,0)\n(0.1,107,107,1,107)\n(0.0,0,0,0,0)\n(0.3,155,155,1,155)\n(0.0,0,0,0,0)\n(0.5,206,206,1,206)\n(0.0,0,0,0,0)\n(0.7,235,235,1,235)\n(0.0,0,0,0,0)\n(0.9,299,299,1,299)\n...\n\n-------------------------------------------\nTime: 1627179877000 ms\n-------------------------------------------\n(0.0,21,25,2,46)\n(0.1,34,107,3,186)\n(0.2,82,111,3,302)\n(0.3,118,155,3,398)\n(0.4,128,149,3,410)\n(0.5,182,206,3,577)\n(0.6,191,213,2,404)\n(0.7,215,240,4,918)\n(0.8,257,286,2,543)\n(0.9,296,447,4,1401)\n...\n\n-------------------------------------------\nTime: 1627179878000 ms\n-------------------------------------------\n(0.0,21,87,5,260)\n(0.1,34,125,6,914)\n(0.2,82,130,6,1291)\n(0.3,118,155,6,1611)\n(0.4,128,179,6,1731)\n(0.5,182,206,6,2294)\n(0.6,191,228,5,1485)\n(0.7,215,286,7,4454)\n(0.8,257,315,5,2018)\n(0.9,296,473,7,6743)\n...\n\n-------------------------------------------\nTime: 1627179879000 ms\n-------------------------------------------\n(0.0,21,87,12,1624)\n(0.1,34,125,14,6136)\n(0.2,82,130,14,8605)\n(0.3,118,155,14,10824)\n(0.4,128,182,14,11706)\n(0.5,182,206,13,15104)\n(0.6,191,228,13,9053)\n(0.7,211,286,15,32989)\n(0.8,242,315,13,12296)\n(0.9,296,473,15,49944)\n...\n\n-------------------------------------------\nTime: 1627179880000 ms\n-------------------------------------------\n(0.0,10,87,21,19997)\n(0.1,34,125,23,86801)\n(0.2,82,132,23,121594)\n(0.3,118,155,23,152826)\n(0.4,128,187,23,165400)\n(0.5,182,210,22,198166)\n(0.6,191,230,21,119474)\n(0.7,211,286,25,497313)\n(0.8,242,326,22,162509)\n(0.9,296,473,24,752818)\n...\n\n-------------------------------------------\nTime: 1627179881000 ms\n-------------------------------------------\n(0.0,10,87,29,420247)\n(0.1,34,125,32,1997102)\n(0.2,82,132,31,2797504)\n(0.3,113,155,32,3516084)\n(0.4,128,187,32,3805590)\n(0.5,163,210,30,4361036)\n(0.6,190,230,30,2510803)\n(0.7,211,286,33,12434745)\n(0.8,242,326,31,3577702)\n(0.9,296,473,33,18070823)\n...\n\n-------------------------------------------\nTime: 1627179882000 ms\n-------------------------------------------\n(0.0,10,88,36,12187598)\n(0.1,34,125,40,63908089)\n(0.2,82,134,39,86723628)\n(0.3,113,171,39,112515716)\n(0.4,128,196,40,121780357)\n(0.5,163,211,38,130832705)\n(0.6,190,235,37,75325652)\n(0.7,211,286,41,410348593)\n(0.8,242,326,39,110911014)\n(0.9,296,473,41,596339921)\n...\n\n-------------------------------------------\nTime: 1627179883000 ms\n-------------------------------------------\n(0.0,10,88,44,438753871)\n(0.1,34,130,48,2556324338)\n(0.2,82,149,48,3382222781)\n(0.3,113,171,47,4388114223)\n(0.4,128,196,49,4871215915)\n(0.5,163,212,46,4971644408)\n(0.6,190,235,45,2787050868)\n(0.7,211,286,50,16824294587)\n(0.8,242,326,47,4325531991)\n(0.9,296,473,50,24449939914)\n...\n\n-------------------------------------------\nTime: 1627179884000 ms\n-------------------------------------------\n(0.0,10,88,52,19305170742)\n(0.1,34,130,56,122703569089)\n(0.2,82,149,56,162346694541)\n(0.3,113,182,55,206241369785)\n(0.4,128,196,57,238689581355)\n(0.5,163,213,54,228695644404)\n(0.6,190,235,53,125417290851)\n(0.7,211,286,58,841214731264)\n(0.8,242,326,55,203300005735)\n(0.9,296,473,58,1222496998261)\n...\n\n-------------------------------------------\nTime: 1627179886000 ms\n-------------------------------------------\n(0.0,10,88,69,60232132746096)\n(0.1,34,130,74,446640991547548)\n(0.2,82,149,73,581850553304144)\n(0.3,113,182,74,725969621730324)\n(0.4,128,196,74,884344899014107)\n(0.5,163,216,72,778022582377078)\n(0.6,190,243,71,405474101427787)\n(0.7,211,286,76,3268960445836459)\n(0.8,242,326,72,704434520015551)\n(0.9,296,473,77,4750623335443785)\n...\n\n-------------------------------------------\nTime: 1627179887000 ms\n-------------------------------------------\n(0.0,10,88,77,4156017159481104)\n(0.1,34,130,83,33051433374519442)\n(0.2,82,149,82,42475090391203628)\n(0.3,113,182,82,53721752008045216)\n(0.4,128,196,83,65441522527045552)\n(0.5,163,216,81,56017625931151468)\n(0.6,190,243,79,28788661201374669)\n(0.7,211,286,85,248440993883573138)\n(0.8,242,326,81,50719285441122145)\n(0.9,296,473,86,365797996829174496)\n...\n\norg.apache.spark.SparkException: Checkpoint RDD has a different number of partitions from original RDD. Original RDD [ID: 67, num of partitions: 9]; Checkpoint RDD [ID: 202, num of partitions: 0].\n  at org.apache.spark.rdd.ReliableCheckpointRDD$.writeRDDToCheckpointDirectory(ReliableCheckpointRDD.scala:184)\n  at org.apache.spark.rdd.ReliableRDDCheckpointData.doCheckpoint(ReliableRDDCheckpointData.scala:59)\n  at org.apache.spark.rdd.RDDCheckpointData.checkpoint(RDDCheckpointData.scala:75)\n  at org.apache.spark.rdd.RDD.$anonfun$doCheckpoint$1(RDD.scala:1801)\n  at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)\n  at org.apache.spark.rdd.RDD.doCheckpoint(RDD.scala:1791)\n  at org.apache.spark.rdd.RDD.$anonfun$doCheckpoint$3(RDD.scala:1803)\n  at org.apache.spark.rdd.RDD.$anonfun$doCheckpoint$3$adapted(RDD.scala:1803)\n  at scala.collection.immutable.List.foreach(List.scala:392)\n  at org.apache.spark.rdd.RDD.$anonfun$doCheckpoint$1(RDD.scala:1803)\n  at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)\n  at org.apache.spark.rdd.RDD.doCheckpoint(RDD.scala:1791)\n  at org.apache.spark.SparkContext.runJob(SparkContext.scala:2116)\n  at org.apache.spark.SparkContext.runJob(SparkContext.scala:2135)\n  at org.apache.spark.SparkContext.runJob(SparkContext.scala:2154)\n  at org.apache.spark.rdd.RDD.$anonfun$take$1(RDD.scala:1423)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)\n  at org.apache.spark.rdd.RDD.withScope(RDD.scala:388)\n  at org.apache.spark.rdd.RDD.take(RDD.scala:1396)\n  at org.apache.spark.streaming.dstream.DStream.$anonfun$print$3(DStream.scala:736)\n  at org.apache.spark.streaming.dstream.DStream.$anonfun$print$3$adapted(DStream.scala:735)\n  at org.apache.spark.streaming.dstream.ForEachDStream.$anonfun$generateJob$2(ForEachDStream.scala:51)\n  at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)\n  at org.apache.spark.streaming.dstream.DStream.createRDDWithLocalProperties(DStream.scala:417)\n  at org.apache.spark.streaming.dstream.ForEachDStream.$anonfun$generateJob$1(ForEachDStream.scala:51)\n  at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)\n  at scala.util.Try$.apply(Try.scala:213)\n  at org.apache.spark.streaming.scheduler.Job.run(Job.scala:39)\n  at org.apache.spark.streaming.scheduler.JobScheduler$JobHandler.$anonfun$run$1(JobScheduler.scala:256)\n  at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)\n  at scala.util.DynamicVariable.withValue(DynamicVariable.scala:62)\n  at org.apache.spark.streaming.scheduler.JobScheduler$JobHandler.run(JobScheduler.scala:256)\n  at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n  at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n  at java.lang.Thread.run(Thread.java:748)\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627171127796_550166449",
+      "id": "paragraph_1627146791237_1471000902",
+      "dateCreated": "2021-07-24T23:58:47+0000",
+      "dateStarted": "2021-07-25T02:23:47+0000",
+      "dateFinished": "2021-07-25T02:25:05+0000",
+      "status": "ERROR",
+      "$$hashKey": "object:2183",
+      "title": "Quantiles with UpdateStateByKey"
+    },
+    {
+      "text": "%spark\n\n// case class AggMetrics(\n// var quantile: Integer,\n// var min: Integer,\n// var max: Integer,\n// var count: Integer,\n// var total: Integer)\n\n\ndef updateStateFunc(bids: Seq[Int], runningstate: Option[Array[(Double,Long,Long,Long,Long)]]):  Option[Array[(Double,Long,Long,Long,Long)]] = {\n    \n    val previousState = runningstate.getOrElse(Array((0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l)))\n    \n    val newState =Array((0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l))\n    \n    val totalRecords = bids.length\n    \n    val initArray = Array(0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1)\n\n    val limitArray = initArray.map(_ * totalRecords)\n        \n    val sortedBids = bids.sortWith(_ < _)\n    \n    println(sortedBids)\n    \n    println(\"Total Records =\"+totalRecords)\n    \n    for(i <- 0 until initArray.length-1){\n        println(\"=========\")\n        println(i)\n        val next = i+1\n        val sliceStart = initArray(i) * totalRecords\n        val sliceEnd = initArray(next) * totalRecords\n        \n        println(\"slicestart  - \"+sliceStart)\n        println(\"sliceEnd  - \"+sliceEnd)  \n        \n        val subSeq = sortedBids.slice(sliceStart.toInt,sliceEnd.toInt)\n        \n        println(subSeq)\n        val mapValue =  previousState(i)\n        val min = mapValue._2\n        val max = mapValue._3\n        val count = mapValue._4\n        val total = mapValue._5\n\n        println(count)\n        println(total)\n        \n        println(min)\n        println(max)\n        println(subSeq.isEmpty)\n        if(!subSeq.isEmpty){\n        \n        val newCount = count + subSeq.size\n        val newTotal = total + subSeq.sum\n        val newMin =  if (min <= subSeq.min && min != 0 ) min else subSeq.min\n        val newMax =  if (max > subSeq.max) max else subSeq.max\n        println(newMin)\n        println(newMax)\n        println(newCount)\n        println(newTotal)\n        \n        newState(i) = (initArray(i),newMin,newMax,newCount,newTotal)\n        \n        }\n   \n    }\n\n    Some(newState)\n}\nval nums = Seq(189,115,343,147,144,275,194,249,176,376, 85, 20, 90,279,339,256,229,102,199,212,189,115,343,147,144,275,194,249,176,376, 85, 20, 90,279,339,256,229,102,199,212,189,115,343,147,144,275,194,249,176,376, 85, 20, 90,279,339,256,229,102,199,212,189,115,343,147,144,275,194,249,176,376, 85, 20, 90,279,339,256,229,102,199,212,189,115,343,147,144,275,194,249,176,376, 85, 20, 90,279,339,256,229,102,199,212)\n\n//val nums = Seq(189,115,343,147,144,275)\n\n\n//updateStateFunc(nums,Map(0.0 -> (0,0),0.1 -> (0,0),0.2 -> (0,0),0.3 -> (0,0),0.4 -> (0,0),0.5 -> (0,0),0.6 -> (0,0),0.7 -> (0,0),0.8 -> (0,0),0.9 -> (0,0),1.0 -> (0,0)))\n//updateStateFunc(nums,updateStateFunc(nums,Some(Array((0,0,0,0,0)))))\n\nval arrVals =  updateStateFunc(nums,updateStateFunc(nums,Some(Array((0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l),(0d,0l,0l,0l,0l)))))\n\n// for(myTuple <- arrVals) {\n//     println(myTuple);\n// } \n",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-25T02:19:55+0000",
+      "progress": 0,
+      "config": {
+        "lineNumbers": true,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "List(20, 20, 20, 20, 20, 85, 85, 85, 85, 85, 90, 90, 90, 90, 90, 102, 102, 102, 102, 102, 115, 115, 115, 115, 115, 144, 144, 144, 144, 144, 147, 147, 147, 147, 147, 176, 176, 176, 176, 176, 189, 189, 189, 189, 189, 194, 194, 194, 194, 194, 199, 199, 199, 199, 199, 212, 212, 212, 212, 212, 229, 229, 229, 229, 229, 249, 249, 249, 249, 249, 256, 256, 256, 256, 256, 275, 275, 275, 275, 275, 279, 279, 279, 279, 279, 339, 339, 339, 339, 339, 343, 343, 343, 343, 343, 376, 376, 376, 376, 376)\nTotal Records =100\n=========\n0\nslicestart  - 0.0\nsliceEnd  - 10.0\nList(20, 20, 20, 20, 20, 85, 85, 85, 85, 85)\n0\n0\n0\n0\nfalse\n20\n85\n10\n525\n=========\n1\nslicestart  - 10.0\nsliceEnd  - 20.0\nList(90, 90, 90, 90, 90, 102, 102, 102, 102, 102)\n0\n0\n0\n0\nfalse\n90\n102\n10\n960\n=========\n2\nslicestart  - 20.0\nsliceEnd  - 30.0\nList(115, 115, 115, 115, 115, 144, 144, 144, 144, 144)\n0\n0\n0\n0\nfalse\n115\n144\n10\n1295\n=========\n3\nslicestart  - 30.0\nsliceEnd  - 40.0\nList(147, 147, 147, 147, 147, 176, 176, 176, 176, 176)\n0\n0\n0\n0\nfalse\n147\n176\n10\n1615\n=========\n4\nslicestart  - 40.0\nsliceEnd  - 50.0\nList(189, 189, 189, 189, 189, 194, 194, 194, 194, 194)\n0\n0\n0\n0\nfalse\n189\n194\n10\n1915\n=========\n5\nslicestart  - 50.0\nsliceEnd  - 60.0\nList(199, 199, 199, 199, 199, 212, 212, 212, 212, 212)\n0\n0\n0\n0\nfalse\n199\n212\n10\n2055\n=========\n6\nslicestart  - 60.0\nsliceEnd  - 70.0\nList(229, 229, 229, 229, 229, 249, 249, 249, 249, 249)\n0\n0\n0\n0\nfalse\n229\n249\n10\n2390\n=========\n7\nslicestart  - 70.0\nsliceEnd  - 80.0\nList(256, 256, 256, 256, 256, 275, 275, 275, 275, 275)\n0\n0\n0\n0\nfalse\n256\n275\n10\n2655\n=========\n8\nslicestart  - 80.0\nsliceEnd  - 90.0\nList(279, 279, 279, 279, 279, 339, 339, 339, 339, 339)\n0\n0\n0\n0\nfalse\n279\n339\n10\n3090\n=========\n9\nslicestart  - 90.0\nsliceEnd  - 100.0\nList(343, 343, 343, 343, 343, 376, 376, 376, 376, 376)\n0\n0\n0\n0\nfalse\n343\n376\n10\n3595\nList(20, 20, 20, 20, 20, 85, 85, 85, 85, 85, 90, 90, 90, 90, 90, 102, 102, 102, 102, 102, 115, 115, 115, 115, 115, 144, 144, 144, 144, 144, 147, 147, 147, 147, 147, 176, 176, 176, 176, 176, 189, 189, 189, 189, 189, 194, 194, 194, 194, 194, 199, 199, 199, 199, 199, 212, 212, 212, 212, 212, 229, 229, 229, 229, 229, 249, 249, 249, 249, 249, 256, 256, 256, 256, 256, 275, 275, 275, 275, 275, 279, 279, 279, 279, 279, 339, 339, 339, 339, 339, 343, 343, 343, 343, 343, 376, 376, 376, 376, 376)\nTotal Records =100\n=========\n0\nslicestart  - 0.0\nsliceEnd  - 10.0\nList(20, 20, 20, 20, 20, 85, 85, 85, 85, 85)\n10\n525\n20\n85\nfalse\n20\n85\n20\n1050\n=========\n1\nslicestart  - 10.0\nsliceEnd  - 20.0\nList(90, 90, 90, 90, 90, 102, 102, 102, 102, 102)\n10\n960\n90\n102\nfalse\n90\n102\n20\n1920\n=========\n2\nslicestart  - 20.0\nsliceEnd  - 30.0\nList(115, 115, 115, 115, 115, 144, 144, 144, 144, 144)\n10\n1295\n115\n144\nfalse\n115\n144\n20\n2590\n=========\n3\nslicestart  - 30.0\nsliceEnd  - 40.0\nList(147, 147, 147, 147, 147, 176, 176, 176, 176, 176)\n10\n1615\n147\n176\nfalse\n147\n176\n20\n3230\n=========\n4\nslicestart  - 40.0\nsliceEnd  - 50.0\nList(189, 189, 189, 189, 189, 194, 194, 194, 194, 194)\n10\n1915\n189\n194\nfalse\n189\n194\n20\n3830\n=========\n5\nslicestart  - 50.0\nsliceEnd  - 60.0\nList(199, 199, 199, 199, 199, 212, 212, 212, 212, 212)\n10\n2055\n199\n212\nfalse\n199\n212\n20\n4110\n=========\n6\nslicestart  - 60.0\nsliceEnd  - 70.0\nList(229, 229, 229, 229, 229, 249, 249, 249, 249, 249)\n10\n2390\n229\n249\nfalse\n229\n249\n20\n4780\n=========\n7\nslicestart  - 70.0\nsliceEnd  - 80.0\nList(256, 256, 256, 256, 256, 275, 275, 275, 275, 275)\n10\n2655\n256\n275\nfalse\n256\n275\n20\n5310\n=========\n8\nslicestart  - 80.0\nsliceEnd  - 90.0\nList(279, 279, 279, 279, 279, 339, 339, 339, 339, 339)\n10\n3090\n279\n339\nfalse\n279\n339\n20\n6180\n=========\n9\nslicestart  - 90.0\nsliceEnd  - 100.0\nList(343, 343, 343, 343, 343, 376, 376, 376, 376, 376)\n10\n3595\n343\n376\nfalse\n343\n376\n20\n7190\n\u001b[1m\u001b[34mupdateStateFunc\u001b[0m: \u001b[1m\u001b[32m(bids: Seq[Int], runningstate: Option[Array[(Double, Long, Long, Long, Long)]])Option[Array[(Double, Long, Long, Long, Long)]]\u001b[0m\n\u001b[1m\u001b[34mnums\u001b[0m: \u001b[1m\u001b[32mSeq[Int]\u001b[0m = List(189, 115, 343, 147, 144, 275, 194, 249, 176, 376, 85, 20, 90, 279, 339, 256, 229, 102, 199, 212, 189, 115, 343, 147, 144, 275, 194, 249, 176, 376, 85, 20, 90, 279, 339, 256, 229, 102, 199, 212, 189, 115, 343, 147, 144, 275, 194, 249, 176, 376, 85, 20, 90, 279, 339, 256, 229, 102, 199, 212, 189, 115, 343, 147, 144, 275, 194, 249, 176, 376, 85, 20, 90, 279, 339, 256, 229, 102, 199, 212, 189, 115, 343, 147, 144, 275, 194, 249, 176, 376, 85, 20, 90, 279, 339, 256, 229, 102, 199, 212)\n\u001b[1m\u001b[34marrVals\u001b[0m: \u001b[1m\u001b[32mOption[Array[(Double, Long, Long, Long, Long)]]\u001b[0m = Some([Lsc...\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627171127796_814064078",
+      "id": "paragraph_1627147077325_917535",
+      "dateCreated": "2021-07-24T23:58:47+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:2184",
+      "dateFinished": "2021-07-25T02:19:56+0000",
+      "dateStarted": "2021-07-25T02:19:55+0000"
+    },
+    {
+      "text": "%spark\n\n\ndef updateStateFunc(bids: Seq[Int], runningstate: Option[scala.collection.mutable.Map[Double,(Long,Long)]]): Option[scala.collection.mutable.Map[Double,(Long,Long)]] = {\n    \n    val previousState = runningstate.getOrElse(scala.collection.mutable.Map(0.0 -> (0,0),0.1 -> (0,0),0.2 -> (0,0),0.3 -> (0,0),0.4 -> (0,0),0.5 -> (0,0),0.6 -> (0,0),0.7 -> (0,0),0.8 -> (0,0),0.9 -> (0,0),1.0 -> (0,0)))\n    \n    val newState = scala.collection.mutable.Map[Double,(Long,Long)]()\n    \n    val totalRecords = bids.length\n    \n    val initArray = Array(0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0)\n\n    val limitArray = initArray.map(_ * totalRecords)\n        \n    val sortedBids = bids.sortWith(_ < _)\n    \n    for(i <- 0 until initArray.length-1){\n        println(i)\n        val next = i+1\n        val sliceStart = initArray(i) * totalRecords\n        val sliceEnd = initArray(next) * totalRecords\n        val subSeq = bids.slice(sliceStart.toInt,sliceEnd.toInt)\n        print(subSeq)\n        val mapValue =  previousState.get(initArray(i)).getOrElse((0,0))\n        \n        val count = mapValue._1.asInstanceOf[Number].longValue\n        val total = mapValue._2.asInstanceOf[Number].longValue\n        println(count)\n        println(total)\n        val newCount = count + subSeq.size\n        val newTotal = count * total + subSeq.sum\n        println(newCount)\n        println(newTotal)\n        \n        newState(initArray(i)) = (newCount,newTotal.longValue)\n        \n   \n    }\n\n    Some(newState)\n}\n\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-24T23:58:47+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627171127796_221017209",
+      "id": "paragraph_1627153378707_637154471",
+      "dateCreated": "2021-07-24T23:58:47+0000",
+      "status": "READY",
+      "$$hashKey": "object:2185"
+    },
+    {
+      "text": "%",
+      "user": "anonymous",
+      "dateUpdated": "2021-07-24T23:58:47+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Interpreter sh not found"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627171127797_763654543",
+      "id": "paragraph_1627167352584_679693029",
+      "dateCreated": "2021-07-24T23:58:47+0000",
+      "status": "READY",
+      "$$hashKey": "object:2186"
+    },
+    {
+      "user": "anonymous",
+      "dateUpdated": "2021-07-24T23:58:47+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627171127797_2013018862",
+      "id": "paragraph_1627167362996_1677665305",
+      "dateCreated": "2021-07-24T23:58:47+0000",
+      "status": "READY",
+      "$$hashKey": "object:2187"
+    }
+  ],
+  "name": "NEXMark_10s_window_quantile_sample-WithUpdateStateByKey",
+  "id": "2GDSB83UV",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.9.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {},
+  "path": "/NEXMark_10s_window_quantile_sample-WithUpdateStateByKey"
+}
