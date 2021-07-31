@@ -10,7 +10,7 @@
 SELECT TIME,
   VALUE AS CPU_USAGE,
   VAL(POD_ID) AS POD
-FROM PROM_METRIC."node_namespace_pod_container:container_cpu_usage_seconds__1578"
+FROM PROM_METRIC."node_namespace_pod_container:container_cpu_usage_seconds__1766"
 WHERE VAL(POD_ID) LIKE '%spark-worker%'
   AND CONTAINER_ID > 0
   AND TIME > NOW() - INTERVAL '10 hour'
