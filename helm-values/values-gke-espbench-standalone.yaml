@@ -2,236 +2,76 @@
 
 dataIngestion:
   espbench:
-    enabled: false
+    enabled: true
     nodeSelector:
-      sketchbench/pool: control-plane
-    # 10000 ns interval = 100,000 msg/sec
-    # 100000 ns interval = 10,000 msg /sec
+      sketchbench/pool: data-ingestion
+    # 125000 ns interval = 8,000 msg /sec
     # 1000000 ns interval = 1,000 msg /sec
-    sendingInterval: 100000
+    sendingInterval: 125000
     sendingIntervalTimeUnit: NANOSECONDS
     duration: 1
     durationTimeUnit: HOURS
-
-bullet:
-  enabled: false
-  spark: # System Under Test (isolated Spark cluster)
-    enabled: true
-    image:
-      repository: sketchbench/bullet-spark-3.0
-      tag: "1.0.4"
-      pullPolicy: IfNotPresent
-    worker:
-      replicaCount: 2
-      coreLimit: 7
-      nodeSelector:
-        sketchbench/pool: system-under-test
-      resources:
-        requests:
-          memory: "26Gi"
-          cpu: "7"
-        limits:
-          memory: "26Gi"
-          cpu: "7"
-    master:
-      nodeSelector:
-        sketchbench/pool: system-under-test
-      resources:
-        requests:
-          memory: "26Gi"
-          cpu: "7"
-        limits:
-          memory: "26Gi"
-          cpu: "7"
-    podAntiAffinitypreset: hard
-    metrics:
-      enabled: true
-      podMonitor:
-        enabled: true
-  hdfs:
-    namenode:
-      nodeSelector:
-        sketchbench/pool: data-plane
-    datanode:
-      nodeSelector:
-        sketchbench/pool: data-plane
-    shell:
-      nodeSelector:
-        sketchbench/pool: data-plane
-  pubsub:
-    nodeSelector:
-      sketchbench/pool: control-plane
-    metrics:
-      kafka:
-        enabled: true
-        nodeSelector:
-          sketchbench/pool: observability
-      jmx:
-        enabled: true
-      serviceMonitor:
-        enabled: true
-    zookeeper:
-      nodeSelector:
-        sketchbench/pool: data-plane
-      metrics:
-        enabled: true
-        serviceMonitor:
-          enabled: true
-  pubsubMonit:
-    deployment:
-      nodeSelector:
-        sketchbench/pool: observability
-  ui:
-    nodeSelector:
-      sketchbench/pool: control-plane
-  webservice:
-    nodeSelector:
-      sketchbench/pool: control-plane
-  sparkBackend:
-    executorCores: 7
-    executorMemory: 25G
-    nodeSelector:
-      sketchbench/pool: system-under-test
+    replicaCount: 3
     resources:
       requests:
-        memory: "26Gi"
-        cpu: "7"
+        memory: "12Gi"
+        cpu: "3"
       limits:
-        memory: "26Gi"
-        cpu: "7"
-    image:
-      repository: sketchbench/bullet-spark-3.0
-    hdfsUser: hadoop
-    hdfs:
-      port: 8020
-    metrics:
-      enabled: true
-      podMonitor:
-        enabled: true
-    config:
-      bullet:
-        spark:
-          dsl:
-            data:
-              producer:
-                enable: true
-            deserializer:
-              enable: false
-        dsl:
-          connector:
-            class:
-              name: com.yahoo.bullet.dsl.connector.KafkaConnector
-            kafka:
-              topics:
-                - SketchBench-1-1
-              bootstrap:
-                servers:
-                  - kafka:9092
-          converter:
-            class:
-              name: com.yahoo.bullet.dsl.converter.JSONBulletRecordConverter
-            schema:
-              type:
-                check:
-                  enable: false
-          deserializer:
-            class:
-              name: com.yahoo.bullet.dsl.deserializer.IdentityDeserializer
-    dsl:
-      schema: |
-        {
-          "fields": [
-            {
-              "name": "messageID",
-              "type": "INTEGER"
-            },
-            {
-              "name": "ts",
-              "type": "STRING"
-            },
-            {
-              "name": "index",
-              "type": "LONG"
-            },
-            {
-              "name": "mf01",
-              "type": "INTEGER"
-            },
-            {
-              "name": "mf02",
-              "type": "INTEGER"
-            },
-            {
-              "name": "mf03",
-              "type": "INTEGER"
-            },
-            {
-              "name": "pc13",
-              "type": "INTEGER"
-            },
-            {
-              "name": "pc14",
-              "type": "INTEGER"
-            },
-            {
-              "name": "pc15",
-              "type": "INTEGER"
-            },
-            {
-              "name": "pc25",
-              "type": "INTEGER"
-            },
-            {
-              "name": "pc26",
-              "type": "INTEGER"
-            },
-            {
-              "name": "pc27",
-              "type": "INTEGER"
-            },
-            {
-              "name": "res",
-              "type": "INTEGER"
-            }
-          ]
-        }
+        memory: "12Gi"
 
 spark: # System Under Test (isolated Spark cluster)
-  enabled: false
+  enabled: true
   image:
     repository: sketchbench/bullet-spark-3.0
     tag: "1.0.4"
     pullPolicy: IfNotPresent
   worker:
-    replicaCount: 2
-    coreLimit: 7
+    replicaCount: 3
+    coreLimit: 6
     nodeSelector:
       sketchbench/pool: system-under-test
     resources:
       requests:
-        memory: "26Gi"
+        memory: "27Gi"
         cpu: "7"
       limits:
-        memory: "26Gi"
-        cpu: "7"
+        memory: "27Gi"
   master:
     nodeSelector:
       sketchbench/pool: system-under-test
     resources:
       requests:
-        memory: "26Gi"
+        memory: "27Gi"
         cpu: "7"
       limits:
-        memory: "26Gi"
-        cpu: "7"
+        memory: "27Gi"
   podAntiAffinitypreset: hard
   metrics:
     enabled: true
     podMonitor:
       enabled: true
+      interval: 5s
+
+hdfs:
+  enabled: true
+  namenode:
+    nodeSelector:
+      sketchbench/pool: data-plane
+  datanode:
+    nodeSelector:
+      sketchbench/pool: data-plane
+  shell:
+    nodeSelector:
+      sketchbench/pool: data-plane
 
 zeppelin:
-  enabled: false
+  enabled: true
+  resources:
+    requests:
+      memory: "27Gi"
+      cpu: "7"
+    limits:
+      memory: "27Gi"
   nodeSelector:
     sketchbench/pool: system-under-test
   runMode: local
@@ -245,6 +85,7 @@ zeppelin:
     enabled: true
     podMonitor:
       enabled: true
+      interval: 5s
   sparkInterpreter:
     spark:
       master: "spark://sketchbench-espbench-spark-master-svc:7077"
@@ -255,30 +96,42 @@ zeppelin:
       jar:
         packages: org.apache.spark:spark-sql-kafka-0-10_2.12:3.0.2,org.apache.spark:spark-streaming-kafka-0-10-assembly_2.12:3.0.2
       cores:
-        max: 14
+        max: 18
       driver:
-        cores: 7
-        memory: 25g
+        cores: 3
+        memory: 13g
       executor:
-        cores: 7
-        memory: 25g
-        instances: 2
+        cores: 3
+        memory: 13g
+# driver
+# - --conf
+# - spark.streaming.backpressure.enabled=true
+# - --conf
+# - spark.dynamicAllocation.enabled=false
+# - --conf
+# - spark.driver.extraJavaOptions="-XX:+UseG1GC"
+# - --conf
+# - spark.executor.extraJavaOptions="-XX:+UseG1GC"
 
 ### Data Ingestion (isolated Kafka cluster) ###
 
 kafka:
-  enabled: false
   nodeSelector:
     sketchbench/pool: data-ingestion
   podAntiAffinitypreset: hard
   logRetentionHours: 6
+  numPartitions: 5
+  deleteTopicEnable: true
   resources:
     requests:
-      memory: "26Gi"
-      cpu: "7"
+      memory: "12Gi"
+      cpu: "3"
     limits:
-      memory: "26Gi"
-      cpu: "7"
+      memory: "12Gi"
+  persistence:
+    size: 32Gi
+  logPersistence:
+    size: 32Gi
   metrics:
     kafka:
       enabled: true
@@ -317,6 +170,8 @@ tobs:
         sketchbench/pool: observability
     prometheus:
       prometheusSpec:
+        scrapeInterval: 5s
+        scrapeTimeout: 5s
         nodeSelector:
           sketchbench/pool: observability
         podMonitorSelectorNilUsesHelmValues: false

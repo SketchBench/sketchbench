@@ -7,18 +7,17 @@ dataIngestion:
       sketchbench/pool: data-ingestion
     # 125000 ns interval = 8,000 msg /sec
     # 1000000 ns interval = 1,000 msg /sec
-    # sendingInterval: 125000
-    sendingInterval: 1000000
+    sendingInterval: 125000
     sendingIntervalTimeUnit: NANOSECONDS
     duration: 1
     durationTimeUnit: HOURS
+    replicaCount: 3
     resources:
       requests:
         memory: "12Gi"
         cpu: "3"
       limits:
         memory: "12Gi"
-        cpu: "3"
 
 bullet:
   enabled: true
@@ -39,7 +38,6 @@ bullet:
           cpu: "7"
         limits:
           memory: "27Gi"
-          cpu: "7"
     master:
       nodeSelector:
         sketchbench/pool: system-under-test
@@ -49,12 +47,12 @@ bullet:
           cpu: "7"
         limits:
           memory: "27Gi"
-          cpu: "7"
     podAntiAffinitypreset: hard
     metrics:
       enabled: true
       podMonitor:
         enabled: true
+        interval: 5s
   hdfs:
     namenode:
       nodeSelector:
@@ -103,7 +101,6 @@ bullet:
         cpu: "7"
       limits:
         memory: "27Gi"
-        cpu: "7"
     image:
       repository: sketchbench/bullet-spark-3.0
     hdfsUser: hadoop
@@ -113,6 +110,7 @@ bullet:
       enabled: true
       podMonitor:
         enabled: true
+        interval: 5s
     driver:
       confs:
         - --conf
@@ -137,16 +135,13 @@ bullet:
               ms: 2000
           data:
             producer:
-              parallelism: 1
+              parallelism: 5
           filter:
             partition:
               parallel:
                 mode:
                   enabled: true
-                  parallelism: 1
-                  # min:
-                  #   query:
-                  #     threshold: 1
+                  parallelism: 5
           query:
             union:
               checkpoint:
@@ -269,7 +264,7 @@ kafka:
     sketchbench/pool: data-ingestion
   podAntiAffinitypreset: hard
   logRetentionHours: 6
-  numPartitions: 1
+  numPartitions: 5
   deleteTopicEnable: true
   resources:
     requests:
@@ -277,7 +272,6 @@ kafka:
       cpu: "3"
     limits:
       memory: "12Gi"
-      cpu: "3"
   metrics:
     kafka:
       enabled: true
@@ -316,6 +310,8 @@ tobs:
         sketchbench/pool: observability
     prometheus:
       prometheusSpec:
+        scrapeInterval: 5s
+        scrapeTimeout: 5s
         nodeSelector:
           sketchbench/pool: observability
         podMonitorSelectorNilUsesHelmValues: false
