@@ -4,7 +4,7 @@
       "title": "Spark Quantile with 10 second Batch Window",
       "text": "%spark\n//All required imports to run this notebook\n\nimport org.apache.kafka.clients.consumer.ConsumerRecord\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.streaming.kafka010._\nimport org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent\nimport org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe\nimport org.apache.spark.SparkContext\nimport org.apache.spark.sql.Row\nimport org.apache.spark.sql.types.{StringType, StructField, StructType, IntegerType, DoubleType}\nimport org.apache.kafka.clients.consumer.ConsumerConfig\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.sql.SQLContext\nimport org.apache.spark.util.LongAccumulator\nimport org.apache.spark.streaming._\nimport org.apache.spark.ml.feature.QuantileDiscretizer\nimport scala.util.parsing.json.JSON\nimport java.util.{Calendar, Date}\nimport java.text.SimpleDateFormat\nimport sqlContext.implicits._\n\n",
       "user": "anonymous",
-      "dateUpdated": "2021-07-25T05:25:35+0000",
+      "dateUpdated": "2021-07-31T06:20:51+0000",
       "progress": 0,
       "config": {
         "lineNumbers": true,
@@ -45,19 +45,19 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627187097623_1620929570",
+      "jobName": "paragraph_1627711537906_704071051",
       "id": "paragraph_1626035545319_1260970793",
-      "dateCreated": "2021-07-25T04:24:57+0000",
+      "dateCreated": "2021-07-31T06:05:37+0000",
+      "dateStarted": "2021-07-31T06:20:51+0000",
+      "dateFinished": "2021-07-31T06:21:03+0000",
       "status": "FINISHED",
       "focus": true,
-      "$$hashKey": "object:2045",
-      "dateFinished": "2021-07-25T05:25:46+0000",
-      "dateStarted": "2021-07-25T05:25:35+0000"
+      "$$hashKey": "object:184"
     },
     {
-      "text": "%spark\n\n// Variable initialization\n\nval ssc = new StreamingContext(sc, Seconds(300)) // 5min\nval sqlContext = new SQLContext(sc)\nval r = scala.util.Random\nval groupId = s\"stream-espbench-v${r.nextInt.toString}\"\nval batchesToRun = 1\nval topics = Array(\"SketchBench-1-1\")\nval dateFormat = new SimpleDateFormat(\"YYYY-MM-d hh:mm:ss.SSS\")",
+      "text": "%spark\n\n// Variable initialization\n\nval ssc = new StreamingContext(sc, Seconds(120)) // 2min\nval sqlContext = new SQLContext(sc)\nval r = scala.util.Random\nval groupId = s\"stream-espbench-v${r.nextInt.toString}\"\nval batchesToRun = 1\nval topics = Array(\"SketchBench-1-1\")\nval dateFormat = new SimpleDateFormat(\"YYYY-MM-d hh:mm:ss.SSS\")",
       "user": "anonymous",
-      "dateUpdated": "2021-07-25T05:25:46+0000",
+      "dateUpdated": "2021-07-31T06:21:03+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -81,25 +81,25 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "\u001b[33mwarning: \u001b[0mthere was one deprecation warning (since 2.0.0); for details, enable `:setting -deprecation' or `:replay -deprecation'\n\u001b[1m\u001b[34mssc\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.streaming.StreamingContext\u001b[0m = org.apache.spark.streaming.StreamingContext@16841cc4\n\u001b[1m\u001b[34msqlContext\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.SQLContext\u001b[0m = org.apache.spark.sql.SQLContext@607e87d9\n\u001b[1m\u001b[34mr\u001b[0m: \u001b[1m\u001b[32mutil.Random.type\u001b[0m = scala.util.Random$@767d000d\n\u001b[1m\u001b[34mgroupId\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = stream-espbench-v-1014197990\n\u001b[1m\u001b[34mbatchesToRun\u001b[0m: \u001b[1m\u001b[32mInt\u001b[0m = 1\n\u001b[1m\u001b[34mtopics\u001b[0m: \u001b[1m\u001b[32mArray[String]\u001b[0m = Array(SketchBench-1-1)\n\u001b[1m\u001b[34mdateFormat\u001b[0m: \u001b[1m\u001b[32mjava.text.SimpleDateFormat\u001b[0m = java.text.SimpleDateFormat@c5e88241\n"
+            "data": "\u001b[33mwarning: \u001b[0mthere was one deprecation warning (since 2.0.0); for details, enable `:setting -deprecation' or `:replay -deprecation'\n\u001b[1m\u001b[34mssc\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.streaming.StreamingContext\u001b[0m = org.apache.spark.streaming.StreamingContext@74183c77\n\u001b[1m\u001b[34msqlContext\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.SQLContext\u001b[0m = org.apache.spark.sql.SQLContext@62086dfc\n\u001b[1m\u001b[34mr\u001b[0m: \u001b[1m\u001b[32mutil.Random.type\u001b[0m = scala.util.Random$@7bbf5e7c\n\u001b[1m\u001b[34mgroupId\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = stream-espbench-v-454117739\n\u001b[1m\u001b[34mbatchesToRun\u001b[0m: \u001b[1m\u001b[32mInt\u001b[0m = 1\n\u001b[1m\u001b[34mtopics\u001b[0m: \u001b[1m\u001b[32mArray[String]\u001b[0m = Array(SketchBench-1-1)\n\u001b[1m\u001b[34mdateFormat\u001b[0m: \u001b[1m\u001b[32mjava.text.SimpleDateFormat\u001b[0m = java.text.SimpleDateFormat@c5e88241\n"
           }
         ]
       },
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627187097623_201620372",
+      "jobName": "paragraph_1627711537907_1767998318",
       "id": "paragraph_1627112323857_186381451",
-      "dateCreated": "2021-07-25T04:24:57+0000",
+      "dateCreated": "2021-07-31T06:05:37+0000",
+      "dateStarted": "2021-07-31T06:21:03+0000",
+      "dateFinished": "2021-07-31T06:21:03+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:2046",
-      "dateFinished": "2021-07-25T05:25:47+0000",
-      "dateStarted": "2021-07-25T05:25:46+0000"
+      "$$hashKey": "object:185"
     },
     {
       "text": "%spark\n\n// Function for defining the batches to run the queries.\n\nobject FinishedBatchesCounter {\n  @volatile private var instance: LongAccumulator = null\n\n  def getInstance(sc: SparkContext): LongAccumulator = {\n    if (instance == null) {\n      synchronized {\n        if (instance == null) {\n      \tinstance = sc.longAccumulator(\"FinishedBatchesCounter\")\n        }\n      }\n    }\n    instance\n  }\n}\n",
       "user": "anonymous",
-      "dateUpdated": "2021-07-25T05:25:47+0000",
+      "dateUpdated": "2021-07-31T06:21:03+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -130,18 +130,18 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627187097623_2075387963",
+      "jobName": "paragraph_1627711537907_452921263",
       "id": "paragraph_1627112367281_1356959987",
-      "dateCreated": "2021-07-25T04:24:57+0000",
+      "dateCreated": "2021-07-31T06:05:37+0000",
+      "dateStarted": "2021-07-31T06:21:03+0000",
+      "dateFinished": "2021-07-31T06:21:03+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:2047",
-      "dateFinished": "2021-07-25T05:25:47+0000",
-      "dateStarted": "2021-07-25T05:25:47+0000"
+      "$$hashKey": "object:186"
     },
     {
-      "text": "%spark\n\n// Kafka Connection details     \nval kafkaParams = Map[String, Object](\n  \"bootstrap.servers\" -> \"sketchbench-espbench-kafka:9092\",\n  \"key.deserializer\" -> classOf[StringDeserializer],\n  \"value.deserializer\" -> classOf[StringDeserializer],\n  \"auto.offset.reset\" -> \"latest\",\n  \"group.id\" -> groupId,\n  \"enable.auto.commit\" -> (false: java.lang.Boolean)\n)\n\n",
+      "text": "%spark\n\n// Kafka Connection details     \nval kafkaParams = Map[String, Object](\n  \"bootstrap.servers\" -> \"sketchbench-kafka:9092\",\n  \"key.deserializer\" -> classOf[StringDeserializer],\n  \"value.deserializer\" -> classOf[StringDeserializer],\n  \"auto.offset.reset\" -> \"latest\",\n  \"group.id\" -> groupId,\n  \"enable.auto.commit\" -> (true: java.lang.Boolean)\n)\n\n",
       "user": "anonymous",
-      "dateUpdated": "2021-07-25T05:25:47+0000",
+      "dateUpdated": "2021-07-31T06:21:03+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -165,25 +165,25 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "\u001b[1m\u001b[34mkafkaParams\u001b[0m: \u001b[1m\u001b[32mscala.collection.immutable.Map[String,Object]\u001b[0m = Map(key.deserializer -> class org.apache.kafka.common.serialization.StringDeserializer, auto.offset.reset -> latest, group.id -> stream-espbench-v-1014197990, bootstrap.servers -> sketchbench-espbench-kafka:9092, enable.auto.commit -> false, value.deserializer -> class org.apache.kafka.common.serialization.StringDeserializer)\n"
+            "data": "\u001b[1m\u001b[34mkafkaParams\u001b[0m: \u001b[1m\u001b[32mscala.collection.immutable.Map[String,Object]\u001b[0m = Map(key.deserializer -> class org.apache.kafka.common.serialization.StringDeserializer, auto.offset.reset -> latest, group.id -> stream-espbench-v-454117739, bootstrap.servers -> sketchbench-kafka:9092, enable.auto.commit -> true, value.deserializer -> class org.apache.kafka.common.serialization.StringDeserializer)\n"
           }
         ]
       },
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627187097623_1865158674",
+      "jobName": "paragraph_1627711537907_417694872",
       "id": "paragraph_1627112430259_454609685",
-      "dateCreated": "2021-07-25T04:24:57+0000",
+      "dateCreated": "2021-07-31T06:05:37+0000",
+      "dateStarted": "2021-07-31T06:21:03+0000",
+      "dateFinished": "2021-07-31T06:21:03+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:2048",
-      "dateFinished": "2021-07-25T05:25:47+0000",
-      "dateStarted": "2021-07-25T05:25:47+0000"
+      "$$hashKey": "object:187"
     },
     {
       "text": "%spark\n\n// Connect to Kafka and establish streaming for windows.\nval stream = KafkaUtils.createDirectStream[String, String](\n  ssc,\n  PreferConsistent,\n  Subscribe[String, String](topics, kafkaParams)\n)\n\n",
       "user": "anonymous",
-      "dateUpdated": "2021-07-25T05:25:47+0000",
+      "dateUpdated": "2021-07-31T06:21:04+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -207,25 +207,25 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "\u001b[1m\u001b[34mstream\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.streaming.dstream.InputDStream[org.apache.kafka.clients.consumer.ConsumerRecord[String,String]]\u001b[0m = org.apache.spark.streaming.kafka010.DirectKafkaInputDStream@54be8e5a\n"
+            "data": "\u001b[1m\u001b[34mstream\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.streaming.dstream.InputDStream[org.apache.kafka.clients.consumer.ConsumerRecord[String,String]]\u001b[0m = org.apache.spark.streaming.kafka010.DirectKafkaInputDStream@7d89c83c\n"
           }
         ]
       },
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627187097623_2078119568",
+      "jobName": "paragraph_1627711537907_468541591",
       "id": "paragraph_1627112465726_2071867502",
-      "dateCreated": "2021-07-25T04:24:57+0000",
+      "dateCreated": "2021-07-31T06:05:37+0000",
+      "dateStarted": "2021-07-31T06:21:04+0000",
+      "dateFinished": "2021-07-31T06:21:04+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:2049",
-      "dateFinished": "2021-07-25T05:25:48+0000",
-      "dateStarted": "2021-07-25T05:25:47+0000"
+      "$$hashKey": "object:188"
     },
     {
       "text": "%spark\n// Process the messages from the stream and calculate Min, Max, Avg and Count of messages in each batch\nval messages = stream\n    .map(record => record.value)\n    .flatMap(record => {\n         JSON.parseFull(record).map(rawMap =>{\n            val map = rawMap.asInstanceOf[Map[String,String]]\n            map\n         } )\n    })\n\nval start = Calendar.getInstance().getTime()\nprintln(s\"--- Start Time - \"+dateFormat.format(start))\n// val windowStream = messages.window(Seconds(300), Seconds(300)) // 5min\n\nmessages.foreachRDD { rdd =>\n  val finishedBatchesCounter = FinishedBatchesCounter.getInstance(sc)\n  println(s\">>> Batch ${finishedBatchesCounter.count + 1} ---\")\n  val newRDD = rdd.map(p => Row(p.get(\"mf01\").get))\n  val columns = Seq(\"mf01\")\n  val schema = StructType(columns.map(fieldName => StructField(fieldName, DoubleType, nullable = true)))\n  val rddDF = spark.createDataFrame(newRDD,schema)\n  val discretizer = new QuantileDiscretizer()\n      .setInputCol(\"mf01\")\n      .setOutputCol(\"result\")\n      .setNumBuckets(11)\n  \n  val result = discretizer.fit(rddDF).transform(rddDF)\n  result.groupBy(\"result\").agg(min(\"mf01\"),max(\"mf01\"),avg(\"mf01\"),count(\"mf01\")).orderBy(\"result\").show(false)\n\n//   println(s\"--- Processing Time in Millis - \"+diff)\n//   println(\"--- Processed messages in this batch: \" + rdd.count()) \n    \n  if (finishedBatchesCounter.count >= batchesToRun - 1) {\n    val end = Calendar.getInstance().getTime()\n    println(s\"--- End Time - \"+dateFormat.format(end))\n    ssc.stop()\n  } else {\n    finishedBatchesCounter.add(1)\n  }\n}\n\nssc.start()  \nssc.awaitTermination()",
       "user": "anonymous",
-      "dateUpdated": "2021-07-25T05:25:48+0000",
+      "dateUpdated": "2021-07-31T06:21:04+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -249,25 +249,25 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "\u001b[33mwarning: \u001b[0mthere was one deprecation warning (since 1.0.6); for details, enable `:setting -deprecation' or `:replay -deprecation'\n--- Start Time - 2021-07-25 05:25:48.624\n>>> Batch 1 ---\n>>> Batch 1 ---\n>>> Batch 1 ---\norg.apache.spark.SparkException: Job aborted due to stage failure: Task 0 in stage 0.0 failed 4 times, most recent failure: Lost task 0.3 in stage 0.0 (TID 3, 10.4.4.8, executor 0): org.apache.kafka.clients.consumer.OffsetOutOfRangeException: Fetch position FetchPosition{offset=76172730, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[sketchbench-espbench-kafka-0.sketchbench-espbench-kafka-headless.default.svc.cluster.local:9092 (id: 0 rack: null)], epoch=0}} is out of range for partition SketchBench-1-1-0\n\tat org.apache.kafka.clients.consumer.internals.Fetcher.handleOffsetOutOfRange(Fetcher.java:1344)\n\tat org.apache.kafka.clients.consumer.internals.Fetcher.initializeCompletedFetch(Fetcher.java:1296)\n\tat org.apache.kafka.clients.consumer.internals.Fetcher.fetchedRecords(Fetcher.java:611)\n\tat org.apache.kafka.clients.consumer.KafkaConsumer.pollForFetches(KafkaConsumer.java:1308)\n\tat org.apache.kafka.clients.consumer.KafkaConsumer.poll(KafkaConsumer.java:1237)\n\tat org.apache.kafka.clients.consumer.KafkaConsumer.poll(KafkaConsumer.java:1165)\n\tat org.apache.spark.streaming.kafka010.InternalKafkaConsumer.poll(KafkaDataConsumer.scala:206)\n\tat org.apache.spark.streaming.kafka010.InternalKafkaConsumer.get(KafkaDataConsumer.scala:135)\n\tat org.apache.spark.streaming.kafka010.KafkaDataConsumer.get(KafkaDataConsumer.scala:39)\n\tat org.apache.spark.streaming.kafka010.KafkaDataConsumer.get$(KafkaDataConsumer.scala:38)\n\tat org.apache.spark.streaming.kafka010.KafkaDataConsumer$NonCachedKafkaDataConsumer.get(KafkaDataConsumer.scala:224)\n\tat org.apache.spark.streaming.kafka010.KafkaRDDIterator.next(KafkaRDD.scala:257)\n\tat org.apache.spark.streaming.kafka010.KafkaRDDIterator.next(KafkaRDD.scala:225)\n\tat scala.collection.Iterator$$anon$10.next(Iterator.scala:459)\n\tat scala.collection.Iterator$$anon$11.nextCur(Iterator.scala:484)\n\tat scala.collection.Iterator$$anon$11.hasNext(Iterator.scala:490)\n\tat scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:458)\n\tat scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:458)\n\tat org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.processNext(Unknown Source)\n\tat org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)\n\tat org.apache.spark.sql.execution.WholeStageCodegenExec$$anon$1.hasNext(WholeStageCodegenExec.scala:729)\n\tat scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:458)\n\tat scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:458)\n\tat scala.collection.Iterator.foreach(Iterator.scala:941)\n\tat scala.collection.Iterator.foreach$(Iterator.scala:941)\n\tat scala.collection.AbstractIterator.foreach(Iterator.scala:1429)\n\tat scala.collection.TraversableOnce.foldLeft(TraversableOnce.scala:162)\n\tat scala.collection.TraversableOnce.foldLeft$(TraversableOnce.scala:160)\n\tat scala.collection.AbstractIterator.foldLeft(Iterator.scala:1429)\n\tat scala.collection.TraversableOnce.aggregate(TraversableOnce.scala:219)\n\tat scala.collection.TraversableOnce.aggregate$(TraversableOnce.scala:219)\n\tat scala.collection.AbstractIterator.aggregate(Iterator.scala:1429)\n\tat org.apache.spark.rdd.RDD.$anonfun$treeAggregate$3(RDD.scala:1204)\n\tat org.apache.spark.rdd.RDD.$anonfun$treeAggregate$5(RDD.scala:1205)\n\tat org.apache.spark.rdd.RDD.$anonfun$mapPartitions$2(RDD.scala:837)\n\tat org.apache.spark.rdd.RDD.$anonfun$mapPartitions$2$adapted(RDD.scala:837)\n\tat org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)\n\tat org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:349)\n\tat org.apache.spark.rdd.RDD.iterator(RDD.scala:313)\n\tat org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:90)\n\tat org.apache.spark.scheduler.Task.run(Task.scala:127)\n\tat org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$3(Executor.scala:462)\n\tat org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:1377)\n\tat org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:465)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n\nDriver stacktrace:\n  at org.apache.spark.scheduler.DAGScheduler.failJobAndIndependentStages(DAGScheduler.scala:2059)\n  at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2(DAGScheduler.scala:2008)\n  at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2$adapted(DAGScheduler.scala:2007)\n  at scala.collection.mutable.ResizableArray.foreach(ResizableArray.scala:62)\n  at scala.collection.mutable.ResizableArray.foreach$(ResizableArray.scala:55)\n  at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:49)\n  at org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:2007)\n  at org.apache.spark.scheduler.DAGScheduler.$anonfun$handleTaskSetFailed$1(DAGScheduler.scala:973)\n  at org.apache.spark.scheduler.DAGScheduler.$anonfun$handleTaskSetFailed$1$adapted(DAGScheduler.scala:973)\n  at scala.Option.foreach(Option.scala:407)\n  at org.apache.spark.scheduler.DAGScheduler.handleTaskSetFailed(DAGScheduler.scala:973)\n  at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:2239)\n  at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2188)\n  at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2177)\n  at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:49)\n  at org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:775)\n  at org.apache.spark.SparkContext.runJob(SparkContext.scala:2114)\n  at org.apache.spark.SparkContext.runJob(SparkContext.scala:2209)\n  at org.apache.spark.rdd.RDD.$anonfun$fold$1(RDD.scala:1157)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)\n  at org.apache.spark.rdd.RDD.withScope(RDD.scala:388)\n  at org.apache.spark.rdd.RDD.fold(RDD.scala:1151)\n  at org.apache.spark.rdd.RDD.$anonfun$treeAggregate$1(RDD.scala:1220)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)\n  at org.apache.spark.rdd.RDD.withScope(RDD.scala:388)\n  at org.apache.spark.rdd.RDD.treeAggregate(RDD.scala:1196)\n  at org.apache.spark.sql.execution.stat.StatFunctions$.multipleApproxQuantiles(StatFunctions.scala:102)\n  at org.apache.spark.sql.DataFrameStatFunctions.approxQuantile(DataFrameStatFunctions.scala:104)\n  at org.apache.spark.sql.DataFrameStatFunctions.approxQuantile(DataFrameStatFunctions.scala:75)\n  at org.apache.spark.ml.feature.QuantileDiscretizer.fit(QuantileDiscretizer.scala:230)\n  at $anonfun$new$1(<console>:86)\n  at $anonfun$new$1$adapted(<console>:74)\n  at org.apache.spark.streaming.dstream.DStream.$anonfun$foreachRDD$2(DStream.scala:629)\n  at org.apache.spark.streaming.dstream.DStream.$anonfun$foreachRDD$2$adapted(DStream.scala:629)\n  at org.apache.spark.streaming.dstream.ForEachDStream.$anonfun$generateJob$2(ForEachDStream.scala:51)\n  at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)\n  at org.apache.spark.streaming.dstream.DStream.createRDDWithLocalProperties(DStream.scala:417)\n  at org.apache.spark.streaming.dstream.ForEachDStream.$anonfun$generateJob$1(ForEachDStream.scala:51)\n  at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)\n  at scala.util.Try$.apply(Try.scala:213)\n  at org.apache.spark.streaming.scheduler.Job.run(Job.scala:39)\n  at org.apache.spark.streaming.scheduler.JobScheduler$JobHandler.$anonfun$run$1(JobScheduler.scala:256)\n  at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)\n  at scala.util.DynamicVariable.withValue(DynamicVariable.scala:62)\n  at org.apache.spark.streaming.scheduler.JobScheduler$JobHandler.run(JobScheduler.scala:256)\n  at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n  at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n  at java.lang.Thread.run(Thread.java:748)\nCaused by: org.apache.kafka.clients.consumer.OffsetOutOfRangeException: Fetch position FetchPosition{offset=76172730, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[sketchbench-espbench-kafka-0.sketchbench-espbench-kafka-headless.default.svc.cluster.local:9092 (id: 0 rack: null)], epoch=0}} is out of range for partition SketchBench-1-1-0\n  at org.apache.kafka.clients.consumer.internals.Fetcher.handleOffsetOutOfRange(Fetcher.java:1344)\n  at org.apache.kafka.clients.consumer.internals.Fetcher.initializeCompletedFetch(Fetcher.java:1296)\n  at org.apache.kafka.clients.consumer.internals.Fetcher.fetchedRecords(Fetcher.java:611)\n  at org.apache.kafka.clients.consumer.KafkaConsumer.pollForFetches(KafkaConsumer.java:1308)\n  at org.apache.kafka.clients.consumer.KafkaConsumer.poll(KafkaConsumer.java:1237)\n  at org.apache.kafka.clients.consumer.KafkaConsumer.poll(KafkaConsumer.java:1165)\n  at org.apache.spark.streaming.kafka010.InternalKafkaConsumer.poll(KafkaDataConsumer.scala:206)\n  at org.apache.spark.streaming.kafka010.InternalKafkaConsumer.get(KafkaDataConsumer.scala:135)\n  at org.apache.spark.streaming.kafka010.KafkaDataConsumer.get(KafkaDataConsumer.scala:39)\n  at org.apache.spark.streaming.kafka010.KafkaDataConsumer.get$(KafkaDataConsumer.scala:38)\n  at org.apache.spark.streaming.kafka010.KafkaDataConsumer$NonCachedKafkaDataConsumer.get(KafkaDataConsumer.scala:224)\n  at org.apache.spark.streaming.kafka010.KafkaRDDIterator.next(KafkaRDD.scala:257)\n  at org.apache.spark.streaming.kafka010.KafkaRDDIterator.next(KafkaRDD.scala:225)\n  at scala.collection.Iterator$$anon$10.next(Iterator.scala:459)\n  at scala.collection.Iterator$$anon$11.nextCur(Iterator.scala:484)\n  at scala.collection.Iterator$$anon$11.hasNext(Iterator.scala:490)\n  at scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:458)\n  at scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:458)\n  at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.processNext(Unknown Source)\n  at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)\n  at org.apache.spark.sql.execution.WholeStageCodegenExec$$anon$1.hasNext(WholeStageCodegenExec.scala:729)\n  at scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:458)\n  at scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:458)\n  at scala.collection.Iterator.foreach(Iterator.scala:941)\n  at scala.collection.Iterator.foreach$(Iterator.scala:941)\n  at scala.collection.AbstractIterator.foreach(Iterator.scala:1429)\n  at scala.collection.TraversableOnce.foldLeft(TraversableOnce.scala:162)\n  at scala.collection.TraversableOnce.foldLeft$(TraversableOnce.scala:160)\n  at scala.collection.AbstractIterator.foldLeft(Iterator.scala:1429)\n  at scala.collection.TraversableOnce.aggregate(TraversableOnce.scala:219)\n  at scala.collection.TraversableOnce.aggregate$(TraversableOnce.scala:219)\n  at scala.collection.AbstractIterator.aggregate(Iterator.scala:1429)\n  at org.apache.spark.rdd.RDD.$anonfun$treeAggregate$3(RDD.scala:1204)\n  at org.apache.spark.rdd.RDD.$anonfun$treeAggregate$5(RDD.scala:1205)\n  at org.apache.spark.rdd.RDD.$anonfun$mapPartitions$2(RDD.scala:837)\n  at org.apache.spark.rdd.RDD.$anonfun$mapPartitions$2$adapted(RDD.scala:837)\n  at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)\n  at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:349)\n  at org.apache.spark.rdd.RDD.iterator(RDD.scala:313)\n  at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:90)\n  at org.apache.spark.scheduler.Task.run(Task.scala:127)\n  at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$3(Executor.scala:462)\n  at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:1377)\n  at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:465)\n  ... 3 more\n"
+            "data": "\u001b[33mwarning: \u001b[0mthere was one deprecation warning (since 1.0.6); for details, enable `:setting -deprecation' or `:replay -deprecation'\n--- Start Time - 2021-07-31 06:21:04.859\n>>> Batch 1 ---\n>>> Batch 1 ---\n>>> Batch 1 ---\norg.apache.spark.SparkException: Job aborted due to stage failure: Master removed our application: KILLED\n  at org.apache.spark.scheduler.DAGScheduler.failJobAndIndependentStages(DAGScheduler.scala:2059)\n  at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2(DAGScheduler.scala:2008)\n  at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2$adapted(DAGScheduler.scala:2007)\n  at scala.collection.mutable.ResizableArray.foreach(ResizableArray.scala:62)\n  at scala.collection.mutable.ResizableArray.foreach$(ResizableArray.scala:55)\n  at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:49)\n  at org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:2007)\n  at org.apache.spark.scheduler.DAGScheduler.$anonfun$handleTaskSetFailed$1(DAGScheduler.scala:973)\n  at org.apache.spark.scheduler.DAGScheduler.$anonfun$handleTaskSetFailed$1$adapted(DAGScheduler.scala:973)\n  at scala.Option.foreach(Option.scala:407)\n  at org.apache.spark.scheduler.DAGScheduler.handleTaskSetFailed(DAGScheduler.scala:973)\n  at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:2239)\n  at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2188)\n  at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2177)\n  at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:49)\n  at org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:775)\n  at org.apache.spark.SparkContext.runJob(SparkContext.scala:2114)\n  at org.apache.spark.SparkContext.runJob(SparkContext.scala:2209)\n  at org.apache.spark.rdd.RDD.$anonfun$reduce$1(RDD.scala:1094)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)\n  at org.apache.spark.rdd.RDD.withScope(RDD.scala:388)\n  at org.apache.spark.rdd.RDD.reduce(RDD.scala:1076)\n  at org.apache.spark.rdd.RDD.$anonfun$takeOrdered$1(RDD.scala:1498)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)\n  at org.apache.spark.rdd.RDD.withScope(RDD.scala:388)\n  at org.apache.spark.rdd.RDD.takeOrdered(RDD.scala:1486)\n  at org.apache.spark.sql.execution.TakeOrderedAndProjectExec.executeCollect(limit.scala:183)\n  at org.apache.spark.sql.Dataset.collectFromPlan(Dataset.scala:3627)\n  at org.apache.spark.sql.Dataset.$anonfun$head$1(Dataset.scala:2697)\n  at org.apache.spark.sql.Dataset.$anonfun$withAction$1(Dataset.scala:3618)\n  at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId$5(SQLExecution.scala:100)\n  at org.apache.spark.sql.execution.SQLExecution$.withSQLConfPropagated(SQLExecution.scala:160)\n  at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId$1(SQLExecution.scala:87)\n  at org.apache.spark.sql.SparkSession.withActive(SparkSession.scala:764)\n  at org.apache.spark.sql.execution.SQLExecution$.withNewExecutionId(SQLExecution.scala:64)\n  at org.apache.spark.sql.Dataset.withAction(Dataset.scala:3616)\n  at org.apache.spark.sql.Dataset.head(Dataset.scala:2697)\n  at org.apache.spark.sql.Dataset.take(Dataset.scala:2904)\n  at org.apache.spark.sql.Dataset.getRows(Dataset.scala:300)\n  at org.apache.spark.sql.Dataset.showString(Dataset.scala:337)\n  at org.apache.spark.sql.Dataset.show(Dataset.scala:826)\n  at org.apache.spark.sql.Dataset.show(Dataset.scala:803)\n  at $anonfun$new$1(<console>:87)\n  at $anonfun$new$1$adapted(<console>:74)\n  at org.apache.spark.streaming.dstream.DStream.$anonfun$foreachRDD$2(DStream.scala:629)\n  at org.apache.spark.streaming.dstream.DStream.$anonfun$foreachRDD$2$adapted(DStream.scala:629)\n  at org.apache.spark.streaming.dstream.ForEachDStream.$anonfun$generateJob$2(ForEachDStream.scala:51)\n  at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)\n  at org.apache.spark.streaming.dstream.DStream.createRDDWithLocalProperties(DStream.scala:417)\n  at org.apache.spark.streaming.dstream.ForEachDStream.$anonfun$generateJob$1(ForEachDStream.scala:51)\n  at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)\n  at scala.util.Try$.apply(Try.scala:213)\n  at org.apache.spark.streaming.scheduler.Job.run(Job.scala:39)\n  at org.apache.spark.streaming.scheduler.JobScheduler$JobHandler.$anonfun$run$1(JobScheduler.scala:256)\n  at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)\n  at scala.util.DynamicVariable.withValue(DynamicVariable.scala:62)\n  at org.apache.spark.streaming.scheduler.JobScheduler$JobHandler.run(JobScheduler.scala:256)\n  at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n  at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n  at java.lang.Thread.run(Thread.java:748)\n"
           }
         ]
       },
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627187097623_326638293",
+      "jobName": "paragraph_1627711537907_298761741",
       "id": "paragraph_1627112487810_608870197",
-      "dateCreated": "2021-07-25T04:24:57+0000",
+      "dateCreated": "2021-07-31T06:05:37+0000",
+      "dateStarted": "2021-07-31T06:21:04+0000",
+      "dateFinished": "2021-07-31T06:27:46+0000",
       "status": "ERROR",
-      "$$hashKey": "object:2050",
-      "dateFinished": "2021-07-25T05:44:11+0000",
-      "dateStarted": "2021-07-25T05:25:48+0000"
+      "$$hashKey": "object:189"
     },
     {
       "text": "%spark\n",
       "user": "anonymous",
-      "dateUpdated": "2021-07-25T05:12:25+0000",
+      "dateUpdated": "2021-07-31T06:19:39+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -286,24 +286,24 @@
         "params": {},
         "forms": {}
       },
-      "apps": [],
-      "runtimeInfos": {},
-      "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627187097623_1747028179",
-      "id": "paragraph_1627112761301_1143049410",
-      "dateCreated": "2021-07-25T04:24:57+0000",
-      "status": "FINISHED",
-      "$$hashKey": "object:2051",
-      "dateFinished": "2021-07-25T05:12:25+0000",
-      "dateStarted": "2021-07-25T05:12:25+0000",
       "results": {
         "code": "SUCCESS",
         "msg": []
-      }
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627711537907_427441854",
+      "id": "paragraph_1627112761301_1143049410",
+      "dateCreated": "2021-07-31T06:05:37+0000",
+      "dateStarted": "2021-07-31T06:19:39+0000",
+      "dateFinished": "2021-07-31T06:19:39+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:190"
     }
   ],
   "name": "ESPBench Query 2 (Standalone)",
-  "id": "2GCM1RN41",
+  "id": "2GBU4SGUQ",
   "defaultInterpreterGroup": "spark",
   "version": "0.9.0",
   "noteParams": {},
@@ -314,6 +314,8 @@
     "looknfeel": "default",
     "personalizedMode": "false"
   },
-  "info": {},
+  "info": {
+    "isRunning": false
+  },
   "path": "/ESPBench Query 2 (Standalone)"
 }

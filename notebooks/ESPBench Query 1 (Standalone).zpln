@@ -4,7 +4,7 @@
       "title": "ESPBench - Query 1",
       "text": "%spark\n// All required imports to run the notebook\n\nimport org.apache.kafka.clients.consumer.ConsumerRecord\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.streaming.kafka010._\nimport org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent\nimport org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe\nimport org.apache.spark.SparkContext\nimport org.apache.spark.sql.Row\nimport org.apache.spark.sql.types.{StringType, StructField, StructType, IntegerType, DoubleType}\nimport org.apache.kafka.clients.consumer.ConsumerConfig\nimport org.apache.kafka.common.serialization.StringDeserializer\nimport org.apache.spark.sql.SQLContext\nimport org.apache.spark.util.LongAccumulator\nimport org.apache.spark.streaming._\nimport org.apache.spark.ml.feature.QuantileDiscretizer\nimport scala.util.parsing.json.JSON\nimport java.util.{Calendar, Date}\nimport java.text.SimpleDateFormat\nimport sqlContext.implicits._\nimport scala.concurrent.duration._\n",
       "user": "anonymous",
-      "dateUpdated": "2021-07-25T04:16:52+0000",
+      "dateUpdated": "2021-07-31T05:56:21+0000",
       "progress": 0,
       "config": {
         "lineNumbers": true,
@@ -37,19 +37,19 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627180696310_1197199112",
+      "jobName": "paragraph_1627710433319_1876156264",
       "id": "paragraph_1626035545319_1260970793",
-      "dateCreated": "2021-07-25T02:38:16+0000",
-      "dateStarted": "2021-07-25T04:16:52+0000",
-      "dateFinished": "2021-07-25T04:17:04+0000",
+      "dateCreated": "2021-07-31T05:47:13+0000",
+      "dateStarted": "2021-07-31T05:56:21+0000",
+      "dateFinished": "2021-07-31T05:56:32+0000",
       "status": "FINISHED",
       "focus": true,
-      "$$hashKey": "object:184"
+      "$$hashKey": "object:5852"
     },
     {
-      "text": "%spark\n\n// Variable initialization\n\nval ssc = new StreamingContext(sc, Seconds(1))\nval sqlContext = new SQLContext(sc)\nval r = scala.util.Random\nval groupId = s\"stream-espbench-v${r.nextInt.toString}\"\nval batchesToRun = 300  // 5min\nval topics = Array(\"SketchBench-1-1\")\n",
+      "text": "%spark\n\n// Variable initialization\n\nval ssc = new StreamingContext(sc, Seconds(2))\nval sqlContext = new SQLContext(sc)\nval r = scala.util.Random\nval groupId = s\"stream-espbench-v${r.nextInt.toString}\"\nval batchesToRun = 60  // 2min\nval topics = Array(\"SketchBench-1-1\")\n",
       "user": "anonymous",
-      "dateUpdated": "2021-07-25T04:17:04+0000",
+      "dateUpdated": "2021-07-31T05:56:32+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -73,25 +73,25 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "\u001b[33mwarning: \u001b[0mthere was one deprecation warning (since 2.0.0); for details, enable `:setting -deprecation' or `:replay -deprecation'\n\u001b[1m\u001b[34mssc\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.streaming.StreamingContext\u001b[0m = org.apache.spark.streaming.StreamingContext@42bfc285\n\u001b[1m\u001b[34msqlContext\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.SQLContext\u001b[0m = org.apache.spark.sql.SQLContext@5e3318c1\n\u001b[1m\u001b[34mr\u001b[0m: \u001b[1m\u001b[32mutil.Random.type\u001b[0m = scala.util.Random$@7b23b017\n\u001b[1m\u001b[34mgroupId\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = stream-espbench-v-813502642\n\u001b[1m\u001b[34mbatchesToRun\u001b[0m: \u001b[1m\u001b[32mInt\u001b[0m = 300\n\u001b[1m\u001b[34mtopics\u001b[0m: \u001b[1m\u001b[32mArray[String]\u001b[0m = Array(SketchBench-1-1)\n"
+            "data": "\u001b[33mwarning: \u001b[0mthere was one deprecation warning (since 2.0.0); for details, enable `:setting -deprecation' or `:replay -deprecation'\n\u001b[1m\u001b[34mssc\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.streaming.StreamingContext\u001b[0m = org.apache.spark.streaming.StreamingContext@405f01d5\n\u001b[1m\u001b[34msqlContext\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.SQLContext\u001b[0m = org.apache.spark.sql.SQLContext@7eb4fa80\n\u001b[1m\u001b[34mr\u001b[0m: \u001b[1m\u001b[32mutil.Random.type\u001b[0m = scala.util.Random$@40e4de5f\n\u001b[1m\u001b[34mgroupId\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = stream-espbench-v1989951562\n\u001b[1m\u001b[34mbatchesToRun\u001b[0m: \u001b[1m\u001b[32mInt\u001b[0m = 60\n\u001b[1m\u001b[34mtopics\u001b[0m: \u001b[1m\u001b[32mArray[String]\u001b[0m = Array(SketchBench-1-1)\n"
           }
         ]
       },
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627180696311_1404936181",
+      "jobName": "paragraph_1627710433319_1089095597",
       "id": "paragraph_1627110253487_874355997",
-      "dateCreated": "2021-07-25T02:38:16+0000",
-      "dateStarted": "2021-07-25T04:17:04+0000",
-      "dateFinished": "2021-07-25T04:17:05+0000",
+      "dateCreated": "2021-07-31T05:47:13+0000",
+      "dateStarted": "2021-07-31T05:56:32+0000",
+      "dateFinished": "2021-07-31T05:56:32+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:185"
+      "$$hashKey": "object:5853"
     },
     {
-      "text": "%spark\n// Kafka Connections details\n\nval kafkaParams = Map[String, Object](\n  \"bootstrap.servers\" -> \"sketchbench-espbench-kafka:9092\",\n  \"key.deserializer\" -> classOf[StringDeserializer],\n  \"value.deserializer\" -> classOf[StringDeserializer],\n  \"auto.offset.reset\" -> \"latest\",\n  \"group.id\" -> groupId,\n  \"enable.auto.commit\" -> (false: java.lang.Boolean)\n)",
+      "text": "%spark\n// Kafka Connections details\n\nval kafkaParams = Map[String, Object](\n  \"bootstrap.servers\" -> \"sketchbench-kafka:9092\",\n  \"key.deserializer\" -> classOf[StringDeserializer],\n  \"value.deserializer\" -> classOf[StringDeserializer],\n  \"auto.offset.reset\" -> \"latest\",\n  \"group.id\" -> groupId,\n  \"enable.auto.commit\" -> (true: java.lang.Boolean)\n)",
       "user": "anonymous",
-      "dateUpdated": "2021-07-25T04:17:05+0000",
+      "dateUpdated": "2021-07-31T05:56:32+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -115,25 +115,25 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "\u001b[1m\u001b[34mkafkaParams\u001b[0m: \u001b[1m\u001b[32mscala.collection.immutable.Map[String,Object]\u001b[0m = Map(key.deserializer -> class org.apache.kafka.common.serialization.StringDeserializer, auto.offset.reset -> latest, group.id -> stream-espbench-v-813502642, bootstrap.servers -> sketchbench-espbench-kafka:9092, enable.auto.commit -> false, value.deserializer -> class org.apache.kafka.common.serialization.StringDeserializer)\n"
+            "data": "\u001b[1m\u001b[34mkafkaParams\u001b[0m: \u001b[1m\u001b[32mscala.collection.immutable.Map[String,Object]\u001b[0m = Map(key.deserializer -> class org.apache.kafka.common.serialization.StringDeserializer, auto.offset.reset -> latest, group.id -> stream-espbench-v1989951562, bootstrap.servers -> sketchbench-kafka:9092, enable.auto.commit -> true, value.deserializer -> class org.apache.kafka.common.serialization.StringDeserializer)\n"
           }
         ]
       },
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627180696311_439439123",
+      "jobName": "paragraph_1627710433319_814681652",
       "id": "paragraph_1627110961130_2034102218",
-      "dateCreated": "2021-07-25T02:38:16+0000",
-      "dateStarted": "2021-07-25T04:17:05+0000",
-      "dateFinished": "2021-07-25T04:17:05+0000",
+      "dateCreated": "2021-07-31T05:47:13+0000",
+      "dateStarted": "2021-07-31T05:56:32+0000",
+      "dateFinished": "2021-07-31T05:56:32+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:186"
+      "$$hashKey": "object:5854"
     },
     {
       "text": "%spark\n\n// Function for defining the batches to run the queries.\n\nobject FinishedBatchesCounter {\n  @volatile private var instance: LongAccumulator = null\n\n  def getInstance(sc: SparkContext): LongAccumulator = {\n    if (instance == null) {\n      synchronized {\n        if (instance == null) {\n      \tinstance = sc.longAccumulator(\"FinishedBatchesCounter\")\n        }\n      }\n    }\n    instance\n  }\n}",
       "user": "anonymous",
-      "dateUpdated": "2021-07-25T04:17:05+0000",
+      "dateUpdated": "2021-07-31T05:56:33+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -164,18 +164,18 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627180696311_2044780226",
+      "jobName": "paragraph_1627710433319_1342472425",
       "id": "paragraph_1627110880763_1499436361",
-      "dateCreated": "2021-07-25T02:38:16+0000",
-      "dateStarted": "2021-07-25T04:17:05+0000",
-      "dateFinished": "2021-07-25T04:17:05+0000",
+      "dateCreated": "2021-07-31T05:47:13+0000",
+      "dateStarted": "2021-07-31T05:56:33+0000",
+      "dateFinished": "2021-07-31T05:56:33+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:187"
+      "$$hashKey": "object:5855"
     },
     {
       "text": "%spark\n\n// Connect to Kafka and establish streaming for windows.\n\nval stream = KafkaUtils.createDirectStream[String, String](\n  ssc,\n  PreferConsistent,\n  Subscribe[String, String](topics, kafkaParams)\n)",
       "user": "anonymous",
-      "dateUpdated": "2021-07-25T04:17:05+0000",
+      "dateUpdated": "2021-07-31T05:56:33+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -199,25 +199,25 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "\u001b[1m\u001b[34mstream\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.streaming.dstream.InputDStream[org.apache.kafka.clients.consumer.ConsumerRecord[String,String]]\u001b[0m = org.apache.spark.streaming.kafka010.DirectKafkaInputDStream@585c120c\n"
+            "data": "\u001b[1m\u001b[34mstream\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.streaming.dstream.InputDStream[org.apache.kafka.clients.consumer.ConsumerRecord[String,String]]\u001b[0m = org.apache.spark.streaming.kafka010.DirectKafkaInputDStream@4a1b6010\n"
           }
         ]
       },
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627180696311_1927683548",
+      "jobName": "paragraph_1627710433319_1242887374",
       "id": "paragraph_1627111021977_1655343716",
-      "dateCreated": "2021-07-25T02:38:16+0000",
-      "dateStarted": "2021-07-25T04:17:05+0000",
-      "dateFinished": "2021-07-25T04:17:06+0000",
+      "dateCreated": "2021-07-31T05:47:13+0000",
+      "dateStarted": "2021-07-31T05:56:33+0000",
+      "dateFinished": "2021-07-31T05:56:33+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:188"
+      "$$hashKey": "object:5856"
     },
     {
       "text": "%spark\n\n// Process the messages from the stream and calculate Min, Max, Avg and Count of messages in each batch\n\nval messages = stream\n    .map(record => record.value)\n    .flatMap(record => {\n         JSON.parseFull(record).map(rawMap =>{\n            val map = rawMap.asInstanceOf[Map[String,String]]\n            map\n         } )\n    })\n    \n// val windowStream = messages.window(Seconds(1), Seconds(1))\nval dateFormat = new SimpleDateFormat(\"YYYY-MM-d hh:mm:ss.SSS\")\nval start = Calendar.getInstance().getTime()\nprintln(s\"--- Start Time - \"+dateFormat.format(start))\n\nmessages.foreachRDD { rdd =>\n  val finishedBatchesCounter = FinishedBatchesCounter.getInstance(sc)\n  println(s\">>> Batch ${finishedBatchesCounter.count + 1} ---\")\n//   val start = Calendar.getInstance().getTime()\n//   println(s\"--- Start Time - \"+dateFormat.format(start))\n  val newRDD = rdd.map(p => Row(p.get(\"mf01\").get))\n  val columns = Seq(\"mf01\")\n  val schema = StructType(columns.map(fieldName => StructField(fieldName, DoubleType, nullable = true)))\n  val rddDF = spark.createDataFrame(newRDD,schema)\n  val result = rddDF.agg(min(\"mf01\"),max(\"mf01\"),avg(\"mf01\"),count(\"mf01\")).show(false)\n//   val end = Calendar.getInstance().getTime()\n//   val diff = end.getTime() - start.getTime()\n//   println(s\"--- End Time - \"+dateFormat.format(end))\n//   println(s\"--- Processing Time in Millis - \"+diff)\n//   println(\"--- Processed messages in this batch: \" + rdd.count())\n  if (finishedBatchesCounter.count >= batchesToRun - 1) {\n    val end = Calendar.getInstance().getTime()\n    println(s\"--- End Time - \"+dateFormat.format(end))\n    ssc.stop()\n  } else {\n    finishedBatchesCounter.add(1)\n  }\n}\n\nssc.start()  \nssc.awaitTermination()",
       "user": "anonymous",
-      "dateUpdated": "2021-07-25T04:17:06+0000",
+      "dateUpdated": "2021-07-31T05:56:33+0000",
       "progress": 0,
       "config": {
         "lineNumbers": true,
@@ -238,29 +238,29 @@
         "forms": {}
       },
       "results": {
-        "code": "ERROR",
+        "code": "SUCCESS",
         "msg": [
           {
             "type": "TEXT",
-            "data": "\u001b[33mwarning: \u001b[0mthere was one deprecation warning (since 1.0.6); for details, enable `:setting -deprecation' or `:replay -deprecation'\n--- Start Time - 2021-07-25 04:17:06.601\n>>> Batch 1 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12450.0  |12628.0  |12556.040885860306|587        |\n+---------+---------+------------------+-----------+\n\n>>> Batch 2 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12418.0  |12706.0  |12606.130047654879|7974       |\n+---------+---------+------------------+-----------+\n\n>>> Batch 3 ---\n+---------+---------+-----------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)        |count(mf01)|\n+---------+---------+-----------------+-----------+\n|12419.0  |12699.0  |12603.87565524808|8203       |\n+---------+---------+-----------------+-----------+\n\n>>> Batch 4 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12449.0  |12749.0  |12608.725194228635|9010       |\n+---------+---------+------------------+-----------+\n\n>>> Batch 5 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12435.0  |12699.0  |12603.743121050073|10285      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 6 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12414.0  |12736.0  |12609.934302539566|10868      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 7 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12485.0  |12768.0  |12651.386272025797|8683       |\n+---------+---------+------------------+-----------+\n\n>>> Batch 8 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12437.0  |12727.0  |12607.652263744161|11132      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 9 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12415.0  |12654.0  |12566.298915917503|7564       |\n+---------+---------+------------------+-----------+\n\n>>> Batch 10 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12391.0  |12681.0  |12568.127419174405|8939       |\n+---------+---------+------------------+-----------+\n\n>>> Batch 11 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12396.0  |12672.0  |12582.034390009607|10410      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 12 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12377.0  |12662.0  |12553.949073109769|9602       |\n+---------+---------+------------------+-----------+\n\n>>> Batch 13 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12393.0  |12653.0  |12564.293749388633|10223      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 14 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12433.0  |12689.0  |12595.736772983115|10660      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 15 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12416.0  |12686.0  |12579.886272141706|9936       |\n+---------+---------+------------------+-----------+\n\n>>> Batch 16 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12438.0  |12735.0  |12611.439614517121|9754       |\n+---------+---------+------------------+-----------+\n\n>>> Batch 17 ---\n+---------+---------+-----------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)        |count(mf01)|\n+---------+---------+-----------------+-----------+\n|12398.0  |12713.0  |12587.70949330227|8585       |\n+---------+---------+-----------------+-----------+\n\n>>> Batch 18 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12439.0  |12751.0  |12613.087402107705|10343      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 19 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12443.0  |12704.0  |12605.275774387424|8652       |\n+---------+---------+------------------+-----------+\n\n>>> Batch 20 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12392.0  |12651.0  |12557.951338463206|9227       |\n+---------+---------+------------------+-----------+\n\n>>> Batch 21 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12428.0  |12702.0  |12597.730908339361|9677       |\n+---------+---------+------------------+-----------+\n\n>>> Batch 22 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12453.0  |12687.0  |12605.414970382337|9285       |\n+---------+---------+------------------+-----------+\n\n>>> Batch 23 ---\n+---------+---------+-----------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)        |count(mf01)|\n+---------+---------+-----------------+-----------+\n|12445.0  |12689.0  |12602.55481902357|9504       |\n+---------+---------+-----------------+-----------+\n\n>>> Batch 24 ---\n+---------+---------+----------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)       |count(mf01)|\n+---------+---------+----------------+-----------+\n|12404.0  |12686.0  |12581.4182530186|9193       |\n+---------+---------+----------------+-----------+\n\n>>> Batch 25 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12428.0  |12708.0  |12598.730866177819|8728       |\n+---------+---------+------------------+-----------+\n\n>>> Batch 26 ---\n>>> Batch 26 ---\n>>> Batch 26 ---\n>>> Batch 26 ---\n>>> Batch 26 ---\n>>> Batch 26 ---\n>>> Batch 26 ---\n>>> Batch 26 ---\n>>> Batch 26 ---\norg.apache.spark.SparkException: Job aborted due to stage failure: Master removed our application: KILLED\n  at org.apache.spark.scheduler.DAGScheduler.failJobAndIndependentStages(DAGScheduler.scala:2059)\n  at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2(DAGScheduler.scala:2008)\n  at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2$adapted(DAGScheduler.scala:2007)\n  at scala.collection.mutable.ResizableArray.foreach(ResizableArray.scala:62)\n  at scala.collection.mutable.ResizableArray.foreach$(ResizableArray.scala:55)\n  at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:49)\n  at org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:2007)\n  at org.apache.spark.scheduler.DAGScheduler.$anonfun$handleTaskSetFailed$1(DAGScheduler.scala:973)\n  at org.apache.spark.scheduler.DAGScheduler.$anonfun$handleTaskSetFailed$1$adapted(DAGScheduler.scala:973)\n  at scala.Option.foreach(Option.scala:407)\n  at org.apache.spark.scheduler.DAGScheduler.handleTaskSetFailed(DAGScheduler.scala:973)\n  at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:2239)\n  at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2188)\n  at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2177)\n  at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:49)\n  at org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:775)\n  at org.apache.spark.SparkContext.runJob(SparkContext.scala:2114)\n  at org.apache.spark.SparkContext.runJob(SparkContext.scala:2135)\n  at org.apache.spark.SparkContext.runJob(SparkContext.scala:2154)\n  at org.apache.spark.sql.execution.SparkPlan.executeTake(SparkPlan.scala:472)\n  at org.apache.spark.sql.execution.SparkPlan.executeTake(SparkPlan.scala:425)\n  at org.apache.spark.sql.execution.CollectLimitExec.executeCollect(limit.scala:47)\n  at org.apache.spark.sql.Dataset.collectFromPlan(Dataset.scala:3627)\n  at org.apache.spark.sql.Dataset.$anonfun$head$1(Dataset.scala:2697)\n  at org.apache.spark.sql.Dataset.$anonfun$withAction$1(Dataset.scala:3618)\n  at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId$5(SQLExecution.scala:100)\n  at org.apache.spark.sql.execution.SQLExecution$.withSQLConfPropagated(SQLExecution.scala:160)\n  at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId$1(SQLExecution.scala:87)\n  at org.apache.spark.sql.SparkSession.withActive(SparkSession.scala:764)\n  at org.apache.spark.sql.execution.SQLExecution$.withNewExecutionId(SQLExecution.scala:64)\n  at org.apache.spark.sql.Dataset.withAction(Dataset.scala:3616)\n  at org.apache.spark.sql.Dataset.head(Dataset.scala:2697)\n  at org.apache.spark.sql.Dataset.take(Dataset.scala:2904)\n  at org.apache.spark.sql.Dataset.getRows(Dataset.scala:300)\n  at org.apache.spark.sql.Dataset.showString(Dataset.scala:337)\n  at org.apache.spark.sql.Dataset.show(Dataset.scala:826)\n  at org.apache.spark.sql.Dataset.show(Dataset.scala:803)\n  at $anonfun$new$1(<console>:88)\n  at $anonfun$new$1$adapted(<console>:79)\n  at org.apache.spark.streaming.dstream.DStream.$anonfun$foreachRDD$2(DStream.scala:629)\n  at org.apache.spark.streaming.dstream.DStream.$anonfun$foreachRDD$2$adapted(DStream.scala:629)\n  at org.apache.spark.streaming.dstream.ForEachDStream.$anonfun$generateJob$2(ForEachDStream.scala:51)\n  at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)\n  at org.apache.spark.streaming.dstream.DStream.createRDDWithLocalProperties(DStream.scala:417)\n  at org.apache.spark.streaming.dstream.ForEachDStream.$anonfun$generateJob$1(ForEachDStream.scala:51)\n  at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)\n  at scala.util.Try$.apply(Try.scala:213)\n  at org.apache.spark.streaming.scheduler.Job.run(Job.scala:39)\n  at org.apache.spark.streaming.scheduler.JobScheduler$JobHandler.$anonfun$run$1(JobScheduler.scala:256)\n  at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)\n  at scala.util.DynamicVariable.withValue(DynamicVariable.scala:62)\n  at org.apache.spark.streaming.scheduler.JobScheduler$JobHandler.run(JobScheduler.scala:256)\n  at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n  at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n  at java.lang.Thread.run(Thread.java:748)\n"
+            "data": "\u001b[33mwarning: \u001b[0mthere was one deprecation warning (since 1.0.6); for details, enable `:setting -deprecation' or `:replay -deprecation'\n--- Start Time - 2021-07-31 05:56:34.051\n>>> Batch 1 ---\n+---------+---------+-----------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)        |count(mf01)|\n+---------+---------+-----------------+-----------+\n|12604.0  |18910.0  |13062.48921373829|35230      |\n+---------+---------+-----------------+-----------+\n\n>>> Batch 2 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12604.0  |15531.0  |12920.241583820454|46874      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 3 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12604.0  |19206.0  |13104.330925667658|48041      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 4 ---\n+---------+---------+-----------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)        |count(mf01)|\n+---------+---------+-----------------+-----------+\n|12604.0  |19482.0  |13126.11517527579|47953      |\n+---------+---------+-----------------+-----------+\n\n>>> Batch 5 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12604.0  |19700.0  |13124.345294656998|47988      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 6 ---\n+---------+---------+-----------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)        |count(mf01)|\n+---------+---------+-----------------+-----------+\n|12604.0  |19592.0  |13125.14565452879|48004      |\n+---------+---------+-----------------+-----------+\n\n>>> Batch 7 ---\n+---------+---------+-----------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)        |count(mf01)|\n+---------+---------+-----------------+-----------+\n|12604.0  |19468.0  |13137.54416453085|47991      |\n+---------+---------+-----------------+-----------+\n\n>>> Batch 8 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12604.0  |19304.0  |13136.359338209248|47991      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 9 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12604.0  |19425.0  |13130.605332222454|48010      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 10 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12411.0  |19378.0  |13123.331354290356|48003      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 11 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12411.0  |19388.0  |13107.740962976854|47997      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 12 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12413.0  |19182.0  |13138.121053618688|47987      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 13 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12433.0  |19531.0  |13155.273085257104|47996      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 14 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12415.0  |19030.0  |13083.653270307977|48023      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 15 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12429.0  |17927.0  |12934.185205251095|47990      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 16 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12434.0  |18797.0  |12762.188148707302|47691      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 17 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12430.0  |12855.0  |12614.874922369892|48306      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 18 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12419.0  |12718.0  |12601.590950773207|47982      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 19 ---\n+---------+---------+-----------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)        |count(mf01)|\n+---------+---------+-----------------+-----------+\n|12413.0  |12763.0  |12603.56762158561|48032      |\n+---------+---------+-----------------+-----------+\n\n>>> Batch 20 ---\n+---------+---------+----------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)       |count(mf01)|\n+---------+---------+----------------+-----------+\n|12412.0  |12744.0  |12602.2678835615|47991      |\n+---------+---------+----------------+-----------+\n\n>>> Batch 21 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12390.0  |12738.0  |12604.500750062505|47996      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 22 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12423.0  |12785.0  |12602.916826402201|47996      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 23 ---\n+---------+---------+-----------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)        |count(mf01)|\n+---------+---------+-----------------+-----------+\n|12431.0  |12710.0  |12607.08690853049|48016      |\n+---------+---------+-----------------+-----------+\n\n>>> Batch 24 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12453.0  |12721.0  |12616.687940159187|47994      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 25 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12407.0  |12721.0  |12597.698255922985|47991      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 26 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12422.0  |12702.0  |12602.119324335583|48012      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 27 ---\n+---------+---------+-----------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)        |count(mf01)|\n+---------+---------+-----------------+-----------+\n|12392.0  |12702.0  |12596.42840466115|47971      |\n+---------+---------+-----------------+-----------+\n\n>>> Batch 28 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12418.0  |12710.0  |12603.285532757005|48005      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 29 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12409.0  |12716.0  |12601.004851134707|48030      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 30 ---\n+---------+---------+-----------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)        |count(mf01)|\n+---------+---------+-----------------+-----------+\n|12423.0  |12724.0  |12608.02379612844|47991      |\n+---------+---------+-----------------+-----------+\n\n>>> Batch 31 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12404.0  |12868.0  |12611.111833333332|48000      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 32 ---\n+---------+---------+-----------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)        |count(mf01)|\n+---------+---------+-----------------+-----------+\n|12433.0  |12868.0  |12609.66111122685|48001      |\n+---------+---------+-----------------+-----------+\n\n>>> Batch 33 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12422.0  |12718.0  |12613.572283254467|47971      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 34 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12411.0  |12733.0  |12613.200758049064|48018      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 35 ---\n+---------+---------+-----------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)        |count(mf01)|\n+---------+---------+-----------------+-----------+\n|12413.0  |12744.0  |12622.07959255942|48007      |\n+---------+---------+-----------------+-----------+\n\n>>> Batch 36 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12433.0  |12703.0  |12610.384540076653|48008      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 37 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12415.0  |12765.0  |12626.144396282249|47986      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 38 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12429.0  |12725.0  |12618.302880109957|48019      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 39 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12434.0  |12710.0  |12613.860360923563|47988      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 40 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12431.0  |12726.0  |12620.874200337577|47989      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 41 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12431.0  |12719.0  |12619.584354166667|48000      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 42 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12413.0  |12770.0  |12618.696872460567|47993      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 43 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12357.0  |18132.0  |12828.428297681781|48011      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 44 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12412.0  |17522.0  |12978.268542625648|48011      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 45 ---\n+---------+---------+-----------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)        |count(mf01)|\n+---------+---------+-----------------+-----------+\n|12423.0  |19402.0  |13405.80717264387|47960      |\n+---------+---------+-----------------+-----------+\n\n>>> Batch 46 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12431.0  |18991.0  |13660.901428392954|48026      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 47 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12453.0  |19006.0  |13439.378027699677|48015      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 48 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12407.0  |18792.0  |13311.413641478764|47986      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 49 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12422.0  |17165.0  |12878.473160164143|48007      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 50 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12389.0  |18095.0  |12679.327075345891|47992      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 51 ---\n+---------+---------+-----------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)        |count(mf01)|\n+---------+---------+-----------------+-----------+\n|12372.0  |13128.0  |12592.54461737192|47997      |\n+---------+---------+-----------------+-----------+\n\n>>> Batch 52 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12433.0  |18149.0  |12927.419281624154|48025      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 53 ---\n+---------+---------+-----------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)        |count(mf01)|\n+---------+---------+-----------------+-----------+\n|12409.0  |18112.0  |13082.13398216072|47984      |\n+---------+---------+-----------------+-----------+\n\n>>> Batch 54 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12404.0  |18381.0  |13048.493687236969|47998      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 55 ---\n+---------+---------+-----------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)        |count(mf01)|\n+---------+---------+-----------------+-----------+\n|12433.0  |18381.0  |13198.94576292376|47993      |\n+---------+---------+-----------------+-----------+\n\n>>> Batch 56 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12445.0  |19040.0  |13495.067665256975|48001      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 57 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12433.0  |19507.0  |13638.194633668729|48003      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 58 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12445.0  |19487.0  |13627.987729422304|48001      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 59 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12449.0  |19487.0  |13638.217645833332|48000      |\n+---------+---------+------------------+-----------+\n\n>>> Batch 60 ---\n+---------+---------+------------------+-----------+\n|min(mf01)|max(mf01)|avg(mf01)         |count(mf01)|\n+---------+---------+------------------+-----------+\n|12444.0  |19003.0  |13626.523391751933|47987      |\n+---------+---------+------------------+-----------+\n\n--- End Time - 2021-07-31 06:00:41.043\n\u001b[1m\u001b[34mmessages\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.streaming.dstream.DStream[Map[String,String]]\u001b[0m = org.apache.spark.streaming.dstream.FlatMappedDStream@7e1a68f7\n\u001b[1m\u001b[34mdateFormat\u001b[0m: \u001b[1m\u001b[32mjava.text.SimpleDateFormat\u001b[0m = java.text.SimpleDateFormat@c5e88241\n\u001b[1m\u001b[34mstart\u001b[0m: \u001b[1m\u001b[32mjava.util.Date\u001b[0m = Sat Jul 31 05:56:34 GMT 2021\n"
           }
         ]
       },
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627180696311_17659824",
+      "jobName": "paragraph_1627710433320_824315723",
       "id": "paragraph_1627111129592_655190706",
-      "dateCreated": "2021-07-25T02:38:16+0000",
-      "dateStarted": "2021-07-25T04:17:06+0000",
-      "dateFinished": "2021-07-25T04:18:40+0000",
-      "status": "ERROR",
-      "$$hashKey": "object:189"
+      "dateCreated": "2021-07-31T05:47:13+0000",
+      "dateStarted": "2021-07-31T05:56:33+0000",
+      "dateFinished": "2021-07-31T06:00:43+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:5857"
     },
     {
       "text": "%spark\n",
       "user": "anonymous",
-      "dateUpdated": "2021-07-25T03:44:27+0000",
+      "dateUpdated": "2021-07-31T06:00:43+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -286,17 +286,17 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1627180696311_1759399364",
+      "jobName": "paragraph_1627710433320_995310795",
       "id": "paragraph_1627111429493_1345950351",
-      "dateCreated": "2021-07-25T02:38:16+0000",
-      "dateStarted": "2021-07-25T03:44:27+0000",
-      "dateFinished": "2021-07-25T03:44:27+0000",
+      "dateCreated": "2021-07-31T05:47:13+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:190"
+      "$$hashKey": "object:5858",
+      "dateFinished": "2021-07-31T06:00:43+0000",
+      "dateStarted": "2021-07-31T06:00:43+0000"
     }
   ],
   "name": "ESPBench Query 1 (Standalone)",
-  "id": "2GDYRU2MQ",
+  "id": "2GE81JCSR",
   "defaultInterpreterGroup": "spark",
   "version": "0.9.0",
   "noteParams": {},
@@ -307,8 +307,6 @@
     "looknfeel": "default",
     "personalizedMode": "false"
   },
-  "info": {
-    "isRunning": false
-  },
+  "info": {},
   "path": "/ESPBench Query 1 (Standalone)"
 }
