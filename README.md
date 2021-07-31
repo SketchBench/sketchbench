@@ -28,7 +28,7 @@ helm install \
 --values ./helm-values/values-gke-espbench-bullet.yaml \
 my-sketchbench \
 sketchbench/sketchbench \
---version 0.2.3
+--version 0.2.4
 ```
 
 #### ESPBench data with Zeppelin for non-sketch-based queries
@@ -38,7 +38,7 @@ helm install \
 --values ./helm-values/values-gke-espbench-no-bullet.yaml \
 my-sketchbench \
 sketchbench/sketchbench \
---version 0.2.3
+--version 0.2.4
 ```
 
 ---
@@ -54,7 +54,7 @@ helm install \
 --values ./helm-values/values-gke-tester-bullet.yaml \
 my-sketchbench \
 sketchbench/sketchbench \
---version 0.2.3
+--version 0.2.4
 ```
 
 #### Test data with Zeppelin for non-sketch-based queries
@@ -64,7 +64,7 @@ helm install \
 --values ./helm-values/values-gke-tester-no-bullet.yaml \
 my-sketchbench \
 sketchbench/sketchbench \
---version 0.2.3
+--version 0.2.4
 ```
 
 ## Development setup
@@ -76,7 +76,7 @@ helm install \
 --values ./helm-values/values-gke-espbench-bullet-dev.yaml \
 sketchbench-espbench \
 sketchbench/sketchbench \
---version 0.2.3
+--version 0.2.4
 ```
 
 ### Install SketchBench stack for NEXMark with Bullet, Zeppelin, and Spark
@@ -87,7 +87,7 @@ helm install \
 ./helm-values/values-gke-nexmark-bullet-dev.yaml \
 sketchbench-nexmark \
 sketchbench/sketchbench \
---version 0.2.3
+--version 0.2.4
 ```
 
 ### Install SketchBench "standalone" stack for ESPBench
@@ -98,7 +98,7 @@ helm install \
 ./helm-values/values-gke-espbench-standalone-dev.yaml \
 sketchbench-espbench-standalone \
 sketchbench/sketchbench \
---version 0.2.3
+--version 0.2.4
 ```
 
 ### Install SketchBench "standalone" stack for ESPBench for local development
@@ -109,7 +109,7 @@ helm install \
 ./helm-values/values-gke-espbench-standalone-dev-local.yaml \
 sketchbench-espbench-standalone \
 sketchbench/sketchbench \
---version 0.2.3
+--version 0.2.4
 ```
 
 ### Install SketchBench "standalone" stack for NEXMark
@@ -120,7 +120,7 @@ helm install \
 ./helm-values/values-gke-nexmark-standalone-dev.yaml \
 sketchbench-nexmark-standalone \
 sketchbench/sketchbench \
---version 0.2.3
+--version 0.2.4
 ```
 
 ### Accessing Bullet locally
