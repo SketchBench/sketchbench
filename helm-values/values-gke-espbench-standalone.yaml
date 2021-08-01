@@ -1,17 +1,16 @@
-### Benchmark Control Plane ###
-
+### Configurable SketchBench Data Generation (ESPBench) ###
 dataIngestion:
   espbench:
     enabled: true
     nodeSelector:
-      sketchbench/pool: data-ingestion
+      sketchbench/pool: data-generation
     # 125000 ns interval = 8,000 msg /sec
     # 1000000 ns interval = 1,000 msg /sec
     sendingInterval: 125000
     sendingIntervalTimeUnit: NANOSECONDS
     duration: 1
     durationTimeUnit: HOURS
-    replicaCount: 3
+    replicaCount: 1
     resources:
       requests:
         memory: "12Gi"
@@ -19,14 +18,76 @@ dataIngestion:
       limits:
         memory: "12Gi"
 
-spark: # System Under Test (isolated Spark cluster)
+### Bullet Stack ###
+bullet:
+  enabled: false
+
+### Apache Zeppelin for benchmark notebooks ###
+zeppelin:
+  enabled: true
+  resources:
+    requests:
+      memory: "27Gi"
+      cpu: "7"
+    limits:
+      memory: "27Gi"
+  nodeSelector:
+    sketchbench/pool: system-under-test
+  runMode: local
+  interpreters:
+    - file
+    - spark
+    - md
+    - python
+    - sh
+  metrics:
+    enabled: true
+    podMonitor:
+      enabled: true
+    graphiteExporter:
+      enabled: true
+      periodSeconds: 10
+      host: graphite-exporter
+      port : 9109
+  sparkInterpreter:
+    spark:
+      master: "spark://sketchbench-spark-master-svc:7077"
+      submit:
+        deployMode: "client"
+      app:
+        name: SketchBench
+      jar:
+        packages: org.apache.spark:spark-sql-kafka-0-10_2.12:3.0.2,org.apache.spark:spark-streaming-kafka-0-10-assembly_2.12:3.0.2
+      cores:
+        max: 36
+      driver:
+        cores: 6
+        memory: 26g
+      executor:
+        cores: 6
+        memory: 26g
+# driver
+# - --conf
+# - spark.metrics.appStatusSource.enabled=true
+# - --conf
+# - spark.streaming.backpressure.enabled=true
+# - --conf
+# - spark.dynamicAllocation.enabled=false
+# - --conf
+# - spark.driver.extraJavaOptions="-XX:+UseG1GC"
+# - --conf
+# - spark.executor.extraJavaOptions="-XX:+UseG1GC"
+
+
+### System Under Test (isolated Apache Spark cluster) ###
+spark:
   enabled: true
   image:
     repository: sketchbench/bullet-spark-3.0
     tag: "1.0.4"
     pullPolicy: IfNotPresent
   worker:
-    replicaCount: 3
+    replicaCount: 6
     coreLimit: 6
     nodeSelector:
       sketchbench/pool: system-under-test
@@ -50,8 +111,9 @@ spark: # System Under Test (isolated Spark cluster)
     enabled: true
     podMonitor:
       enabled: true
-      interval: 5s
+      interval: 10s
 
+### HDFS for checkpointing ###
 hdfs:
   enabled: true
   namenode:
@@ -64,62 +126,12 @@ hdfs:
     nodeSelector:
       sketchbench/pool: data-plane
 
-zeppelin:
-  enabled: true
-  resources:
-    requests:
-      memory: "27Gi"
-      cpu: "7"
-    limits:
-      memory: "27Gi"
-  nodeSelector:
-    sketchbench/pool: system-under-test
-  runMode: local
-  interpreters:
-    - file
-    - spark
-    - md
-    - python
-    - sh
-  metrics:
-    enabled: true
-    podMonitor:
-      enabled: true
-      interval: 5s
-  sparkInterpreter:
-    spark:
-      master: "spark://sketchbench-espbench-spark-master-svc:7077"
-      submit:
-        deployMode: "client"
-      app:
-        name: BulletSparkStreamingJob
-      jar:
-        packages: org.apache.spark:spark-sql-kafka-0-10_2.12:3.0.2,org.apache.spark:spark-streaming-kafka-0-10-assembly_2.12:3.0.2
-      cores:
-        max: 18
-      driver:
-        cores: 3
-        memory: 13g
-      executor:
-        cores: 3
-        memory: 13g
-# driver
-# - --conf
-# - spark.streaming.backpressure.enabled=true
-# - --conf
-# - spark.dynamicAllocation.enabled=false
-# - --conf
-# - spark.driver.extraJavaOptions="-XX:+UseG1GC"
-# - --conf
-# - spark.executor.extraJavaOptions="-XX:+UseG1GC"
-
-### Data Ingestion (isolated Kafka cluster) ###
-
+### Data Ingestion (isolated Apache Kafka cluster) ###
 kafka:
   nodeSelector:
     sketchbench/pool: data-ingestion
   podAntiAffinitypreset: hard
-  logRetentionHours: 6
+  logRetentionHours: 12
   numPartitions: 5
   deleteTopicEnable: true
   resources:
@@ -129,9 +141,7 @@ kafka:
     limits:
       memory: "12Gi"
   persistence:
-    size: 32Gi
-  logPersistence:
-    size: 32Gi
+    size: 100Gi
   metrics:
     kafka:
       enabled: true
@@ -141,6 +151,7 @@ kafka:
       enabled: true
     serviceMonitor:
       enabled: true
+      interval: 10s
   zookeeper:
     nodeSelector:
       sketchbench/pool: data-plane
@@ -148,34 +159,49 @@ kafka:
       enabled: true
       serviceMonitor:
         enabled: true
+        interval: 10s
 
 ### Benchmark Observability Stack ###
-
 kafdrop:
   enabled: true
   deployment:
     nodeSelector:
       sketchbench/pool: observability
-
 tobs:
   enabled: true
   kube-prometheus-stack:
     alertmanager:
       enabled: false # not needed
     grafana:
+      sidecar:
+        datasources:
+          defaultDatasourceScrapeInterval: 10s
       nodeSelector:
         sketchbench/pool: observability
     kube-state-metrics:
       nodeSelector:
         sketchbench/pool: observability
+    kubeStateMetrics:
+      serviceMonitor:
+        interval: 10s
+    nodeExporter:
+      serviceMonitor:
+        interval: 10s
     prometheus:
       prometheusSpec:
-        scrapeInterval: 5s
-        scrapeTimeout: 5s
+        scrapeInterval: 10s
+        scrapeTimeout: 10s
+        evaluationInterval: 10s
         nodeSelector:
           sketchbench/pool: observability
         podMonitorSelectorNilUsesHelmValues: false
         serviceMonitorSelectorNilUsesHelmValues: false
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              resources:
+                requests:
+                  storage: 50Gi
     prometheusOperator:
       nodeSelector:
         sketchbench/pool: observability
@@ -188,3 +214,15 @@ tobs:
   timescaledb-single:
     nodeSelector:
       sketchbench/pool: observability
+    persistentVolumes:
+      data:
+        size: 50Gi
+      wal:
+        size: 50Gi
+graphite-exporter:
+  enabled: true
+  nodeSelector:
+    sketchbench/pool: observability
+  podMonitor:
+    enabled: true
+    interval: 10s
