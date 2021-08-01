@@ -15,11 +15,12 @@ SketchBench utilizes 5 node pools:
 
 |                             |                    Description                    |   Node type   | Number of Nodes | Disk Size per Node |
 |-----------------------------|---------------------------------------------------|---------------|-----------------|--------------------|
-| **control-plane**           | SketchBench components such as the data generator | e2-standard-4 |        3        |        100GB       |
-| **data-ingestion**          |  Isolated Apache Kafka cluster for data ingestion | c2-standard-4 |        2        |         50GB       |
+| **default-pool**            | K8s and SketchBench control plane components      | n2-standard-4 |        3        |        100GB       |
+| **data-generation**         | SketchBench data sender (ESPBench/NEXMark)        | n2-standard-4 |        1        |        100GB       |
+| **data-ingestion**          |  Isolated Apache Kafka cluster for data ingestion | c2-standard-8 |        1        |        100GB       |
 | **system-under-test**       |          Isolated SUT (e.g. Apache Spark)         | c2-standard-8 |        5        |        100GB       |
-| **observability**           |       Observability stack (e.g. Prometheus)       | e2-standard-4 |        2        |        100GB       |
-| **data-plane**              |    Persistency services (e.g. HDFS & Zookeeper)   | e2-standard-4 |        2        |        100GB       |
+| **observability**           |       Observability stack (e.g. Prometheus)       | n2-standard-4 |        3        |        100GB       |
+| **data-plane**              |    Persistency services (e.g. HDFS & Zookeeper)   | n2-standard-4 |        3        |        100GB       |
 
 ## `gcloud` commands
 
@@ -32,7 +33,7 @@ gcloud beta container \
 --no-enable-basic-auth \
 --cluster-version "1.20.8-gke.900" \
 --release-channel "regular" \
---machine-type "e2-standard-4" \
+--machine-type "n2-standard-4" \
 --image-type "COS_CONTAINERD" \
 --disk-type "pd-ssd" \
 --disk-size "100" \
@@ -61,6 +62,29 @@ gcloud beta container \
 --node-locations "us-west1-a"
 ```
 
+### Node pool for data-generation (ESPBench data set / NEXMark data generator)
+
+```bash
+gcloud beta container \
+--project "cosmic-ascent-321403" node-pools create "data-generation" \
+--cluster "sketchbench-cluster" \
+--zone "us-west1-a" \
+--machine-type "n2-standard-4" \
+--image-type "COS_CONTAINERD" \
+--disk-type "pd-ssd" \
+--disk-size "100" \
+--node-labels sketchbench/pool=data-generation \
+--metadata disable-legacy-endpoints=true \
+--scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \
+--num-nodes "1" \
+--enable-autoupgrade \
+--enable-autorepair \
+--max-surge-upgrade 1 \
+--max-unavailable-upgrade 0 \
+--max-pods-per-node "110" \
+--node-locations "us-west1-a"
+```
+
 ### Node pool for data ingestion (Apache Kafka)
 
 ```bash
@@ -68,14 +92,14 @@ gcloud beta container \
 --project "cosmic-ascent-321403" node-pools create "data-ingestion" \
 --cluster "sketchbench-cluster" \
 --zone "us-west1-a" \
---machine-type "c2-standard-4" \
+--machine-type "c2-standard-8" \
 --image-type "COS_CONTAINERD" \
 --disk-type "pd-ssd" \
---disk-size "30" \
+--disk-size "100" \
 --node-labels sketchbench/pool=data-ingestion \
 --metadata disable-legacy-endpoints=true \
 --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \
---num-nodes "2" \
+--num-nodes "1" \
 --enable-autoupgrade \
 --enable-autorepair \
 --max-surge-upgrade 1 \
@@ -114,14 +138,14 @@ gcloud beta container \
 --project "cosmic-ascent-321403" node-pools create "observability" \
 --cluster "sketchbench-cluster" \
 --zone "us-west1-a" \
---machine-type "e2-standard-4" \
+--machine-type "n2-standard-4" \
 --image-type "COS_CONTAINERD" \
 --disk-type "pd-ssd" \
 --disk-size "100" \
 --node-labels sketchbench/pool=observability \
 --metadata disable-legacy-endpoints=true \
 --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \
---num-nodes "2" \
+--num-nodes "3" \
 --enable-autoupgrade \
 --enable-autorepair \
 --max-surge-upgrade 1 \
@@ -137,14 +161,14 @@ gcloud beta container \
 --project "cosmic-ascent-321403" node-pools create "data-plane" \
 --cluster "sketchbench-cluster" \
 --zone "us-west1-a" \
---machine-type "e2-standard-4" \
+--machine-type "n2-standard-4" \
 --image-type "COS_CONTAINERD" \
 --disk-type "pd-ssd" \
 --disk-size "100" \
 --node-labels sketchbench/pool=data-plane \
 --metadata disable-legacy-endpoints=true \
 --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \
---num-nodes "2" \
+--num-nodes "3" \
 --enable-autoupgrade \
 --enable-autorepair \
 --max-surge-upgrade 1 \
