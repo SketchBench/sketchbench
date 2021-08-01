@@ -15,8 +15,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 105,
-  "iteration": 1627707775496,
+  "id": 27,
+  "iteration": 1627795268233,
   "links": [],
   "panels": [
     {
@@ -28,9 +28,9 @@
         "x": 0,
         "y": 0
       },
-      "id": 8,
+      "id": 24,
       "panels": [],
-      "title": "Kafka",
+      "title": "Spark Streaming",
       "type": "row"
     },
     {
@@ -47,13 +47,13 @@
       "fill": 0,
       "fillGradient": 0,
       "gridPos": {
-        "h": 9,
-        "w": 12,
+        "h": 8,
+        "w": 6,
         "x": 0,
         "y": 1
       },
       "hiddenSeries": false,
-      "id": 3,
+      "id": 26,
       "legend": {
         "avg": false,
         "current": false,
@@ -81,25 +81,33 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(rate(kafka_server_brokertopicmetrics_bytesinpersec_count{app_kubernetes_io_instance=\"$broker\", topic=~\"$topic\"}[5m])) by (topic)",
+          "expr": "rate(spark_app_status{qty=\"completedStages\"}[20s])",
           "interval": "",
-          "legendFormat": "Bytes in (MB)",
-          "refId": "Bytes in (MB)"
+          "legendFormat": "Completed",
+          "refId": "Completed Stages"
         },
         {
           "exemplar": true,
-          "expr": "sum(rate(kafka_server_brokertopicmetrics_bytesoutpersec_count{app_kubernetes_io_instance=\"$broker\", topic=~\"$topic\"}[5m])) by (topic)",
+          "expr": "rate(spark_app_status{qty=\"failedStages\"}[20s])",
           "hide": false,
           "interval": "",
-          "legendFormat": "Bytes out (MB)",
-          "refId": "Bytes out (MB)"
+          "legendFormat": "Failed",
+          "refId": "Failed Stages"
+        },
+        {
+          "exemplar": true,
+          "expr": "rate(spark_app_status{qty=\"skippedStages\"}[20s])",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Skipped",
+          "refId": "Skipped Stages"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Bytes in/out",
+      "title": "Stages",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -115,331 +123,663 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:1476",
+          "$$hashKey": "object:227",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": "30",
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:228",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 1
+      },
+      "hiddenSeries": false,
+      "id": 27,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": false
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "rate(spark_app_status{qty=\"completedTasks\"}[20s])",
+          "interval": "",
+          "legendFormat": "Completed",
+          "refId": "Completed Tasks"
+        },
+        {
+          "exemplar": true,
+          "expr": "rate(spark_app_status{qty=\"failedTasks\"}[20s])",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Failed",
+          "refId": "Failed Taks"
+        },
+        {
+          "exemplar": true,
+          "expr": "rate(spark_app_status{qty=\"skippedTasks\"}[20s])",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Skipped",
+          "refId": "Skipped Tasks"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Tasks",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:227",
+          "format": "short",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:228",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 1
+      },
+      "hiddenSeries": false,
+      "id": 30,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": false
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "spark_block_manager{qty=\"memUsed_MB\"}",
+          "interval": "",
+          "legendFormat": "Memory Used",
+          "refId": "Memory Used"
+        },
+        {
+          "exemplar": true,
+          "expr": "spark_block_manager{qty=\"offHeapMemUsed_MB\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Off Heap Memory Used",
+          "refId": "Off Heap Memory Used"
+        },
+        {
+          "exemplar": true,
+          "expr": "spark_block_manager{qty=\"onHeapMemUsed_MB\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "On Heap Memory Used",
+          "refId": "On Heap Memory Used"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Block Manager",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:550",
+          "format": "decmbytes",
+          "label": null,
+          "logBase": 1,
+          "max": "200",
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:551",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 1
+      },
+      "hiddenSeries": false,
+      "id": 28,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": false
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "rate(spark_app_status{qty=\"succeededJobs\"}[20s])",
+          "interval": "",
+          "legendFormat": "Succeeded ",
+          "refId": "Succeeded Jobs"
+        },
+        {
+          "exemplar": true,
+          "expr": "rate(spark_app_status{qty=\"failedJobs\"}[20s])",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Failed",
+          "refId": "Failed Jobs"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Jobs",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:227",
+          "format": "short",
+          "label": "",
+          "logBase": 1,
+          "max": "10",
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:228",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 9
+      },
+      "hiddenSeries": false,
+      "id": 35,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": false
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "spark_streaming_app{qty=\"lastCompletedBatch_processingEndTime\"} - ignoring(qty) \rspark_streaming_app{qty=\"lastCompletedBatch_processingStartTime\"}",
+          "interval": "",
+          "legendFormat": "Processing Time",
+          "refId": "Processing Time"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Processing Time",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:637",
+          "format": "ms",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:638",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 9
+      },
+      "hiddenSeries": false,
+      "id": 32,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": false
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "spark_streaming_app{qty=\"lastCompletedBatch_processingDelay\"}",
+          "interval": "",
+          "legendFormat": "Processing Delay",
+          "refId": "Processing Delay"
+        },
+        {
+          "exemplar": true,
+          "expr": "spark_streaming_app{qty=\"lastCompletedBatch_schedulingDelay\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Scheduling Delay",
+          "refId": "Scheduling Delay"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Delays",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:637",
+          "format": "ms",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:638",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 9
+      },
+      "hiddenSeries": false,
+      "id": 34,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": false
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "rate(spark_streaming_app{qty=\"totalProcessedRecords\"}[20s])",
+          "interval": "",
+          "legendFormat": "Processed Records",
+          "refId": "Processed Records"
+        },
+        {
+          "exemplar": true,
+          "expr": "rate(spark_streaming_app{qty=\"totalReceivedRecords\"}[20s])",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Received Records",
+          "refId": "Received Records"
+        },
+        {
+          "exemplar": true,
+          "expr": "spark_streaming_app{qty=\"lastReceivedBatch_records\"} / 2",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Last Batch Records",
+          "refId": "Last Batch Records / Second"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Message Records",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:724",
           "decimals": null,
-          "format": "Bps",
-          "label": null,
-          "logBase": 1,
-          "max": "10000000",
-          "min": "0",
-          "show": true
-        },
-        {
-          "$$hashKey": "object:1477",
-          "format": "short",
+          "format": "ops",
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": null,
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "unit": "reqps"
-        },
-        "overrides": []
-      },
-      "fill": 0,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 1
-      },
-      "hiddenSeries": false,
-      "id": 4,
-      "legend": {
-        "alignAsTable": false,
-        "avg": false,
-        "current": false,
-        "hideEmpty": false,
-        "hideZero": false,
-        "max": false,
-        "min": false,
-        "rightSide": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": false
-      },
-      "percentage": false,
-      "pluginVersion": "7.5.3",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "sum(rate(kafka_server_brokertopicmetrics_totalproducerequestspersec_count{app_kubernetes_io_instance=\"$broker\", topic=~\"$topic\"}[5m])) by (topic)",
-          "interval": "",
-          "legendFormat": "Produce Requests",
-          "refId": "Produce Requests"
-        },
-        {
-          "exemplar": true,
-          "expr": "sum(rate(kafka_server_brokertopicmetrics_totalfetchrequestspersec_count{app_kubernetes_io_instance=\"$broker\", topic=~\"$topic\"}[5m])) by (topic)",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Fetch Requests",
-          "refId": "Fetch Requests"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Requests in/out",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "$$hashKey": "object:1630",
-          "format": "reqps",
-          "label": "",
-          "logBase": 1,
-          "max": "50000",
           "min": "0",
           "show": true
         },
         {
-          "$$hashKey": "object:1631",
-          "format": "short",
-          "label": "",
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": null,
-      "description": "",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "fill": 0,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 10
-      },
-      "hiddenSeries": false,
-      "id": 5,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": false
-      },
-      "percentage": false,
-      "pluginVersion": "7.5.3",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "kafka_consumergroup_lag{topic=~\"$topic\", job=\"sketchbench-espbench-kafka-metrics\"}",
-          "interval": "",
-          "legendFormat": "{{consumergroup}} (topic: {{topic}})",
-          "refId": "Lag"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Approximate Lag by Consumer Group",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "$$hashKey": "object:1396",
-          "format": "short",
-          "label": "",
-          "logBase": 1,
-          "max": "40000",
-          "min": "0",
-          "show": true
-        },
-        {
-          "$$hashKey": "object:1397",
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": null,
-      "description": "",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "fill": 0,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 10
-      },
-      "hiddenSeries": false,
-      "id": 6,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": false
-      },
-      "percentage": false,
-      "pluginVersion": "7.5.3",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "sum(rate(kafka_topic_partition_current_offset{app_kubernetes_io_instance=\"$broker\", topic=~\"$topic\"}[5m])) by (topic)",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Current Partition Offset",
-          "refId": "Current Partition Offset"
-        },
-        {
-          "exemplar": true,
-          "expr": "sum(rate(kafka_consumergroup_current_offset{app_kubernetes_io_instance=\"$broker\", topic=~\"$topic\"}[5m])) by (topic)",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Current Consumer Offset",
-          "refId": "Current Consumer Offset"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Current Offset",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "$$hashKey": "object:1944",
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": "50000",
-          "min": "0",
-          "show": true
-        },
-        {
-          "$$hashKey": "object:1945",
+          "$$hashKey": "object:725",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -460,7 +800,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 19
+        "y": 17
       },
       "id": 10,
       "panels": [],
@@ -484,9 +824,9 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 8,
-        "w": 12,
+        "w": 6,
         "x": 0,
-        "y": 20
+        "y": 18
       },
       "hiddenSeries": false,
       "id": 19,
@@ -517,7 +857,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{container=\"spark-worker\"}",
+          "expr": "rate(container_cpu_usage_seconds_total{container=\"spark-worker\", pod=~\".*spark-worker.*\"}[1m])",
           "interval": "",
           "intervalFactor": 1,
           "legendFormat": "{{pod}}",
@@ -575,106 +915,6 @@
       "datasource": null,
       "description": "",
       "fieldConfig": {
-        "defaults": {
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "fill": 0,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 20
-      },
-      "hiddenSeries": false,
-      "id": 20,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null as zero",
-      "options": {
-        "alertThreshold": false
-      },
-      "percentage": false,
-      "pluginVersion": "7.5.3",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{container=\"spark-backend\"}",
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "{{pod}}",
-          "refId": "Spark Driver CPU Usage"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Spark Driver CPU Usage",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "$$hashKey": "object:2029",
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": "7",
-          "min": "0",
-          "show": true
-        },
-        {
-          "$$hashKey": "object:2030",
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": null,
-      "description": "",
-      "fieldConfig": {
         "defaults": {},
         "overrides": []
       },
@@ -682,9 +922,9 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 28
+        "w": 6,
+        "x": 6,
+        "y": 18
       },
       "hiddenSeries": false,
       "id": 21,
@@ -773,6 +1013,106 @@
       "datasource": null,
       "description": "",
       "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 18
+      },
+      "hiddenSeries": false,
+      "id": 20,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": false
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "rate(container_cpu_usage_seconds_total{container=\"spark-backend\", pod=~\".*spark-backend.*\"}[1m])",
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "{{pod}}",
+          "refId": "Spark Driver CPU Usage"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Spark Driver CPU Usage",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:2029",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": "7",
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:2030",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
         "defaults": {},
         "overrides": []
       },
@@ -780,9 +1120,9 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 28
+        "w": 6,
+        "x": 18,
+        "y": 18
       },
       "hiddenSeries": false,
       "id": 22,
@@ -880,9 +1220,9 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 9,
-        "w": 12,
+        "w": 8,
         "x": 0,
-        "y": 36
+        "y": 26
       },
       "hiddenSeries": false,
       "id": 13,
@@ -979,9 +1319,9 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 36
+        "w": 8,
+        "x": 8,
+        "y": 26
       },
       "hiddenSeries": false,
       "id": 16,
@@ -1012,7 +1352,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(metrics_executor_completedTasks_total{executor_id!=\"driver\", application_name=\"$sparkapp\"}[1m])",
+          "expr": "rate(metrics_executor_completedTasks_total{executor_id!=\"driver\", application_name=\"$sparkapp\"}[20s])",
           "format": "time_series",
           "interval": "",
           "legendFormat": "Executor {{executor_id}}",
@@ -1079,9 +1419,9 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 45
+        "w": 8,
+        "x": 16,
+        "y": 26
       },
       "hiddenSeries": false,
       "id": 11,
@@ -1162,66 +1502,6 @@
       }
     },
     {
-      "datasource": null,
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 45
-      },
-      "id": 15,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": ["lastNotNull"],
-          "fields": "",
-          "values": false
-        },
-        "text": {},
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.5.3",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "sum(metrics_executor_totalCores{executor_id!=\"driver\", application_name=\"$sparkapp\"}) by (executor_id)",
-          "interval": "",
-          "legendFormat": "Executor {{executor_id}}",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Cores",
-      "type": "stat"
-    },
-    {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
@@ -1238,9 +1518,9 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 9,
-        "w": 12,
+        "w": 6,
         "x": 0,
-        "y": 54
+        "y": 35
       },
       "hiddenSeries": false,
       "id": 12,
@@ -1327,7 +1607,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
-      "description": "Total shuffle bytes and records read/written.",
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "unit": "decbytes"
@@ -1338,9 +1618,9 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 54
+        "w": 6,
+        "x": 6,
+        "y": 35
       },
       "hiddenSeries": false,
       "id": 17,
@@ -1371,18 +1651,10 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(metrics_executor_totalShuffleRead_bytes_total{executor_id!=\"driver\", application_name=\"$sparkapp\"}) by (executor_id)",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Executor {{executor_id}} Shuffle Read",
-          "refId": "Shuffle Read"
-        },
-        {
-          "exemplar": true,
           "expr": "sum(metrics_executor_totalShuffleWrite_bytes_total{executor_id!=\"driver\", application_name=\"$sparkapp\"}) by (executor_id)",
           "hide": false,
           "interval": "",
-          "legendFormat": "Executor {{executor_id}} Shuffle Write",
+          "legendFormat": "Executor {{executor_id}}",
           "refId": "Shuffle Write"
         }
       ],
@@ -1390,7 +1662,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Shuffle Read/Write",
+      "title": "Shuffle Write",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1428,6 +1700,600 @@
         "align": false,
         "alignLevel": null
       }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "decbytes"
+        },
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 12,
+        "y": 35
+      },
+      "hiddenSeries": false,
+      "id": 36,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(metrics_executor_totalShuffleRead_bytes_total{executor_id!=\"driver\", application_name=\"$sparkapp\"}) by (executor_id)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Executor {{executor_id}}",
+          "refId": "Shuffle Read"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Shuffle Read",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:857",
+          "format": "decbytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:858",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 18,
+        "y": 35
+      },
+      "id": 15,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.3",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(metrics_executor_totalCores{executor_id!=\"driver\", application_name=\"$sparkapp\"}) by (executor_id)",
+          "interval": "",
+          "legendFormat": "Executor {{executor_id}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Cores",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 44
+      },
+      "id": 8,
+      "panels": [],
+      "title": "Kafka",
+      "type": "row"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 45
+      },
+      "hiddenSeries": false,
+      "id": 3,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": false
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(rate(kafka_server_brokertopicmetrics_bytesinpersec_count{app_kubernetes_io_instance=\"$broker\", topic=~\"$topic\"}[1m])) by (topic)",
+          "interval": "",
+          "legendFormat": "Bytes in (MB)",
+          "refId": "Bytes in (MB)"
+        },
+        {
+          "exemplar": true,
+          "expr": "sum(rate(kafka_server_brokertopicmetrics_bytesoutpersec_count{app_kubernetes_io_instance=\"$broker\", topic=~\"$topic\"}[1m])) by (topic)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Bytes out (MB)",
+          "refId": "Bytes out (MB)"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Bytes in/out",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:1476",
+          "decimals": null,
+          "format": "Bps",
+          "label": null,
+          "logBase": 1,
+          "max": "10000000",
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:1477",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 45
+      },
+      "hiddenSeries": false,
+      "id": 4,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": false
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(rate(kafka_server_brokertopicmetrics_totalproducerequestspersec_count{app_kubernetes_io_instance=\"$broker\", topic=~\"$topic\"}[1m])) by (topic)",
+          "interval": "",
+          "legendFormat": "Produce Requests",
+          "refId": "Produce Requests"
+        },
+        {
+          "exemplar": true,
+          "expr": "sum(rate(kafka_server_brokertopicmetrics_totalfetchrequestspersec_count{app_kubernetes_io_instance=\"$broker\", topic=~\"$topic\"}[1m])) by (topic)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Fetch Requests",
+          "refId": "Fetch Requests"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Requests in/out",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:1630",
+          "format": "reqps",
+          "label": "",
+          "logBase": 1,
+          "max": "50000",
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:1631",
+          "format": "short",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 45
+      },
+      "hiddenSeries": false,
+      "id": 6,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": false
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(rate(kafka_topic_partition_current_offset{app_kubernetes_io_instance=\"$broker\", topic=~\"$topic\"}[1m])) by (topic)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Current Partition Offset",
+          "refId": "Current Partition Offset"
+        },
+        {
+          "exemplar": true,
+          "expr": "sum(rate(kafka_consumergroup_current_offset{app_kubernetes_io_instance=\"$broker\", topic=~\"$topic\"}[1m])) by (topic)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Current Consumer Offset",
+          "refId": "Current Consumer Offset"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Current Offset",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:1944",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": "50000",
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:1945",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 45
+      },
+      "hiddenSeries": false,
+      "id": 5,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": false
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "kafka_consumergroup_lag{topic=~\"$topic\", job=\"sketchbench-kafka-metrics\"}",
+          "interval": "",
+          "legendFormat": "{{consumergroup}} (topic: {{topic}})",
+          "refId": "Lag"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Approximate Lag by Consumer Group",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:1396",
+          "format": "short",
+          "label": "",
+          "logBase": 1,
+          "max": "40000",
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:1397",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     }
   ],
   "refresh": "5s",
@@ -1440,8 +2306,8 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "sketchbench-espbench",
-          "value": "sketchbench-espbench"
+          "text": "sketchbench",
+          "value": "sketchbench"
         },
         "datasource": null,
         "definition": "label_values(kafka_topic_partitions{app_kubernetes_io_name=\"kafka\",topic!=\"__consumer_offsets\"}, app_kubernetes_io_instance)",
@@ -1539,5 +2405,5 @@
   "timezone": "",
   "title": "SketchBench",
   "uid": "CsZ004Wnz",
-  "version": 18
+  "version": 10
 }
