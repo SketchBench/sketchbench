@@ -25,152 +25,83 @@ helm repo update
 
 ```bash
 helm install \
---values ./helm-values/values-gke-espbench-bullet.yaml \
-my-sketchbench \
+--values \
+./helm-values/values-gke-espbench-bullet.yaml \
+sketchbench \
 sketchbench/sketchbench \
---version 0.2.4
+--version 0.2.7
 ```
 
 #### ESPBench data with Zeppelin for non-sketch-based queries
 
 ```bash
 helm install \
---values ./helm-values/values-gke-espbench-no-bullet.yaml \
-my-sketchbench \
+--values ./helm-values/values-gke-espbench-standalone.yaml \
+sketchbench \
 sketchbench/sketchbench \
---version 0.2.4
+--version 0.2.7
 ```
 
 ---
 
-### `sketchbench-data-ingestion-tester`
+### `sketchbench-data-ingestion-nexmark`
 
-> Data Generator: [`sketchbench-data-ingestion-tester`](https://github.com/SketchBench/sketchbench-data-ingestion-tester)
+> Data Sender: [`sketchbench-data-ingestion-nexmark`](https://github.com/SketchBench/sketchbench-data-ingestion-nexmark)
 
-#### Test data with Bullet & Zeppelin for sketch-based queries
-
-```bash
-helm install \
---values ./helm-values/values-gke-tester-bullet.yaml \
-my-sketchbench \
-sketchbench/sketchbench \
---version 0.2.4
-```
-
-#### Test data with Zeppelin for non-sketch-based queries
-
-```bash
-helm install \
---values ./helm-values/values-gke-tester-no-bullet.yaml \
-my-sketchbench \
-sketchbench/sketchbench \
---version 0.2.4
-```
-
-## Development setup
-
-### Install SketchBench stack for ESPBench with Bullet, Zeppelin, and Spark
-
-```bash
-helm install \
---values ./helm-values/values-gke-espbench-bullet-dev.yaml \
-sketchbench-espbench \
-sketchbench/sketchbench \
---version 0.2.4
-```
-
-### Install SketchBench stack for NEXMark with Bullet, Zeppelin, and Spark
+#### NEXMark data with Bullet & Zeppelin for sketch-based queries
 
 ```bash
 helm install \
 --values \
-./helm-values/values-gke-nexmark-bullet-dev.yaml \
-sketchbench-nexmark \
+./helm-values/values-gke-nexmark-bullet.yaml \
+sketchbench \
 sketchbench/sketchbench \
---version 0.2.4
+--version 0.2.7
 ```
 
-### Install SketchBench "standalone" stack for ESPBench
+#### NEXMark data with Zeppelin for non-sketch-based queries
 
 ```bash
 helm install \
---values \
-./helm-values/values-gke-espbench-standalone-dev.yaml \
-sketchbench-espbench-standalone \
+--values ./helm-values/values-gke-nexmark-standalone.yaml \
+sketchbench \
 sketchbench/sketchbench \
---version 0.2.4
+--version 0.2.7
 ```
 
-### Install SketchBench "standalone" stack for ESPBench for local development
+---
 
-```bash
-helm install \
---values \
-./helm-values/values-gke-espbench-standalone-dev-local.yaml \
-sketchbench-espbench-standalone \
-sketchbench/sketchbench \
---version 0.2.4
-```
+### Accessing SketchBench components
 
-### Install SketchBench "standalone" stack for NEXMark
-
-```bash
-helm install \
---values \
-./helm-values/values-gke-nexmark-standalone-dev.yaml \
-sketchbench-nexmark-standalone \
-sketchbench/sketchbench \
---version 0.2.4
-```
-
-### Accessing Bullet locally
-
-#### Bullet for ESPBench
+#### Bullet
 
 Two services are required to use the Bullet UI locally; open each in a separate terminal:
 
 ```bash
-kubectl port-forward service/sketchbench-espbench-bullet-ui 8800:8800
-kubectl port-forward service/sketchbench-espbench-bullet-web-service 9999:9999
+kubectl port-forward service/sketchbench-bullet-ui 8800:8800
+kubectl port-forward service/sketchbench-bullet-web-service 9999:9999
 ```
 
-#### Bullet for NEXMark
-
-Two services are required to use the Bullet UI locally; open each in a separate terminal:
+#### Zeppelin
 
 ```bash
-kubectl port-forward service/sketchbench-nexmark-bullet-ui 8800:8800
-kubectl port-forward service/sketchbench-nexmark-bullet-web-service 9999:9999
+kubectl port-forward service/sketchbench-zeppelin 8080:8080
 ```
 
-### Accessing Zeppelin locally
-
-#### Zeppelin for ESPBench (Bullet)
+#### Grafana
 
 ```bash
-kubectl port-forward service/sketchbench-espbench-zeppelin 8080:8080
+kubectl port-forward service/sketchbench-grafana 8000:80
 ```
 
-#### Zeppelin for NEXMark (Bullet)
+#### Bullet Spark UI
 
 ```bash
-kubectl port-forward service/sketchbench-nexmark-zeppelin 8080:8080
+kubectl port-forward service/sketchbench-bullet-spark-backend-ui 4040:4040
 ```
 
-#### Zeppelin for "standalone"
+#### Zeppelin Spark UI
 
 ```bash
-kubectl port-forward service/sketchbench-zeppelin-standalone 8080:8080
-```
-
-When starting a Spark job through Zeppelin, open Zeppelin's Spark UI with:
-
-```bash
-kubectl port-forward service/sketchbench-zeppelin-standalone 4040:4040
-```
-
-### Accessing Grafana locally
-
-```bash
-kubectl port-forward service/sketchbench-espbench-grafana 8000:80
+kubectl port-forward service/sketchbench-zeppelin 4040:4040
 ```
