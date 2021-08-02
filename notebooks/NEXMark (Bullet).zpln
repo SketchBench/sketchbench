@@ -1,0 +1,567 @@
+﻿{
+  "paragraphs": [
+    {
+      "text": "%python\n# Docker container runs with `zeppelin` user and installs pip packages in user-specific `.local` directory, that's not part of the default `PYTHONPATH`\nimport sys\nsys.path.append('/opt/zeppelin/.local/lib/python3.7/site-packages')",
+      "user": "anonymous",
+      "dateUpdated": "2021-08-02T00:43:08+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627864540619_2109791410",
+      "id": "paragraph_1627073275990_859555869",
+      "dateCreated": "2021-08-02T00:35:40+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:15470",
+      "dateFinished": "2021-08-02T00:43:12+0000",
+      "dateStarted": "2021-08-02T00:43:08+0000"
+    },
+    {
+      "text": "# All required imports to run the notebook\nimport json\nimport sseclient\nimport requests\nimport pandas as pd\nimport time",
+      "user": "anonymous",
+      "dateUpdated": "2021-08-02T00:43:22+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627864540620_797107734",
+      "id": "paragraph_1627073292314_656828845",
+      "dateCreated": "2021-08-02T00:35:40+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:15471",
+      "dateFinished": "2021-08-02T00:43:23+0000",
+      "dateStarted": "2021-08-02T00:43:22+0000"
+    },
+    {
+      "text": "# Globals\nBULLET_SERVICE_NAME = 'sketchbench-bullet-web-service'\nBULLET_SERVICE_PORT = '9999'\nBULLET_HTTP_API_ENDPOINT = 'http://{0}:{1}/api/bullet/queries/http-query'.format(BULLET_SERVICE_NAME, BULLET_SERVICE_PORT)\nBULLET_SSE_API_ENDPOINT = 'http://{0}:{1}/api/bullet/queries/sse-query'.format(BULLET_SERVICE_NAME, BULLET_SERVICE_PORT)\n\nREQUEST_HEADERS = {\n    'Content-type': 'text/plain',\n}",
+      "user": "anonymous",
+      "dateUpdated": "2021-08-02T00:43:25+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627864540620_348360328",
+      "id": "paragraph_1627073816029_1102174803",
+      "dateCreated": "2021-08-02T00:35:40+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:15472",
+      "dateFinished": "2021-08-02T00:43:25+0000",
+      "dateStarted": "2021-08-02T00:43:25+0000"
+    },
+    {
+      "text": "# Function for pretty-printing a dict/JSON\ndef pretty_print(data):\n    z.show(json.dumps(data, indent=2, sort_keys=True))",
+      "user": "anonymous",
+      "dateUpdated": "2021-08-02T00:43:27+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627864540620_949631005",
+      "id": "paragraph_1627078524867_1462564514",
+      "dateCreated": "2021-08-02T00:35:40+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:15473",
+      "dateFinished": "2021-08-02T00:43:27+0000",
+      "dateStarted": "2021-08-02T00:43:27+0000"
+    },
+    {
+      "text": "# Function for blocking HTTP requests\ndef http_request(query):\n    start = time.time()\n    z.show('############# START #############')\n    z.show('Epoch: {0}'.format(start))\n    z.show('UTC: {0}'.format(time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(start))))\n    z.show('#################################')\n    \n    response = requests.post(BULLET_HTTP_API_ENDPOINT, data=query, headers=REQUEST_HEADERS)\n        \n    end = time.time()\n    z.show('############## END ##############')\n    z.show('Epoch: {0}'.format(end))\n    z.show('UTC: {0}'.format(time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(end))))\n    z.show('#################################')\n    \n    response_data = response.json()\n    pretty_print(response_data.get('meta', {}))\n    z.show(pd.DataFrame(response_data.get('records', [])))",
+      "user": "anonymous",
+      "dateUpdated": "2021-08-02T00:43:29+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627864540620_4672814",
+      "id": "paragraph_1627073936668_2099232657",
+      "dateCreated": "2021-08-02T00:35:40+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:15474",
+      "dateFinished": "2021-08-02T00:43:29+0000",
+      "dateStarted": "2021-08-02T00:43:29+0000"
+    },
+    {
+      "text": "# Function for Server-Sent Events (SSE)-based streaming requests (e.g. for queries with windows)\ndef sse_request(query):\n    start = time.time()\n    z.show('############# START #############')\n    z.show('Epoch: {0}'.format(start))\n    z.show('UTC: {0}'.format(time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(start))))\n    z.show('#################################')\n    \n    response = requests.post(BULLET_SSE_API_ENDPOINT, data=query, stream=True, headers=REQUEST_HEADERS)\n    sse_client = sseclient.SSEClient(response)\n    all_results = []\n    query_receive_time = float('inf')\n    for sse_event in sse_client.events():\n        # Update table with all results\n        window_results = json.loads(sse_event.data)\n        all_results.extend(window_results.get('records', []))\n        # Update receive time of overall query\n        window_query_receive_time = window_results.get('meta', {}).get('Query', {}).get('Receive Time')\n        query_receive_time = window_query_receive_time if window_query_receive_time < query_receive_time else query_receive_time\n        # Print current window stats\n        z.show(window_results.get('meta', {}).get('Window', {}))\n    \n    end = time.time()\n    z.show('############## END ##############')\n    z.show('Epoch: {0}'.format(end))\n    z.show('UTC: {0}'.format(time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(end))))\n    z.show('#################################')\n    \n    # Print query receive time\n    z.show('Query Receive Time: {0}'.format(query_receive_time))\n    # Show overall results\n    z.show(pd.DataFrame(all_results))",
+      "user": "anonymous",
+      "dateUpdated": "2021-08-02T00:43:31+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627864540620_2053727348",
+      "id": "paragraph_1627074111627_456611848",
+      "dateCreated": "2021-08-02T00:35:40+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:15475",
+      "dateFinished": "2021-08-02T00:43:31+0000",
+      "dateStarted": "2021-08-02T00:43:31+0000"
+    },
+    {
+      "text": "%md\n\n## Query 1: Auction Statistics Report\n\n**CQL:**\n\n```sql\nSELECT\n    auction_id,\n    COUNT (*) AS total_bids ,\n    MIN ( bid ) AS min_price ,\n    MAX ( bid ) AS max_price ,\n    AVG ( bid ) AS avg_price ,\n    SUM ( bid ) AS sum_price\nFROM\n    STREAM\nGROUP BY\n    auction_id;\n```",
+      "user": "anonymous",
+      "dateUpdated": "2021-08-02T00:41:04+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h2>Query 1: Auction Statistics Report</h2>\n<p><strong>CQL:</strong></p>\n<pre><code class=\"language-sql\">SELECT\n    auction_id,\n    COUNT (*) AS total_bids ,\n    MIN ( bid ) AS min_price ,\n    MAX ( bid ) AS max_price ,\n    AVG ( bid ) AS avg_price ,\n    SUM ( bid ) AS sum_price\nFROM\n    STREAM\nGROUP BY\n    auction_id;\n</code></pre>\n\n</div>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627864540620_776740409",
+      "id": "paragraph_1627074388021_160175271",
+      "dateCreated": "2021-08-02T00:35:40+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:15476",
+      "dateFinished": "2021-08-02T00:41:04+0000",
+      "dateStarted": "2021-08-02T00:41:04+0000"
+    },
+    {
+      "text": "DURATION = 300000 # 5min\n\nquery_1_bql = '''\nSELECT\n  auction_id,\n  person,\n  AVG ( bid ) AS avg_price\nFROM\n  STREAM({0}, TIME)\nGROUP BY\n  auction_id,\n  person;\n'''.format(DURATION)\n\nhttp_request(query_1_bql)",
+      "user": "anonymous",
+      "dateUpdated": "2021-08-02T03:50:50+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "COUNT(*)",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "AVG(mf01)",
+                  "index": 1,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          },
+          "1": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "auction_id": "string",
+                      "avg_price": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [],
+              "groups": [],
+              "values": []
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627864540620_413549662",
+      "id": "paragraph_1627074417073_567825142",
+      "dateCreated": "2021-08-02T00:35:40+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:15477",
+      "dateFinished": "2021-08-02T03:23:11+0000",
+      "dateStarted": "2021-08-02T03:21:09+0000"
+    },
+    {
+      "user": "anonymous",
+      "dateUpdated": "2021-08-02T00:35:40+0000",
+      "progress": 0,
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/undefined"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627864540621_800845198",
+      "id": "paragraph_1627854570712_1455506516",
+      "dateCreated": "2021-08-02T00:35:40+0000",
+      "status": "READY",
+      "$$hashKey": "object:15478"
+    },
+    {
+      "text": "%md\n\n## Query 2: Top 10 Auction bids\n\n**CQL:**\n\n```sql\nSELECT\n  TOP(10, auction_id)\nFROM \n  STREAM;\n```\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-08-02T01:06:21+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h2>Query 2: Top 10 Auction bids</h2>\n<p><strong>CQL:</strong></p>\n<pre><code class=\"language-sql\">SELECT\n  TOP(10, auction_id)\nFROM \n  STREAM;\n</code></pre>\n\n</div>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627864540621_1268053252",
+      "id": "paragraph_1627074435918_1009489766",
+      "dateCreated": "2021-08-02T00:35:40+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:15479",
+      "dateFinished": "2021-08-02T01:06:21+0000",
+      "dateStarted": "2021-08-02T01:06:21+0000"
+    },
+    {
+      "text": "DURATION = 300000 # 5min\n\nquery_2_bql = '''\nSELECT \n  TOP(10, auction_id)\nfrom \n  STREAM({0}, TIME);\n'''.format(DURATION)\n\nhttp_request(query_2_bql)",
+      "user": "anonymous",
+      "dateUpdated": "2021-08-02T03:14:46+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "results": {
+          "1": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "auction_id": "string",
+                      "Count": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "############# START #############\nEpoch: 1627874086.4518278\nUTC: 2021-08-02 03:14:46\n#################################\n############## END ##############\nEpoch: 1627874387.4939198\nUTC: 2021-08-02 03:19:47\n#################################\n{\n  \"Query\": {\n    \"Finish Time\": 1627874387373,\n    \"ID\": \"b91d7ea6-2d36-4158-91d3-6fb1de3691af\",\n    \"Query String\": \"SELECT TOP(10, auction_id) FROM STREAM(300000, TIME)\",\n    \"Receive Time\": 1627874086462\n  },\n  \"Sketch\": {\n    \"Active Items\": 466,\n    \"Family\": \"FREQUENCY\",\n    \"Items Seen\": 4130766,\n    \"Maximum Count Error\": 5371,\n    \"Was Estimated\": true\n  },\n  \"Window\": {\n    \"Emit Time\": 1627874387370,\n    \"Name\": \"Windowless\",\n    \"Number\": 1\n  }\n}\n"
+          },
+          {
+            "type": "TABLE",
+            "data": "auction_id\tCount\n1668902\t5373\n1633901\t5372\n1633456\t5372\n1661784\t5372\n1629990\t5372\n1623147\t5372\n1632748\t5372\n1667195\t5372\n1663908\t5372\n1633229\t5372\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627864540621_312395834",
+      "id": "paragraph_1627078338380_618797484",
+      "dateCreated": "2021-08-02T00:35:40+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:15480",
+      "dateFinished": "2021-08-02T03:19:47+0000",
+      "dateStarted": "2021-08-02T03:14:46+0000"
+    },
+    {
+      "user": "anonymous",
+      "dateUpdated": "2021-08-02T00:35:40+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/undefined",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1627864540621_657592950",
+      "id": "paragraph_1627078692889_2128591818",
+      "dateCreated": "2021-08-02T00:35:40+0000",
+      "status": "READY",
+      "$$hashKey": "object:15481"
+    }
+  ],
+  "name": "NEXMark (Bullet)",
+  "id": "2GF2G5ZHY",
+  "defaultInterpreterGroup": "file",
+  "version": "0.9.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {},
+  "path": "/NEXMark (Bullet)"
+}
