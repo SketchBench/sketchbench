@@ -78,7 +78,6 @@ zeppelin:
 # - --conf
 # - spark.executor.extraJavaOptions="-XX:+UseG1GC"
 
-
 ### System Under Test (isolated Apache Spark cluster) ###
 spark:
   enabled: true
@@ -173,9 +172,6 @@ tobs:
     alertmanager:
       enabled: false # not needed
     grafana:
-      sidecar:
-        datasources:
-          defaultDatasourceScrapeInterval: 10s
       nodeSelector:
         sketchbench/pool: observability
     kube-state-metrics:
@@ -189,11 +185,15 @@ tobs:
         interval: 10s
     prometheus:
       prometheusSpec:
+        nodeSelector:
+          sketchbench/pool: observability
+        resources:
+          requests:
+            memory: "16Gi"
+            cpu: "4"
         scrapeInterval: 10s
         scrapeTimeout: 10s
         evaluationInterval: 10s
-        nodeSelector:
-          sketchbench/pool: observability
         podMonitorSelectorNilUsesHelmValues: false
         serviceMonitorSelectorNilUsesHelmValues: false
         storageSpec:
@@ -201,7 +201,7 @@ tobs:
             spec:
               resources:
                 requests:
-                  storage: 50Gi
+                  storage: 500Gi
     prometheusOperator:
       nodeSelector:
         sketchbench/pool: observability
@@ -211,14 +211,22 @@ tobs:
         sketchbench/pool: observability
     nodeSelector:
       sketchbench/pool: observability
+    resources:
+      requests:
+        memory: "16Gi"
+        cpu: "4"
   timescaledb-single:
     nodeSelector:
       sketchbench/pool: observability
+    resources:
+      requests:
+        memory: "16Gi"
+        cpu: "4"
     persistentVolumes:
       data:
-        size: 50Gi
+        size: 500Gi
       wal:
-        size: 50Gi
+        size: 500Gi
 graphite-exporter:
   enabled: true
   nodeSelector:
