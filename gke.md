@@ -17,10 +17,10 @@ SketchBench utilizes 5 node pools:
 |-----------------------------|---------------------------------------------------|---------------|-----------------|--------------------|
 | **default-pool**            | K8s and SketchBench control plane components      | n2-standard-4 |        3        |        100GB       |
 | **data-generation**         | SketchBench data sender (ESPBench/NEXMark)        | n2-standard-4 |        1        |        100GB       |
-| **data-ingestion**          |  Isolated Apache Kafka cluster for data ingestion | c2-standard-8 |        1        |        100GB       |
-| **system-under-test**       |          Isolated SUT (e.g. Apache Spark)         | c2-standard-8 |        5        |        100GB       |
-| **observability**           |       Observability stack (e.g. Prometheus)       | n2-standard-4 |        3        |        100GB       |
-| **data-plane**              |    Persistency services (e.g. HDFS & Zookeeper)   | n2-standard-4 |        3        |        100GB       |
+| **data-ingestion**          | Isolated Apache Kafka cluster for data ingestion  | c2-standard-8 |        1        |        100GB       |
+| **system-under-test**       | Isolated SUT (Apache Spark)                       | c2-standard-8 |        8        |        100GB       |
+| **observability**           | Observability stack (e.g. Prometheus)             | n2-standard-8 |        3        |        100GB       |
+| **data-plane**              | Persistency services (e.g. HDFS & Zookeeper)      | n2-standard-4 |        3        |        100GB       |
 
 ## `gcloud` commands
 
@@ -122,7 +122,7 @@ gcloud beta container \
 --node-labels sketchbench/pool=system-under-test \
 --metadata disable-legacy-endpoints=true \
 --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \
---num-nodes "5" \
+--num-nodes "8" \
 --enable-autoupgrade \
 --enable-autorepair \
 --max-surge-upgrade 1 \
@@ -138,7 +138,7 @@ gcloud beta container \
 --project "cosmic-ascent-321403" node-pools create "observability" \
 --cluster "sketchbench-cluster" \
 --zone "us-west1-a" \
---machine-type "n2-standard-4" \
+--machine-type "n2-standard-8" \
 --image-type "COS_CONTAINERD" \
 --disk-type "pd-ssd" \
 --disk-size "100" \
