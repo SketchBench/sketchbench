@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 27,
-  "iteration": 1627795268233,
+  "iteration": 1627858637357,
   "links": [],
   "panels": [
     {
@@ -127,7 +127,7 @@
           "format": "short",
           "label": null,
           "logBase": 1,
-          "max": "30",
+          "max": null,
           "min": "0",
           "show": true
         },
@@ -353,7 +353,7 @@
           "format": "decmbytes",
           "label": null,
           "logBase": 1,
-          "max": "200",
+          "max": null,
           "min": "0",
           "show": true
         },
@@ -458,7 +458,7 @@
           "format": "short",
           "label": "",
           "logBase": 1,
-          "max": "10",
+          "max": null,
           "min": "0",
           "show": true
         },
@@ -1283,7 +1283,7 @@
           "format": "short",
           "label": "",
           "logBase": 1,
-          "max": "10000",
+          "max": null,
           "min": "0",
           "show": true
         },
@@ -1352,7 +1352,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(metrics_executor_completedTasks_total{executor_id!=\"driver\", application_name=\"$sparkapp\"}[20s])",
+          "expr": "rate(metrics_executor_completedTasks_total{executor_id!=\"driver\", application_name=\"$sparkapp\"}[1m])",
           "format": "time_series",
           "interval": "",
           "legendFormat": "Executor {{executor_id}}",
@@ -1507,7 +1507,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
-      "description": "Memory used for storage of data like RDD partitions cached in memory.",
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "unit": "decbytes"
@@ -1518,7 +1518,7 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 9,
-        "w": 6,
+        "w": 8,
         "x": 0,
         "y": 35
       },
@@ -1618,8 +1618,8 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 9,
-        "w": 6,
-        "x": 6,
+        "w": 8,
+        "x": 8,
         "y": 35
       },
       "hiddenSeries": false,
@@ -1651,7 +1651,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(metrics_executor_totalShuffleWrite_bytes_total{executor_id!=\"driver\", application_name=\"$sparkapp\"}) by (executor_id)",
+          "expr": "rate(metrics_executor_totalShuffleWrite_bytes_total{executor_id!=\"driver\", application_name=\"$sparkapp\"}[1m])",
           "hide": false,
           "interval": "",
           "legendFormat": "Executor {{executor_id}}",
@@ -1683,7 +1683,7 @@
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
@@ -1693,7 +1693,7 @@
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -1718,8 +1718,8 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 9,
-        "w": 6,
-        "x": 12,
+        "w": 8,
+        "x": 16,
         "y": 35
       },
       "hiddenSeries": false,
@@ -1751,7 +1751,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(metrics_executor_totalShuffleRead_bytes_total{executor_id!=\"driver\", application_name=\"$sparkapp\"}) by (executor_id)",
+          "expr": "rate(metrics_executor_totalShuffleRead_bytes_total{executor_id!=\"driver\", application_name=\"$sparkapp\"}[1m])",
           "hide": false,
           "interval": "",
           "legendFormat": "Executor {{executor_id}}",
@@ -1783,7 +1783,7 @@
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
@@ -1793,73 +1793,13 @@
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
         "align": false,
         "alignLevel": null
       }
-    },
-    {
-      "datasource": null,
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 6,
-        "x": 18,
-        "y": 35
-      },
-      "id": 15,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": ["lastNotNull"],
-          "fields": "",
-          "values": false
-        },
-        "text": {},
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.5.3",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "sum(metrics_executor_totalCores{executor_id!=\"driver\", application_name=\"$sparkapp\"}) by (executor_id)",
-          "interval": "",
-          "legendFormat": "Executor {{executor_id}}",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Cores",
-      "type": "stat"
     },
     {
       "collapsed": false,
@@ -1890,7 +1830,7 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 8,
-        "w": 6,
+        "w": 8,
         "x": 0,
         "y": 45
       },
@@ -1998,8 +1938,8 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 8,
-        "w": 6,
-        "x": 6,
+        "w": 8,
+        "x": 8,
         "y": 45
       },
       "hiddenSeries": false,
@@ -2107,8 +2047,8 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 8,
-        "w": 6,
-        "x": 12,
+        "w": 8,
+        "x": 16,
         "y": 45
       },
       "hiddenSeries": false,
@@ -2197,106 +2137,9 @@
         "align": false,
         "alignLevel": null
       }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": null,
-      "description": "",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "fill": 0,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 18,
-        "y": 45
-      },
-      "hiddenSeries": false,
-      "id": 5,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": false
-      },
-      "percentage": false,
-      "pluginVersion": "7.5.3",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "kafka_consumergroup_lag{topic=~\"$topic\", job=\"sketchbench-kafka-metrics\"}",
-          "interval": "",
-          "legendFormat": "{{consumergroup}} (topic: {{topic}})",
-          "refId": "Lag"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Approximate Lag by Consumer Group",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "$$hashKey": "object:1396",
-          "format": "short",
-          "label": "",
-          "logBase": 1,
-          "max": "40000",
-          "min": "0",
-          "show": true
-        },
-        {
-          "$$hashKey": "object:1397",
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
     }
   ],
-  "refresh": "5s",
+  "refresh": "10s",
   "schemaVersion": 27,
   "style": "dark",
   "tags": [],
@@ -2368,8 +2211,8 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "BulletSparkStreamingJob",
-          "value": "BulletSparkStreamingJob"
+          "text": "SketchBench",
+          "value": "SketchBench"
         },
         "datasource": null,
         "definition": "label_values(metrics_executor_rddBlocks, application_name)",
@@ -2398,12 +2241,12 @@
     ]
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-10m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "SketchBench",
   "uid": "CsZ004Wnz",
-  "version": 10
+  "version": 3
 }
