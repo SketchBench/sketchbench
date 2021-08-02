@@ -1,35 +1,285 @@
 # Metrics from TimescaleDB
 
-## Spark
+## Spark Streaming App
 
-### Workers / Executors
-
-#### Workers CPU Usage in Percent
+### Stages
 
 ```sql
 SELECT TIME,
-  VALUE AS CPU_USAGE,
-  VAL(POD_ID) AS POD
-FROM PROM_METRIC."node_namespace_pod_container:container_cpu_usage_seconds__1766"
-WHERE VAL(POD_ID) LIKE '%spark-worker%'
-  AND CONTAINER_ID > 0
-  AND TIME > NOW() - INTERVAL '10 hour'
+	VALUE AS COMPLETED_STAGES
+FROM PROM_METRIC."spark_app_status"
+WHERE VAL(QTY_ID) LIKE 'completedStages'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
 ORDER BY TIME ASC
 ```
+
+```sql
+SELECT TIME,
+	VALUE AS FAILED_STAGES
+FROM PROM_METRIC."spark_app_status"
+WHERE VAL(QTY_ID) LIKE 'failedStages'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
+ORDER BY TIME ASC
+```
+
+```sql
+SELECT TIME,
+	VALUE AS SKIPPED_STAGES
+FROM PROM_METRIC."spark_app_status"
+WHERE VAL(QTY_ID) LIKE 'skippedStages'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
+ORDER BY TIME ASC
+```
+
+### Tasks
+
+```sql
+SELECT TIME,
+	VALUE AS COMPLETED_TASKS
+FROM PROM_METRIC."spark_app_status"
+WHERE VAL(QTY_ID) LIKE 'completedTasks'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
+ORDER BY TIME ASC
+```
+
+```sql
+SELECT TIME,
+	VALUE AS FAILED_TASKS
+FROM PROM_METRIC."spark_app_status"
+WHERE VAL(QTY_ID) LIKE 'failedTasks'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
+ORDER BY TIME ASC
+```
+
+```sql
+SELECT TIME,
+	VALUE AS SKIPPED_TASKS
+FROM PROM_METRIC."spark_app_status"
+WHERE VAL(QTY_ID) LIKE 'skippedTasks'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
+ORDER BY TIME ASC
+```
+
+### Block Manager
+
+```sql
+SELECT TIME,
+	VALUE AS MEM_USED_MB
+FROM PROM_METRIC."spark_block_manager"
+WHERE VAL(QTY_ID) LIKE 'memUsed_MB'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
+ORDER BY TIME ASC
+```
+
+```sql
+SELECT TIME,
+	VALUE AS OFF_HEAP_MEM_USED_MB
+FROM PROM_METRIC."spark_block_manager"
+WHERE VAL(QTY_ID) LIKE 'offHeapMemUsed_MB'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
+ORDER BY TIME ASC
+```
+
+```sql
+SELECT TIME,
+	VALUE AS ON_HEAP_MEM_USED_MB
+FROM PROM_METRIC."spark_block_manager"
+WHERE VAL(QTY_ID) LIKE 'onHeapMemUsed_MB'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
+ORDER BY TIME ASC
+```
+
+### Jobs
+
+```sql
+SELECT TIME,
+	VALUE AS SUCCEEDED_JOBS
+FROM PROM_METRIC."spark_app_status"
+WHERE VAL(QTY_ID) LIKE 'succeededJobs'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
+ORDER BY TIME ASC
+```
+
+```sql
+SELECT TIME,
+	VALUE AS FAILED_JOBS
+FROM PROM_METRIC."spark_app_status"
+WHERE VAL(QTY_ID) LIKE 'failedJobs'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
+ORDER BY TIME ASC
+```
+
+### Processing Time
+
+```sql
+SELECT START_VIEW.TIME AS TIME,
+	END_TIME - START_TIME AS PROCESSING_TIME
+FROM
+	(SELECT TIME,
+			VALUE AS START_TIME
+		FROM PROM_METRIC."spark_streaming_app"
+		WHERE VAL(QTY_ID) LIKE 'lastCompletedBatch_processingStartTime'
+			AND TIME BETWEEN '2021-08-01 22:05:00'::TIMESTAMP AND '2021-08-01 23:15:00'::TIMESTAMP ) START_VIEW
+JOIN
+	(SELECT TIME,
+			VALUE AS END_TIME
+		FROM PROM_METRIC."spark_streaming_app"
+		WHERE VAL(QTY_ID) LIKE 'lastCompletedBatch_processingEndTime'
+			AND TIME BETWEEN '2021-08-01 22:05:00'::TIMESTAMP AND '2021-08-01 23:15:00'::TIMESTAMP ) END_VIEW ON START_VIEW.TIME = END_VIEW.TIME
+ORDER BY TIME ASC
+```
+### Delays
+
+```sql
+SELECT TIME,
+	VALUE AS PROCESSING_DELAY
+FROM PROM_METRIC."spark_streaming_app"
+WHERE VAL(QTY_ID) LIKE 'lastCompletedBatch_processingDelay'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
+ORDER BY TIME ASC
+```
+
+```sql
+SELECT TIME,
+	VALUE AS SCHEDULING_DELAY
+FROM PROM_METRIC."spark_streaming_app"
+WHERE VAL(QTY_ID) LIKE 'lastCompletedBatch_schedulingDelay'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
+ORDER BY TIME ASC
+```
+
+### Messaging Records
+
+```sql
+SELECT TIME,
+	VALUE AS TOTAL_PROCESSED_RECORDS
+FROM PROM_METRIC."spark_streaming_app"
+WHERE VAL(QTY_ID) LIKE 'totalProcessedRecords'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
+ORDER BY TIME ASC
+```
+
+```sql
+SELECT TIME,
+	VALUE AS TOTAL_RECEIVED_RECORDS
+FROM PROM_METRIC."spark_streaming_app"
+WHERE VAL(QTY_ID) LIKE 'totalReceivedRecords'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
+ORDER BY TIME ASC
+```
+
+```sql
+SELECT TIME,
+	VALUE / 2 AS LAST_BATCH_RECORDS_PER_SEC
+FROM PROM_METRIC."spark_streaming_app"
+WHERE VAL(QTY_ID) LIKE 'lastReceivedBatch_records'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
+ORDER BY TIME ASC
+```
+
+## Spark
+
+### CPU Usage
+
+#### Workers CPU Usage
+
+```sql
+SELECT TIME,
+  VALUE AS CPU_USAGE_SECONDS_TOTAL,
+  VAL(POD_ID) AS POD
+FROM PROM_METRIC."container_cpu_usage_seconds_total"
+WHERE
+  VAL(POD_ID) LIKE '%spark-worker%'
+  AND VAL(CONTAINER_ID) = 'spark-worker'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
+ORDER BY TIME ASC
+```
+
+#### Driver CPU Usage
+
+```sql
+SELECT TIME,
+  VALUE AS CPU_USAGE_SECONDS_TOTAL,
+  VAL(POD_ID) AS POD
+FROM PROM_METRIC."container_cpu_usage_seconds_total"
+WHERE
+  VAL(POD_ID) LIKE '%spark-backend%'
+  AND VAL(CONTAINER_ID) = 'spark-backend'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
+ORDER BY TIME ASC
+```
+
+### Memory Usage
 
 #### Workers Memory in Bytes
 
 ```sql
-SELECT TIME, VALUE AS VALUE_MEM_BYTES,
+SELECT TIME,
+  VALUE AS VALUE_MEM_BYTES,
   VAL(POD_ID) AS POD
 FROM PROM_METRIC.CONTAINER_MEMORY_WORKING_SET_BYTES
-WHERE VAL(POD_ID) LIKE '%spark-worker%'
+WHERE
+  VAL(POD_ID) LIKE '%spark-worker%'
   AND CONTAINER_ID > 0
-  AND TIME > NOW() - INTERVAL '10 hour'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
 ORDER BY TIME ASC
 ```
 
-#### RDD Blocks
+#### Driver Memory in Bytes
+
+```sql
+SELECT TIME,
+  VALUE AS VALUE_MEM_BYTES,
+  VAL(POD_ID) AS POD
+FROM PROM_METRIC.CONTAINER_MEMORY_WORKING_SET_BYTES
+WHERE
+  VAL(POD_ID) LIKE '%spark-backend%'
+  AND VAL(CONTAINER_ID) = 'spark-backend'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
+ORDER BY TIME ASC
+```
+
+### RDD Blocks
 
 ```sql
 SELECT TIME,
@@ -37,7 +287,9 @@ SELECT TIME,
   VAL(EXECUTOR_ID_ID) AS EXECUTOR
 FROM PROM_METRIC."metrics_executor_rddBlocks"
 WHERE VAL(EXECUTOR_ID_ID) <> 'driver'
-  AND TIME > NOW() - INTERVAL '10 hour'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
 ORDER BY TIME ASC
 ```
 
@@ -49,7 +301,9 @@ SELECT TIME,
   VAL(EXECUTOR_ID_ID) AS EXECUTOR
 FROM PROM_METRIC."metrics_executor_completedTasks_total"
 WHERE VAL(EXECUTOR_ID_ID) <> 'driver'
-  AND TIME > NOW() - INTERVAL '10 hour'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
 ORDER BY TIME ASC
 ```
 
@@ -61,34 +315,51 @@ SELECT TIME,
   VAL(EXECUTOR_ID_ID) AS EXECUTOR
 FROM PROM_METRIC."metrics_executor_activeTasks"
 WHERE VAL(EXECUTOR_ID_ID) <> 'driver'
-  AND TIME > NOW() - INTERVAL '10 hour'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
 ORDER BY TIME ASC
 ```
 
-### Driver
-
-#### Driver CPU Usage in Percent
+#### Memory Used
 
 ```sql
 SELECT TIME,
-  VALUE AS CPU_USAGE,
-  VAL(POD_ID) AS POD
-FROM PROM_METRIC."node_namespace_pod_container:container_cpu_usage_seconds__1578"
-WHERE VAL(POD_ID) LIKE '%spark-backend%'
-  AND CONTAINER_ID > 0
-  AND TIME > NOW() - INTERVAL '10 hour'
+  VALUE AS MEMORY_USED_BYTES,
+  VAL(EXECUTOR_ID_ID) AS EXECUTOR
+FROM PROM_METRIC."metrics_executor_memoryUsed_bytes"
+WHERE VAL(EXECUTOR_ID_ID) <> 'driver'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
 ORDER BY TIME ASC
 ```
 
-#### Driver Memory in MB
+#### Shuffle Write
 
 ```sql
-SELECT TIME, VALUE AS VALUE_MEM_BYTES,
-  VAL(POD_ID) AS POD
-FROM PROM_METRIC.CONTAINER_MEMORY_WORKING_SET_BYTES
-WHERE VAL(POD_ID) LIKE '%spark-backend%'
-  AND CONTAINER_ID > 0
-  AND TIME > NOW() - INTERVAL '10 hour'
+SELECT TIME,
+  VALUE AS shuffle_write_bytes_total,
+  VAL(EXECUTOR_ID_ID) AS EXECUTOR
+FROM PROM_METRIC."metrics_executor_totalShuffleWrite_bytes_total"
+WHERE VAL(EXECUTOR_ID_ID) <> 'driver'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
+ORDER BY TIME ASC
+```
+
+#### Shuffle Read
+
+```sql
+SELECT TIME,
+  VALUE AS shuffle_read_bytes_total,
+  VAL(EXECUTOR_ID_ID) AS EXECUTOR
+FROM PROM_METRIC."metrics_executor_totalShuffleRead_bytes_total"
+WHERE VAL(EXECUTOR_ID_ID) <> 'driver'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
 ORDER BY TIME ASC
 ```
 
@@ -102,8 +373,10 @@ ORDER BY TIME ASC
 SELECT TIME, VALUE AS BYTESINPERSEC_ONEMINUTERATE
 FROM PROM_METRIC.KAFKA_SERVER_BROKERTOPICMETRICS_BYTESINPERSEC_ONEMINUTERATE
 WHERE VAL(TOPIC_ID) = 'SketchBench-1-1'
-  AND VAL(JOB_ID) = 'sketchbench-espbench-kafka-jmx-metrics'
-  AND TIME > NOW() - INTERVAL '10 hour'
+    AND VAL(JOB_ID) = 'sketchbench-kafka-jmx-metrics'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
 ORDER BY TIME ASC
 ```
 
@@ -113,8 +386,10 @@ ORDER BY TIME ASC
 SELECT TIME, VALUE AS BYTESOUTPERSEC_ONEMINUTERATE
 FROM PROM_METRIC.KAFKA_SERVER_BROKERTOPICMETRICS_BYTESOUTPERSEC_ONEMINUTERATE
 WHERE VAL(TOPIC_ID) = 'SketchBench-1-1'
-  AND VAL(JOB_ID) = 'sketchbench-espbench-kafka-jmx-metrics'
-  AND TIME > NOW() - INTERVAL '10 hour'
+    AND VAL(JOB_ID) = 'sketchbench-kafka-jmx-metrics'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
 ORDER BY TIME ASC
 ```
 
@@ -125,10 +400,12 @@ ORDER BY TIME ASC
 ```sql
 SELECT TIME,
   VALUE AS REQUESTS_PER_SEC_IN
-FROM PROM_METRIC.KAFKA_SERVER_BROKERTOPICMETRICS_TOTALPRODUCEREQUESTSPERSE_1562
+FROM PROM_METRIC.KAFKA_SERVER_BROKERTOPICMETRICS_TOTALPRODUCEREQUESTSPERSE_1618
 WHERE VAL(TOPIC_ID) = 'SketchBench-1-1'
-  AND VAL(JOB_ID) = 'sketchbench-espbench-kafka-jmx-metrics'
-  AND TIME > NOW() - INTERVAL '10 hour'
+    AND VAL(JOB_ID) = 'sketchbench-kafka-jmx-metrics'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
 ORDER BY TIME ASC
 ```
 
@@ -137,25 +414,12 @@ ORDER BY TIME ASC
 ```sql
 SELECT TIME,
   VALUE AS REQUESTS_PER_SEC_OUT
-FROM PROM_METRIC.KAFKA_SERVER_BROKERTOPICMETRICS_TOTALFETCHREQUESTSPERSEC__1572
+FROM PROM_METRIC.KAFKA_SERVER_BROKERTOPICMETRICS_TOTALFETCHREQUESTSPERSEC__1626
 WHERE VAL(TOPIC_ID) = 'SketchBench-1-1'
-  AND VAL(JOB_ID) = 'sketchbench-espbench-kafka-jmx-metrics'
-  AND TIME > NOW() - INTERVAL '10 hour'
-ORDER BY TIME ASC
-```
-
-### Lag
-
-#### Lag by Consumer Group
-
-```sql
-SELECT TIME,
-  VALUE AS CONSUMERGROUP_LAG,
-  VAL(CONSUMERGROUP_ID) AS CONSUMERGROUP
-FROM PROM_METRIC.KAFKA_CONSUMERGROUP_LAG_SUM
-WHERE VAL(TOPIC_ID) = 'SketchBench-1-1'
-  AND VAL(JOB_ID) = 'sketchbench-espbench-kafka-metrics'
-  AND TIME > NOW() - INTERVAL '10 hour'
+    AND VAL(JOB_ID) = 'sketchbench-kafka-jmx-metrics'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
 ORDER BY TIME ASC
 ```
 
@@ -166,11 +430,14 @@ ORDER BY TIME ASC
 ```sql
 SELECT TIME,
   VALUE AS CURRENT_CONSUMER_OFFSET,
-  VAL(CONSUMERGROUP_ID) AS CONSUMERGROUP
+  VAL(CONSUMERGROUP_ID) AS CONSUMERGROUP,
+  VAL(PARTITION_ID) AS KAFKA_PARTITION
 FROM PROM_METRIC.KAFKA_CONSUMERGROUP_CURRENT_OFFSET
 WHERE VAL(TOPIC_ID) = 'SketchBench-1-1'
-  AND VAL(JOB_ID) = 'sketchbench-espbench-kafka-metrics'
-  AND TIME > NOW() - INTERVAL '10 hour'
+  AND VAL(JOB_ID) = 'sketchbench-kafka-metrics'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
 ORDER BY TIME ASC
 ```
 
@@ -178,10 +445,13 @@ ORDER BY TIME ASC
 
 ```sql
 SELECT TIME,
-  VALUE AS CURRENT_PRODUCER_OFFSET
+  VALUE AS CURRENT_CONSUMER_OFFSET,
+  VAL(PARTITION_ID) AS KAFKA_PARTITION
 FROM PROM_METRIC.KAFKA_TOPIC_PARTITION_CURRENT_OFFSET
 WHERE VAL(TOPIC_ID) = 'SketchBench-1-1'
-  AND VAL(JOB_ID) = 'sketchbench-espbench-kafka-metrics'
-  AND TIME > NOW() - INTERVAL '10 hour'
+  AND VAL(JOB_ID) = 'sketchbench-kafka-metrics'
+	AND TIME 
+	BETWEEN '2021-08-01 22:05:00'::timestamp
+	AND '2021-08-01 23:15:00'::timestamp
 ORDER BY TIME ASC
 ```
