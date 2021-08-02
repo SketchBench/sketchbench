@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 27,
-  "iteration": 1627858637357,
+  "iteration": 1627882159329,
   "links": [],
   "panels": [
     {
@@ -509,7 +509,7 @@
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "null",
+      "nullPointMode": "null as zero",
       "options": {
         "alertThreshold": false
       },
@@ -606,7 +606,7 @@
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "null",
+      "nullPointMode": "null as zero",
       "options": {
         "alertThreshold": false
       },
@@ -711,7 +711,7 @@
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "null",
+      "nullPointMode": "null as zero",
       "options": {
         "alertThreshold": false
       },
@@ -1055,7 +1055,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(container_cpu_usage_seconds_total{container=\"spark-backend\", pod=~\".*spark-backend.*\"}[1m])",
+          "expr": "rate(container_cpu_usage_seconds_total{container=~\"spark-backend|zeppelin\", pod=~\".*spark-backend.*|.*zeppelin.*\"}[1m])",
           "interval": "",
           "intervalFactor": 1,
           "legendFormat": "{{pod}}",
@@ -1153,7 +1153,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "container_memory_working_set_bytes{container=\"spark-backend\"}",
+          "expr": "container_memory_working_set_bytes{container=~\"spark-backend|zeppelin\"}",
           "interval": "",
           "intervalFactor": 1,
           "legendFormat": "{{pod}}",
@@ -1383,7 +1383,7 @@
           "format": "ops",
           "label": "",
           "logBase": 1,
-          "max": "250",
+          "max": null,
           "min": "0",
           "show": true
         },
@@ -1582,7 +1582,7 @@
           "format": "decbytes",
           "label": null,
           "logBase": 1,
-          "max": "25000000",
+          "max": null,
           "min": "0",
           "show": true
         },
@@ -1902,7 +1902,7 @@
           "format": "Bps",
           "label": null,
           "logBase": 1,
-          "max": "10000000",
+          "max": null,
           "min": "0",
           "show": true
         },
@@ -2013,7 +2013,7 @@
           "format": "reqps",
           "label": "",
           "logBase": 1,
-          "max": "50000",
+          "max": null,
           "min": "0",
           "show": true
         },
@@ -2119,7 +2119,7 @@
           "format": "short",
           "label": null,
           "logBase": 1,
-          "max": "50000",
+          "max": null,
           "min": "0",
           "show": true
         },
@@ -2179,9 +2179,9 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
-          "text": ["SketchBench-1-1"],
-          "value": ["SketchBench-1-1"]
+          "selected": false,
+          "text": "SketchBench-1-1",
+          "value": "SketchBench-1-1"
         },
         "datasource": null,
         "definition": "label_values(kafka_topic_partitions{app_kubernetes_io_name=\"kafka\",app_kubernetes_io_instance=\"$broker\",topic!=\"__consumer_offsets\"}, topic)",
@@ -2248,5 +2248,5 @@
   "timezone": "",
   "title": "SketchBench",
   "uid": "CsZ004Wnz",
-  "version": 3
+  "version": 5
 }
