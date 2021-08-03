@@ -1,0 +1,231 @@
+### Configurable SketchBench Data Generation (NEXMark) ###
+dataIngestion:
+  nexmark:
+    enabled: true
+    nodeSelector:
+      sketchbench/pool: data-generation
+    kafkaTopic: sketchbench-nexmark
+    threadSleep: 8  # 1,000 msg/sec
+    resources:
+      requests:
+        memory: "12Gi"
+        cpu: "3"
+      limits:
+        memory: "12Gi"
+
+### Bullet Stack ###
+bullet:
+  enabled: false
+
+### Apache Zeppelin for benchmark notebooks ###
+zeppelin:
+  enabled: true
+  resources:
+    requests:
+      memory: "27Gi"
+      cpu: "7"
+    limits:
+      memory: "27Gi"
+  nodeSelector:
+    sketchbench/pool: system-under-test
+  runMode: local
+  interpreters:
+    - file
+    - spark
+    - md
+    - python
+    - sh
+  metrics:
+    enabled: true
+    podMonitor:
+      enabled: true
+    graphiteExporter:
+      enabled: true
+      periodSeconds: 10
+      host: graphite-exporter
+      port : 9109
+  sparkInterpreter:
+    spark:
+      master: "spark://sketchbench-spark-master-svc:7077"
+      submit:
+        deployMode: "client"
+      app:
+        name: SketchBench
+      jar:
+        packages: org.apache.spark:spark-sql-kafka-0-10_2.12:3.0.2,org.apache.spark:spark-streaming-kafka-0-10-assembly_2.12:3.0.2
+      cores:
+        max: 36
+      driver:
+        cores: 6
+        memory: 26g
+      executor:
+        cores: 6
+        memory: 26g
+# driver
+# - --conf
+# - spark.metrics.appStatusSource.enabled=true
+# - --conf
+# - spark.streaming.backpressure.enabled=true
+# - --conf
+# - spark.dynamicAllocation.enabled=false
+# - --conf
+# - spark.driver.extraJavaOptions="-XX:+UseG1GC"
+# - --conf
+# - spark.executor.extraJavaOptions="-XX:+UseG1GC"
+
+### System Under Test (isolated Apache Spark cluster) ###
+spark:
+  enabled: true
+  image:
+    repository: sketchbench/bullet-spark-3.0
+    tag: "1.0.4"
+    pullPolicy: IfNotPresent
+  worker:
+    replicaCount: 6
+    coreLimit: 6
+    nodeSelector:
+      sketchbench/pool: system-under-test
+    resources:
+      requests:
+        memory: "27Gi"
+        cpu: "7"
+      limits:
+        memory: "27Gi"
+  master:
+    nodeSelector:
+      sketchbench/pool: system-under-test
+    resources:
+      requests:
+        memory: "27Gi"
+        cpu: "7"
+      limits:
+        memory: "27Gi"
+  podAntiAffinitypreset: hard
+  metrics:
+    enabled: true
+    podMonitor:
+      enabled: true
+      interval: 10s
+
+### HDFS for checkpointing ###
+hdfs:
+  enabled: true
+  namenode:
+    nodeSelector:
+      sketchbench/pool: data-plane
+  datanode:
+    nodeSelector:
+      sketchbench/pool: data-plane
+  shell:
+    nodeSelector:
+      sketchbench/pool: data-plane
+
+### Data Ingestion (isolated Apache Kafka cluster) ###
+kafka:
+  nodeSelector:
+    sketchbench/pool: data-ingestion
+  podAntiAffinitypreset: hard
+  logRetentionHours: 12
+  numPartitions: 5
+  deleteTopicEnable: true
+  resources:
+    requests:
+      memory: "12Gi"
+      cpu: "3"
+    limits:
+      memory: "12Gi"
+  persistence:
+    size: 100Gi
+  metrics:
+    kafka:
+      enabled: true
+      nodeSelector:
+        sketchbench/pool: observability
+    jmx:
+      enabled: true
+    serviceMonitor:
+      enabled: true
+      interval: 10s
+  zookeeper:
+    nodeSelector:
+      sketchbench/pool: data-plane
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+        interval: 10s
+
+### Benchmark Observability Stack ###
+kafdrop:
+  enabled: true
+  deployment:
+    nodeSelector:
+      sketchbench/pool: observability
+tobs:
+  enabled: true
+  kube-prometheus-stack:
+    alertmanager:
+      enabled: false # not needed
+    grafana:
+      nodeSelector:
+        sketchbench/pool: observability
+    kube-state-metrics:
+      nodeSelector:
+        sketchbench/pool: observability
+    kubeStateMetrics:
+      serviceMonitor:
+        interval: 10s
+    nodeExporter:
+      serviceMonitor:
+        interval: 10s
+    prometheus:
+      prometheusSpec:
+        nodeSelector:
+          sketchbench/pool: observability
+        resources:
+          requests:
+            memory: "16Gi"
+            cpu: "4"
+        scrapeInterval: 10s
+        scrapeTimeout: 10s
+        evaluationInterval: 10s
+        podMonitorSelectorNilUsesHelmValues: false
+        serviceMonitorSelectorNilUsesHelmValues: false
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              resources:
+                requests:
+                  storage: 500Gi
+    prometheusOperator:
+      nodeSelector:
+        sketchbench/pool: observability
+  promscale:
+    maintenance:
+      nodeSelector:
+        sketchbench/pool: observability
+    nodeSelector:
+      sketchbench/pool: observability
+    resources:
+      requests:
+        memory: "16Gi"
+        cpu: "4"
+  timescaledb-single:
+    nodeSelector:
+      sketchbench/pool: observability
+    resources:
+      requests:
+        memory: "16Gi"
+        cpu: "4"
+    persistentVolumes:
+      data:
+        size: 500Gi
+      wal:
+        size: 500Gi
+graphite-exporter:
+  enabled: true
+  nodeSelector:
+    sketchbench/pool: observability
+  podMonitor:
+    enabled: true
+    interval: 10s

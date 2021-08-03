@@ -1,6 +1,7 @@
-### Configurable SketchBench Data Generation (ESPBench) ###
+### Configurable SketchBench Data Generation (NEXMark) ###
 dataIngestion:
   nexmark:
+    replicaCount: 2
     enabled: true
     nodeSelector:
       sketchbench/pool: data-generation
@@ -8,10 +9,10 @@ dataIngestion:
     threadSleep: 8  # 1,000 msg/sec
     resources:
       requests:
-        memory: "12Gi"
-        cpu: "3"
+        memory: "6Gi"
+        cpu: "1.5"
       limits:
-        memory: "12Gi"
+        memory: "6Gi"
 
 ### Bullet Stack ###
 bullet:
